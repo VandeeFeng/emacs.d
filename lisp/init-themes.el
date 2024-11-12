@@ -2,11 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-
+;; https://github.com/mrunhap/nano-theme.el
+;; https://github.com/rougier/nano-theme
+;; (straight-use-package '(nano-theme :type git :host github
+                                   ;; :repo "rougier/nano-theme"))
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
-
 
 (use-package doom-themes
   :ensure t
@@ -25,7 +27,6 @@
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
-
 
 (when (maybe-require-package 'dimmer)
   (setq-default dimmer-fraction 0.15)

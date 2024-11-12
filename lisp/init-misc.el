@@ -33,11 +33,12 @@
 
 
 ;; jk 退出 insert
-(use-package key-chord
-  :ensure t
-  :config
-  (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "jk" 'evil-normal-state))
+(with-eval-after-load 'evil
+  (use-package key-chord
+    :ensure t
+    :config
+    (key-chord-mode 1)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 ;;--------------------------------------------
 ;; modeline 里的彩虹猫！
 ;;--------------------------------------------
@@ -199,8 +200,10 @@
 ;; evil settings
 
 (use-package evil
+  :demand t
   :ensure t
-  :init      ;; tweak evil's configuration before loading it
+  :init
+  (evil-mode)
   :config
   (setq evil-want-integration t  ;; This is optional since it's already set to t by default.
         evil-want-keybinding nil

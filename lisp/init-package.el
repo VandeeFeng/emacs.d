@@ -18,7 +18,7 @@
 
 ;; ConfigurePackageManager
 (unless (bound-and-true-p package--initialized)
-  (setq package-enable-at-startup nil)          ; To prevent initializing twice
+  (setq package-enable-at-startup nil) ; To prevent initializing twice
   (package-initialize))
 
 ;; set use-package-verbose to t for interpreted .emacs,
@@ -57,7 +57,7 @@
 ;; -AutoPackageUpdate
 
 ;; DimPac
-(use-package diminish)
+;;(use-package diminish)
 ;; -DimPac
 
 (provide 'init-package)

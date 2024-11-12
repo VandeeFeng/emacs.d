@@ -61,17 +61,11 @@
 (maybe-require-package 'scratch)
 (require-package 'command-log-mode)
 
-;; evil
-(unless (package-installed-p 'evil)
-  (package-refresh-contents)
-  (package-install 'evil))
-
-(require 'evil)
-(evil-mode 1)
-
+(require 'init-misc)
 (require 'init-languages)
-(require 'init-package)
 (require 'init-keybindings)
+(require 'init-package)
+
 (require 'init-frame-hooks)
 (require 'init-xterm)
 (require 'init-themes)
@@ -146,7 +140,6 @@
 (when *spell-check-support-enabled*
   (require 'init-spelling))
 
-(require 'init-misc)
 
 (require 'init-folding)
 (require 'init-dash)

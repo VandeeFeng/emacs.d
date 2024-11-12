@@ -23,11 +23,8 @@
 
 ;;-------------------------------------------------------------------------
 ;;Python
-;;(setq python-shell-virtualenv-root "~/miniconda3/envs") ;;设置虚拟环境
 
-;; (add-hook 'python-mode-hook 'anaconda-mode)
 (use-package conda
-  :ensure t
   :defer t
   :config
   (setq conda-anaconda-home "~/miniconda3/")
@@ -80,6 +77,9 @@
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
                                                        (:kernel . "base"))))
+
+
+
 
 (provide 'init-languages)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

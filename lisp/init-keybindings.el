@@ -4,10 +4,6 @@
 
 ;; Customized key bindings
 ;;
-;;
-;;
-;;
-;;
 
 ;;----------------------------------------------------------------------------
 ;;自定义函数
@@ -22,15 +18,16 @@
 
 ;;
 ;; 在 normal 模式下将 9 键导航到行尾
-(defun move-to-end-of-line ()
-  "Move the cursor to the end of the current line."
-  (interactive)
-  (end-of-line))
+(with-eval-after-load 'evil
+  (defun move-to-end-of-line ()
+    "Move the cursor to the end of the current line."
+    (interactive)
+    (end-of-line))
 
-;; 在 normal 模式下将 9 键绑定到这个函数
-;;(map! :n "-" #'move-to-end-of-line)
+  ;; 在 normal 模式下将 9 键绑定到这个函数
+  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line))
 
-(define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
+
 
 ;; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#3669681
 (defun my-buffer-path ()
@@ -462,5 +459,4 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
   )
 (provide 'init-keybindings)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; init-evil.el ends here
 ;;; init-keybindings.el ends here

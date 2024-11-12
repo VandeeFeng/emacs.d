@@ -1,3 +1,7 @@
+/cache/
+.agignore
+.last-package-update-day
+*org-roam*
 /url/cache
 /.emacs.desktop
 /auto-save-list

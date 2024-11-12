@@ -13,8 +13,6 @@
 ;;自定义函数
 ;;----------------------------------------------------------------------------
 ;;
-
-;;
 ;; 执行代码块
 (defun my-execute-src-block ()
   "Execute the selected org code block and display a message."

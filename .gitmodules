@@ -1,0 +1,3 @@
+[submodule "site-lisp/org-remoteimg"]
+	path = site-lisp/org-remoteimg
+	url = git@github.com:gaoDean/org-remoteimg.git

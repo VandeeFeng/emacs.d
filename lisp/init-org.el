@@ -7,6 +7,26 @@
 ;; global
 ;;
 ;;-------------------------------------------------------------------------------
+;; org-remoteimg
+(require 'org-remoteimg)
+
+(setq url-cache-directory "~/.emacs.d/cache/url"
+      org-display-remote-inline-images 'skip) ;; Default to disabling the plugin
+
+;; Toggle function for enabling or disabling org-remoteimg
+(defun toggle-org-remoteimg ()
+  "Toggle the `org-remoteimg` package based on its current state."
+  (interactive)
+  (if (eq org-display-remote-inline-images 'skip)
+      (progn
+        (require 'org-remoteimg) ;; Ensure the plugin is loaded
+        (setq org-display-remote-inline-images 'cache) ;; Enable with caching
+        (message "org-remoteimg enabled."))
+    (setq org-display-remote-inline-images 'skip) ;; Disable plugin
+    (message "org-remoteimg disabled.")))
+
+
+
 
 ;; org-babel
 (with-eval-after-load 'org
@@ -313,7 +333,7 @@
 ;; 改变 Org-mode 各个级别标题的大小
 ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
 (custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.6))))   ; 一级标题 1.8 倍
+ '(org-level-1 ((t (:inherit outline-1 :height 1.5))))   ; 一级标题 1.8 倍
  '(org-level-2 ((t (:inherit outline-2 :height 1.4))))   ; 二级标题 1.5 倍
  '(org-level-3 ((t (:inherit outline-3 :height 1.3))))   ; 三级标题 1.3 倍
  '(org-level-4 ((t (:inherit outline-4 :height 1.2))))   ; 四级标题 1.2 倍

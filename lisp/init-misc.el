@@ -32,7 +32,12 @@
 ;; -SmoothScroll
 
 
-
+;; jk 退出 insert
+(use-package key-chord
+  :ensure t
+  :config
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map "jk" 'evil-normal-state))
 ;;--------------------------------------------
 ;; modeline 里的彩虹猫！
 ;;--------------------------------------------
@@ -80,30 +85,6 @@
                              (org-display-inline-images t))))
 
 
-
-;;------------------------------------------------
-;;org-remoteimg
-;;-----------------------------------------
-;;https://github.com/gaoDean/org-remoteimg
-;;
-(use-package org-remoteimg
-  :load-path "~/.config/doom/org-remoteimg"
-  :config
-  ;; Set the cache directory for remote images
-  (setq url-cache-directory "~/.config/emacs/.local/cache/url"
-        org-display-remote-inline-images 'skip) ;; Default to disabling the plugin
-
-  ;; Toggle function for enabling or disabling org-remoteimg
-  (defun toggle-org-remoteimg ()
-    "Toggle the `org-remoteimg` package based on its current state."
-    (interactive)
-    (if (eq org-display-remote-inline-images 'skip)
-        (progn
-          (require 'org-remoteimg) ;; Ensure the plugin is loaded
-          (setq org-display-remote-inline-images 'cache) ;; Enable with caching
-          (message "org-remoteimg enabled."))
-      (setq org-display-remote-inline-images 'skip) ;; Disable plugin
-      (message "org-remoteimg disabled."))))
 
 
 ;;-------------------------------------------------------------------------------------------

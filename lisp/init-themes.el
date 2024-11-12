@@ -2,22 +2,46 @@
 ;;; Commentary:
 ;;; Code:
 
+;; https://github.com/credmp/arjen-grey-theme 灰色
+;; https://github.com/mswift42/white-sand-theme 护眼
+;; https://github.com/sashimacs/os1-theme 护眼
+;; https://github.com/Lokaltog/distinguished-theme 黑色
+;; https://github.com/gchp/flatland-emacs 还可以
+;; https://github.com/jmdeldin/ir-black-theme.el 黑色
+;; https://github.com/thblt/eziam-theme-emacs
+;; https://github.com/emacsfodder/emacs-theme-creamsody
+;; https://github.com/caffo/monotropic-theme 护眼
+;; https://github.com/kunalb/poet 护眼
+;; https://github.com/erikbackman/mindre-theme 白色
+;; https://github.com/cryon/almost-mono-themes 也还不错
+;; https://github.com/motform/stimmung-themes 可定制自由度高
+;; https://github.com/mclear-tools/bespoke-themes
+;; https://github.com/emacsfodder/emacs-theme-darktooth
+;; https://github.com/jordonbiondo/ample-theme
+;; https://emacs-china.org/t/topic/18556/11
+;; https://emacsthemes.com/popular/index.html
 ;; https://github.com/mrunhap/nano-theme.el
 ;; https://github.com/rougier/nano-theme
 ;; (straight-use-package '(nano-theme :type git :host github
-                                   ;; :repo "rougier/nano-theme"))
+;; :repo "rougier/nano-theme"))
+
+
+;;(load-theme 'ir-black t)
+;;(set-face-background 'default "#252525")
+;;(set-face-background 'mode-line 'unspecified)  ;; 禁用 mode-line 背景颜色
+;;(set-face-background 'vertical-border "#282828")
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
+
 
 (use-package doom-themes
   :ensure t
   :config
   ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-one t)
-
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)

@@ -198,7 +198,6 @@
 
 
 ;; evil settings
-
 (use-package evil
   :demand t
   :ensure t
@@ -211,6 +210,7 @@
         evil-split-window-below t
         evil-undo-system 'undo-redo)  ;; Adds vim-like C-r redo functionality
   )
+
 
 (use-package evil-collection
   :init

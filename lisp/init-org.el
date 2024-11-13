@@ -413,6 +413,7 @@
   (interactive)
   ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
   (custom-set-faces
+   '(font-lock-comment-face ((t (:foreground "gray50"))))
    '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
    '(org-level-2 ((t (:inherit outline-2 :height 1.4 :weight normal))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.3 :weight normal))))
@@ -441,7 +442,7 @@
                       :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
                       :height 140 ; 基础字体大小(pt)
                       :weight 'Regular
-                      :foreground "#bcc0c5")
+                      :foreground "#c7cad0")
   ;; https://www.jyshare.com/front-end/6214/#d1d5db
   ;; #F5F5f5 ,#b2b5ba 15% ,#bcc0c5 10% ，#c7cad0 5% 加灰黑《 #d1d5db 原始灰色 》加白 #f6f7f8 80% #f1f2f4 70%，#edeef1 60% ,#e8eaed 50% ,#e3e6e9 40% ,#dfe2e6 30% #dadde2 20% ,#d6d9df 10% ,#d3d7dd 5%
 

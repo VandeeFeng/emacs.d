@@ -85,6 +85,5 @@
          (compilation-buffer-name-function (lambda (major-mode-name) "*git-svn*")))
     (compile (concat "git svn " command))))
 
-
 (provide 'init-git)
 ;;; init-git.el ends here

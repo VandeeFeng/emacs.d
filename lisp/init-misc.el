@@ -1,4 +1,4 @@
-;;; init-misc.el --- Miscellaneous config -*- lexical-binding: t -*-
+;; init-misc.el --- Miscellaneous config -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -441,7 +441,7 @@
 
 ;; vertico
 (use-package vertico
-  :ensure t
+  ;;:ensure t
   :init
   (vertico-mode)
   ;; 不同的显示样式配置

@@ -171,6 +171,62 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
     (color-rg-search-input regexp)
     ))
 
+;;---------------------------------------------
+;; Search
+;; ---------------------------------------------
+;; inspired by doom emacs
+(defun my/search-cwd (&optional arg)
+  "Conduct a text search in files under the current folder.
+If prefix ARG is set, prompt for a directory to search from."
+  (interactive "P")
+  (let ((default-directory
+         (if arg
+             (read-directory-name "Search directory: ")
+           default-directory)))
+    (if (featurep 'vertico)
+        (cond
+         ((and (require 'consult nil t)
+               (executable-find "rg"))
+          (call-interactively #'consult-ripgrep))
+         ((require 'consult nil t)
+          (call-interactively #'consult-grep))
+         (t
+          (call-interactively #'grep-find)))
+      (call-interactively #'grep-find))))
+
+
+(defun my/search-other-cwd ()
+  "Conduct a text search in another directory."
+  (interactive)
+  (my/search-cwd 'other))
+
+
+(defun my/search-buffer ()
+  "Conduct a text search on the current buffer.
+
+If a selection is active and multi-line, perform a search restricted to that
+region.
+
+If a selection is active and not multi-line, use the selection as the initial
+input and search the whole buffer for it."
+  (interactive)
+  (let (start end multiline-p)
+    (save-restriction
+      (when (region-active-p)
+        (setq start (region-beginning)
+              end   (region-end)
+              multiline-p (/= (line-number-at-pos start)
+                              (line-number-at-pos end)))
+        (deactivate-mark)
+        (when multiline-p
+          (narrow-to-region start end)))
+      (if (featurep 'vertico)  ;; 检查是否启用了 Vertico
+          (if (and start end (not multiline-p))
+              (consult-line (buffer-substring-no-properties start end))
+            (call-interactively #'consult-line))
+        (message "Vertico is not installed or enabled.")))))
+
+
 
 ;; 去除多余空格
 
@@ -241,6 +297,41 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
   (message "All buffers closed except *scratch* and *Messages*."))
 
 
+
+
+;; org-mode realtime editor
+;;
+(defvar my-org-preview-file (expand-file-name "org-preview.html" "~/.config/emacs/.local/cache/")
+  "用于存放 Org 文件实时预览的固定 HTML 文件路径。")
+
+(defvar my-org-preview-active nil
+  "是否正在进行 Org 文件的实时预览。")
+
+(defun my-org-generate-html ()
+  "生成当前 Org 文件的 HTML 内容。"
+  (org-export-string-as (buffer-string) 'html t))
+
+(defun my-org-preview-in-browser ()
+  "更新浏览器中的 Org 文件预览。"
+  (let ((html (my-org-generate-html)))
+    (with-temp-file my-org-preview-file
+      (insert html))))
+
+(defun my-org-toggle-preview ()
+  "手动控制 Org 文件的 HTML 预览开关。"
+  (interactive)
+  (if my-org-preview-active
+      (progn
+        (setq my-org-preview-active nil)
+        (remove-hook 'after-save-hook 'my-org-preview-in-browser)
+        (message "Org 预览已停止。"))
+    (setq my-org-preview-active t)
+    (my-org-preview-in-browser)
+    (browse-url (concat "file://" my-org-preview-file))
+    (add-hook 'after-save-hook 'my-org-preview-in-browser)
+    (message "Org 预览已启动。")))
+
+
 ;;----------------------------------------------------------------------------
 ;; general
 ;;----------------------------------------------------------------------------
@@ -271,7 +362,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
     "v ." '(org-emphasize :wk "org-emphasize")
     "v e" '(my-execute-src-block :wk "execute-src-block")
     "v r" '(org-roam-capture :wk "org-roam-capture")
-    "v t" '(vterm :wk "open vterm")
+    "v t" '(vt :wk "open vterm")
     ;; "v t s" '(org-set-tags-command :wk "插入TAGS")
     "v a" '(:ignore t :wk "agenda and TODO")
     "v a t" '(org-todo :wk "编辑TODO状态")
@@ -410,8 +501,6 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 
   (vf/leader-keys
     "o" '(:ignore t :wk "Open")
-    "o d" '(dashboard-open :wk "Dashboard")
-    "o e" '(elfeed :wk "Elfeed RSS")
     "o f" '(make-frame :wk "Open buffer in new frame")
     "o F" '(select-frame-by-name :wk "Select frame by name"))
 
@@ -422,10 +511,10 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 
   (vf/leader-keys
     "s" '(:ignore t :wk "Search")
-    "s d" '(dictionary-search :wk "Search dictionary")
-    "s m" '(man :wk "Man pages")
-    "s t" '(tldr :wk "Lookup TLDR docs for a command")
-    "s w" '(woman :wk "Similar to man but doesn't require man"))
+    "s d" '(my/search-cwd :wk "Search cwd")
+    "s D" '(my/search-other-cwd :wk "Search another dictionary")
+    "s b" '(my/search-buffer :wk "Search buffer")
+    )
 
   (vf/leader-keys
     "t" '(:ignore t :wk "Toggle")

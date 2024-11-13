@@ -428,42 +428,48 @@
   )
 
 
+;; vertico
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+  ;; 不同的显示样式配置
+  :custom
+  ;; 基础配置
+  (vertico-count 15)                    ; 显示候选项数量
+  (vertico-resize t)                    ; 自动调整大小
+  (vertico-cycle t)                     ; 循环滚动
 
+  ;; 使用buffer模式
+  :config
+  (vertico-buffer-mode)
+  ;; buffer模式的详细配置
+  (setq vertico-buffer-display-action
+        '(display-buffer-in-side-window
+          (side . bottom)
+          (window-height . 0.3)         ; 高度占比
+          (window-parameters . ((no-other-window . t)
+                                (mode-line-format . none)))))
+  )
 
-;; org-mode realtime editor
-;;
-(defvar my-org-preview-file (expand-file-name "org-preview.html" "~/.config/emacs/.local/cache/")
-  "用于存放 Org 文件实时预览的固定 HTML 文件路径。")
-
-(defvar my-org-preview-active nil
-  "是否正在进行 Org 文件的实时预览。")
-
-(defun my-org-generate-html ()
-  "生成当前 Org 文件的 HTML 内容。"
-  (org-export-string-as (buffer-string) 'html t))
-
-(defun my-org-preview-in-browser ()
-  "更新浏览器中的 Org 文件预览。"
-  (let ((html (my-org-generate-html)))
-    (with-temp-file my-org-preview-file
-      (insert html))))
-
-(defun my-org-toggle-preview ()
-  "手动控制 Org 文件的 HTML 预览开关。"
+;; vterm
+(defun vterm-minibuffer ()
+  "Open vterm in minibuffer."
   (interactive)
-  (if my-org-preview-active
-      (progn
-        (setq my-org-preview-active nil)
-        (remove-hook 'after-save-hook 'my-org-preview-in-browser)
-        (message "Org 预览已停止。"))
-    (setq my-org-preview-active t)
-    (my-org-preview-in-browser)
-    (browse-url (concat "file://" my-org-preview-file))
-    (add-hook 'after-save-hook 'my-org-preview-in-browser)
-    (message "Org 预览已启动。")))
+  (let ((height (/ (frame-height) 3))) ; 设置高度为框架高度的1/3
+    (with-temp-buffer
+      (let ((window (split-window-vertically (- height))))
+        (select-window window)
+        (vterm)))))
 
+;; 定义一个更简单的命令别名
+(defalias 'vt 'vterm-minibuffer)
 
-
+;; 自定义 vterm 在 minibuffer 中的行为
+(with-eval-after-load 'vterm
+  (setq vterm-min-window-width 30)
+  (setq vterm-kill-buffer-on-exit t)  ; 退出时自动关闭buffer
+  )
 ;;----------------------------------------------
 ;; org-blog
 ;; ----------------------------------------------

@@ -326,6 +326,79 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start nil)))
 
+;;--------------------------------------------
+;; 使用Company补全org block
+;;--------------------------------------------
+;; https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E4%BD%BF%E7%94%A8Company%E8%A1%A5%E5%85%A8org%20block.org
+;; 需要安装 company-org-block
+(require 'map)
+(require 'org)
+(require 'seq)
+
+(defvar company-org-block-bol-p t "If t, detect completion when at
+    begining of line, otherwise detect completion anywhere.")
+
+(defvar company-org--regexp "<\\([^ ]*\\)")
+
+(defun company-org-block (command &optional arg &rest ignored)
+  "Complete org babel languages into source blocks."
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-org-block))
+    (prefix (when (derived-mode-p 'org-mode)
+              (company-org-block--grab-symbol-cons)))
+    (candidates (company-org-block--candidates arg))
+    (post-completion
+     (company-org-block--expand arg))))
+
+(defun company-org-block--candidates (prefix)
+  "Return a list of org babel languages matching PREFIX."
+  (seq-filter (lambda (language)
+                (string-prefix-p prefix language))
+              ;; Flatten `org-babel-load-languages' and
+              ;; `org-structure-template-alist', join, and sort.
+              (seq-sort
+               #'string-lessp
+               (append
+                (mapcar #'prin1-to-string
+                        (map-keys org-babel-load-languages))
+                (map-values org-structure-template-alist)))))
+
+(defun company-org-block--template-p (template)
+  (seq-contains (map-values org-structure-template-alist)
+                template))
+
+(defun company-org-block--expand (insertion)
+  "Replace INSERTION with actual source block."
+  (delete-region (point) (- (point) (1+ ;; Include "<" in length.
+                                     (length insertion))))
+  (if (company-org-block--template-p insertion)
+      (company-org-block--wrap-point insertion
+                                     ;; May be multiple words.
+                                     ;; Take the first one.
+                                     (nth 0 (split-string insertion)))
+    (company-org-block--wrap-point (format "src %s" insertion)
+                                   "src")))
+
+(defun company-org-block--wrap-point (begin end)
+  "Wrap point with block using BEGIN and END. For example:
+    ,#+begin_BEGIN
+     |
+    ,#+end_END"
+  (insert (format "#+begin_%s\n" begin))
+  (insert (make-string org-edit-src-content-indentation ?\s))
+  ;; Saving excursion restores point to location inside code block.
+  (save-excursion
+    (insert (format "\n#+end_%s" end))))
+
+(defun company-org-block--grab-symbol-cons ()
+  "Return cons with symbol and t whenever prefix of < is found.
+    For example: \"<e\" -> (\"e\" . t)"
+  (when (looking-back (if company-org-block-bol-p
+                          (concat "^" company-org--regexp)
+                        company-org--regexp)
+                      (line-beginning-position))
+    (cons (match-string-no-properties 1) t)))
 
 
 
@@ -338,33 +411,33 @@
 
 ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
 (custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.4 :weight normal))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.3 :weight normal))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.2 :weight normal))))
-  '(org-level-5 ((t (:inherit outline-5 :height 1.1 :weight normal))))
-  '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
-  '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
-  '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.4 :weight normal))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.3 :weight normal))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.2 :weight normal))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.1 :weight normal))))
+ '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
+ '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
+ '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
 
 
-;; 设置文档标题 (#+TITLE:)
-'(org-document-title ((t (:inherit default :weight bold
-                                   :height 1.6    ; 文档标题字体大小
-                                   :underline nil   ; 添加下划线
-                                   ))))       ; 标题颜色
+ ;; 设置文档标题 (#+TITLE:)
+ '(org-document-title ((t (:inherit default :weight bold
+                                    :height 1.6    ; 文档标题字体大小
+                                    :underline nil ; 添加下划线
+                                    ))))           ; 标题颜色
 
-;; 设置特殊关键字 (#+STARTUP: 等)
-'(org-meta-line ((t (:inherit font-lock-comment-face
-                              :height 1.1        ; 关键字字体大小
-                              ;; :slant italic     ; 斜体
-                              ))))
+ ;; 设置特殊关键字 (#+STARTUP: 等)
+ '(org-meta-line ((t (:inherit font-lock-comment-face
+                               :height 1.1 ; 关键字字体大小
+                               ;; :slant italic     ; 斜体
+                               ))))
 
-;; 设置正文文字
-'(org-default ((t (:family "Fira Code"
-                           :height 120
-                           :weight normal))))
-)
+ ;; 设置正文文字
+ '(org-default ((t (:family "Fira Code"
+                            :height 120
+                            :weight normal))))
+ )
 
 
 ;; 设置默认字体和大小
@@ -373,6 +446,21 @@
                     :height 130)  ; 基础字体大小(pt)
 
 (setq org-hide-emphasis-markers t) ;; 设置行内make up，直接显示*粗体*，/斜体/，=高亮=，~代码~
+
+;; 设置时间戳颜色
+
+(set-face-attribute 'org-date nil
+                    :foreground "#61AFEF"     ; 设置前景色
+                    :background nil   ; 设置背景色
+                    ;; :underline nil           ; 移除下划线
+                    :weight 'normal)         ; 设置字重
+;; 设置 org-tags 的颜色
+(set-face-attribute 'org-tag nil
+                    :foreground "#8B949E"     ; 淡灰色
+                    :weight 'normal           ; 普通字重
+                    :height 0.9               ; 字体大小为默认的90%
+                    :inherit nil              ; 不继承其他face的属性
+                    :slant 'normal)           ; 正常字体（非斜体）
 
 ;;-------------------------------------------------------------------------------
 ;;

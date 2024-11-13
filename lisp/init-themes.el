@@ -32,6 +32,18 @@
 ;;(set-face-background 'vertical-border "#282828")
 
 
+;; https://github.com/rougier/nano-modeline/blob/master/nano-modeline.el
+;;(require 'nano-modeline)
+;;(add-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
+;;(add-hook 'text-mode-hook            #'nano-modeline-text-mode)
+;;(add-hook 'org-mode-hook             #'nano-modeline-org-mode)
+;;(setq nano-modeline-position #'nano-modeline-footer)
+
+(use-package minions
+  :ensure t
+  :config (minions-mode 1))
+
+
 (use-package almost-mono-themes
   :ensure t
   :config
@@ -39,11 +51,6 @@
   (load-theme 'almost-mono-gray t)
   ;; (load-theme 'almost-mono-cream t)
   ;; (load-theme 'almost-mono-white t)
-)
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
   )
 
 (when (maybe-require-package 'dimmer)

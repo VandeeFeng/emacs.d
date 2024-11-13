@@ -314,7 +314,7 @@
                   (make-local-variable 'auto-hscroll-mode)
                   (setq auto-hscroll-mode nil)))))
 
-
+;; company
 (use-package company
   :defer 0.1
   :config
@@ -330,7 +330,18 @@
    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
    ))
 
-
+(use-package company-org-block
+  :ensure t
+  :after (company org)
+  :custom
+  (company-org-block-edit-style 'auto) ;; 'auto, 'inline, or 'prompt
+  :config
+  ;; 添加到 company-backends
+  (add-to-list 'company-backends 'company-org-block)
+  ;; 只在 org-mode 中启用
+  :hook (org-mode . (lambda ()
+                      (add-to-list (make-local-variable 'company-backends)
+                                   'company-org-block))))
 
 ;;corfu
 ;;

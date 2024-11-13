@@ -17,14 +17,14 @@
   (org-babel-execute-src-block))
 
 ;;
-;; 在 normal 模式下将 9 键导航到行尾
+;; 在 normal 模式下将 - 键导航到行尾
 (with-eval-after-load 'evil
   (defun move-to-end-of-line ()
     "Move the cursor to the end of the current line."
     (interactive)
     (end-of-line))
 
-  ;; 在 normal 模式下将 9 键绑定到这个函数
+  ;; 在 normal 模式下将 - 键绑定到这个函数
   (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line))
 
 

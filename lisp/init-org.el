@@ -2,12 +2,11 @@
 ;;;
 ;;;
 
-;;-------------------------------------------------------------------------------
+;;---------------------------------------------------------------------
 ;;
 ;; global
 ;;
-;;-------------------------------------------------------------------------------
-
+;;---------------------------------------------------------------------
 
 ;; org-remoteimg
 (require 'org-remoteimg)
@@ -26,9 +25,6 @@
         (message "org-remoteimg enabled."))
     (setq org-display-remote-inline-images 'skip) ;; Disable plugin
     (message "org-remoteimg disabled.")))
-
-
-
 
 ;; org-babel
 (with-eval-after-load 'org
@@ -131,29 +127,6 @@
 ;;                  :head "#+title: ${title}\n#+roam_key: ${ref}\n#+roam_alias:\n"
 ;;                  :immediate-finish t
 ;;                  :unnarrowed t)))
-
-
-
-;; (defun my/org-roam-filter-by-tag (tag-name)
-;;   (lambda (node)
-;;     (member tag-name (org-roam-node-tags node))))
-
-;; (defun my/org-roam-list-notes-by-tag (tag-name)
-;;   (interactive)
-;;   (mapcar #'org-roam-node-file
-;;           (seq-filter
-;;            (my/org-roam-filter-by-tag tag-name)
-;;            (org-roam-node-list))))
-
-
-
-
-;; (defun my/org-roam-capture-inbox ()
-;;   (interactive)
-;;   (org-roam-capture- :node (org-roam-node-create)
-;;                      :templates '(("i" "inbox" plain "* %?"
-;;                                    :if-new (file+head "Inbox.org" "#+TITLE: Inbox\n")))))
-
 
 
 ;; For users that prefer using a side-window for the org-roam buffer, the following example configuration should provide a good starting point:对于喜欢使用侧窗口作为 org-roam 缓冲区的用户，以下示例配置应该提供一个很好的起点：
@@ -402,11 +375,11 @@
 
 
 
-;;-------------------------------------------------------------------------------
+;;---------------------------------------------------------------------
 ;;
 ;; org 美化
 ;;
-;;-------------------------------------------------------------------------------
+;;---------------------------------------------------------------------
 ;; 设置标题大小
 (defun my-org-face-settings ()
   "设置org-mode的各种face属性"
@@ -426,7 +399,7 @@
 
    ;; 设置文档标题 (#+TITLE:)
    '(org-document-title ((t (:inherit default :weight bold
-                                      :height 1.6    ; 文档标题字体大小
+                                      :height 1.6 ; 文档标题字体大小
                                       :underline nil ; 添加下划线
                                       ))))           ; 标题颜色
 
@@ -440,7 +413,7 @@
   ;; 设置默认字体和大小
   (set-face-attribute 'default nil
                       :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
-                      :height 140 ; 基础字体大小(pt)
+                      :height 140               ; 基础字体大小(pt)
                       :weight 'Regular
                       :foreground "#c7cad0")
   ;; https://www.jyshare.com/front-end/6214/#d1d5db
@@ -451,17 +424,17 @@
   ;; 设置时间戳颜色
 
   (set-face-attribute 'org-date nil
-                      :foreground "#61AFEF"     ; 设置前景色
-                      :background nil   ; 设置背景色
+                      :foreground "#61AFEF" ; 设置前景色
+                      :background nil       ; 设置背景色
                       ;; :underline nil           ; 移除下划线
-                      :weight 'normal)         ; 设置字重
+                      :weight 'normal)  ; 设置字重
   ;; 设置 org-tags 的颜色
   (set-face-attribute 'org-tag nil
-                      :foreground "#8B949E"     ; 淡灰色
-                      :weight 'normal           ; 普通字重
-                      :height 0.9               ; 字体大小为默认的90%
-                      :inherit nil              ; 不继承其他face的属性
-                      :slant 'normal)           ; 正常字体（非斜体）
+                      :foreground "#8B949E" ; 淡灰色
+                      :weight 'normal       ; 普通字重
+                      :height 0.9           ; 字体大小为默认的90%
+                      :inherit nil          ; 不继承其他face的属性
+                      :slant 'normal)       ; 正常字体（非斜体）
   )
 ;; 在初始化时应用设置
 (add-hook 'after-init-hook #'my-org-face-settings)

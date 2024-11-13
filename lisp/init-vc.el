@@ -6,11 +6,11 @@
 
 ;;; Code:
 
-;; diff-hl 使用细条显示而不是色块
+;; diff-hl 配色美化
 (custom-set-faces
- '(diff-hl-insert ((t (:background nil :foreground "green4"))))
- '(diff-hl-delete ((t (:background nil :foreground "firebrick2"))))
- '(diff-hl-change ((t (:background nil :foreground "goldenrod1")))))
+ '(diff-hl-insert ((t (:background nil :foreground "green1"))))
+ '(diff-hl-delete ((t (:background nil :foreground "#ff3030"))))
+ '(diff-hl-change ((t (:background nil :foreground "#ffc125")))))
 
 (when (maybe-require-package 'diff-hl)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)

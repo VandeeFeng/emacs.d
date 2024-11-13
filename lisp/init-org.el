@@ -408,7 +408,9 @@
 ;;
 ;;-------------------------------------------------------------------------------
 ;; 设置标题大小
-(with-eval-after-load 'evil
+(defun my-org-face-settings ()
+  "设置org-mode的各种face属性"
+  (interactive)
   ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
   (custom-set-faces
    '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
@@ -432,7 +434,6 @@
                                  :height 1.1 ; 关键字字体大小
                                  ;; :slant italic     ; 斜体
                                  ))))
-
    )
 
   ;; 设置默认字体和大小
@@ -461,6 +462,14 @@
                       :inherit nil              ; 不继承其他face的属性
                       :slant 'normal)           ; 正常字体（非斜体）
   )
+;; 在初始化时应用设置
+(add-hook 'after-init-hook #'my-org-face-settings)
+
+;; 在创建新frame时应用设置
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (with-selected-frame frame
+              (my-org-face-settings))))
 ;;-------------------------------------------------------------------------------
 ;;
 ;; org-protocol

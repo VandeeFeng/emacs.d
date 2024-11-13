@@ -336,35 +336,35 @@
 ;;-------------------------------------------------------------------------------
 ;; 设置标题大小
 
-;; 改变 Org-mode 各个级别标题的大小
 ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
 (custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.3))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.2))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.1))))
- '(org-level-6 ((t (:inherit outline-6 :height 1.05))))
- '(org-level-7 ((t (:inherit outline-7 :height 1.0))))
- '(org-level-8 ((t (:inherit outline-8 :height 1.0))))
+  '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.4 :weight normal))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.3 :weight normal))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.2 :weight normal))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.1 :weight normal))))
+  '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
+  '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
+  '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
 
- ;; 设置文档标题 (#+TITLE:)
- '(org-document-title ((t (:inherit default :weight bold
-                                    :height 1.6    ; 文档标题字体大小
-                                    :underline nil   ; 添加下划线
-                                    ))))       ; 标题颜色
 
- ;; 设置特殊关键字 (#+STARTUP: 等)
- '(org-meta-line ((t (:inherit font-lock-comment-face
-                               :height 1.1        ; 关键字字体大小
-                               ;; :slant italic     ; 斜体
-                               ))))
+;; 设置文档标题 (#+TITLE:)
+'(org-document-title ((t (:inherit default :weight bold
+                                   :height 1.6    ; 文档标题字体大小
+                                   :underline nil   ; 添加下划线
+                                   ))))       ; 标题颜色
 
- ;; 设置正文文字
- '(org-default ((t (:family "Fira Code"
-                            :height 120
-                            :weight normal))))
- )
+;; 设置特殊关键字 (#+STARTUP: 等)
+'(org-meta-line ((t (:inherit font-lock-comment-face
+                              :height 1.1        ; 关键字字体大小
+                              ;; :slant italic     ; 斜体
+                              ))))
+
+;; 设置正文文字
+'(org-default ((t (:family "Fira Code"
+                           :height 120
+                           :weight normal))))
+)
 
 
 ;; 设置默认字体和大小

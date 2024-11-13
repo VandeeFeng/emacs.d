@@ -368,7 +368,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
             :wk "Open emacs init.el")
     "f j" '(counsel-file-jump :wk "Jump to a file below current directory")
     "f l" '(counsel-locate :wk "Locate a file")
-    "f r" '(counsel-recentf :wk "Find recent files")
+    "f r" '(recentf :wk "Find recent files")
     "f u" '(sudo-edit-find-file :wk "Sudo find file")
     "f U" '(sudo-edit :wk "Sudo edit file"))
 

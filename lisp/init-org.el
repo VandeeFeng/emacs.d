@@ -408,7 +408,7 @@
 ;;
 ;;-------------------------------------------------------------------------------
 ;; 设置标题大小
-(with-eval-after-load 'org
+(with-eval-after-load 'evil
   ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
   (custom-set-faces
    '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
@@ -433,21 +433,16 @@
                                  ;; :slant italic     ; 斜体
                                  ))))
 
-   ;; 设置正文文字
-   '(org-default ((t (:family "Fira Code Light"
-                              :height 120
-                              :weight normal
-                              ))))
    )
-
 
   ;; 设置默认字体和大小
   (set-face-attribute 'default nil
-                      :family "Fira Code Light"
-                      :height 130 ; 基础字体大小(pt)
-                      :foreground "#d6d9df")
+                      :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
+                      :height 140 ; 基础字体大小(pt)
+                      :weight 'Regular
+                      :foreground "#bcc0c5")
   ;; https://www.jyshare.com/front-end/6214/#d1d5db
-  ;; #F5F5f5 , #d1d5db 原始灰色, 增加白色 #f6f7f8 80% #f1f2f4 70%，#edeef1 60% ,#e8eaed 50% ,#e3e6e9 40% ,#dfe2e6 30% #dadde2 20% ,#d6d9df 10%
+  ;; #F5F5f5 ,#b2b5ba 15% ,#bcc0c5 10% ，#c7cad0 5% 加灰黑《 #d1d5db 原始灰色 》加白 #f6f7f8 80% #f1f2f4 70%，#edeef1 60% ,#e8eaed 50% ,#e3e6e9 40% ,#dfe2e6 30% #dadde2 20% ,#d6d9df 10% ,#d3d7dd 5%
 
   (setq org-hide-emphasis-markers t) ;; 设置行内make up，直接显示*粗体*，/斜体/，=高亮=，~代码~
 

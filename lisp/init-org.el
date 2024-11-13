@@ -494,11 +494,11 @@
 ;; (setq org-emphasis-regexp-components '("-[:multibyte:][:space:]('\"{" "-[:multibyte:][:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
 ;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 ;; (org-element-update-syntax)
-;;
-;;
 
+
 ;; https://emacs-china.org/t/emacs/27274
 ;; https://remacs.fun/posts/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%97%B6%E4%BB%A3%E6%88%91%E4%BB%AC%E6%80%8E%E4%B9%88%E7%8E%A9emacs1.-%E4%B8%AD%E8%8B%B1%E6%96%87%E8%BE%93%E5%85%A5%E6%97%B6%E7%9A%84%E7%A9%BA%E6%A0%BC/
+
 (defun add-space-between-chinese-and-english ()
   "在中英文之间自动添加空格。"
   (let ((current-char (char-before))

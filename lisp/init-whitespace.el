@@ -6,6 +6,8 @@
 
 
 ;;; Whitespace
+(set-face-attribute 'trailing-whitespace nil
+                    :background "gold")
 
 (defun sanityinc/show-trailing-whitespace ()
   "Enable display of trailing whitespace in this buffer."

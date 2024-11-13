@@ -434,7 +434,7 @@
                                ))))
 
  ;; 设置正文文字
- '(org-default ((t (:family "Fira Code"
+ '(org-default ((t (:family "Fira Code Light"
                             :height 120
                             :weight normal))))
  )
@@ -442,9 +442,10 @@
 
 ;; 设置默认字体和大小
 (set-face-attribute 'default nil
-                    :family "Fira Code"
-                    :height 130)  ; 基础字体大小(pt)
-
+                    :family "Fira Code Light"
+                    :height 130 ; 基础字体大小(pt)
+                    :foreground "#e8eaed")
+;; F5F5f5 , #d1d5db 原始灰色, 增加白色 #f1f2f4 70%，#edeef1 60% ,#e8eaed 50%
 (setq org-hide-emphasis-markers t) ;; 设置行内make up，直接显示*粗体*，/斜体/，=高亮=，~代码~
 
 ;; 设置时间戳颜色

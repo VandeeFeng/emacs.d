@@ -39,11 +39,21 @@
 ;;(add-hook 'org-mode-hook             #'nano-modeline-org-mode)
 ;;(setq nano-modeline-position #'nano-modeline-footer)
 
+;; modeline
 (use-package minions
   :ensure t
   :config (minions-mode 1))
 
+;; moody,modeline 边框的设置在 org 美化里
+(use-package moody
+  :ensure t
+  :config
+  (moody-replace-mode-line-front-space)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  )
 
+;; theme
 (use-package almost-mono-themes
   :ensure t
   :config
@@ -52,6 +62,7 @@
   ;; (load-theme 'almost-mono-cream t)
   ;; (load-theme 'almost-mono-white t)
   )
+
 
 (when (maybe-require-package 'dimmer)
   (setq-default dimmer-fraction 0.15)

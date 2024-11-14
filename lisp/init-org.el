@@ -435,6 +435,9 @@
                       :height 0.9           ; 字体大小为默认的90%
                       :inherit nil          ; 不继承其他face的属性
                       :slant 'normal)       ; 正常字体（非斜体）
+
+  (set-face-attribute 'mode-line nil :box nil)
+  (set-face-attribute 'mode-line-inactive nil :box nil)
   )
 ;; 在初始化时应用设置
 (add-hook 'after-init-hook #'my-org-face-settings)

@@ -481,6 +481,19 @@
   (setq vterm-min-window-width 30)
   (setq vterm-kill-buffer-on-exit t)  ; 退出时自动关闭buffer
   )
+
+;; 消除主题对终端的颜色影响
+(add-hook 'vterm-mode-hook
+          (lambda ()
+            (set-face-attribute 'vterm-color-black nil :foreground "black" :background "black")
+            (set-face-attribute 'vterm-color-red nil :foreground "red" :background "red")
+            (set-face-attribute 'vterm-color-green nil :foreground "green" :background "green")
+            (set-face-attribute 'vterm-color-yellow nil :foreground "yellow" :background "yellow")
+            (set-face-attribute 'vterm-color-blue nil :foreground "blue" :background "blue")
+            (set-face-attribute 'vterm-color-magenta nil :foreground "magenta" :background "magenta")
+            (set-face-attribute 'vterm-color-cyan nil :foreground "cyan" :background "cyan")
+            (set-face-attribute 'vterm-color-white nil :foreground "white" :background "white")))
+
 ;;----------------------------------------------
 ;; org-blog
 ;; ----------------------------------------------

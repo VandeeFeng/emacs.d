@@ -41,16 +41,15 @@
          (end (if (region-active-p)
                   (region-end)
                 (line-end-position))))
-
-    ;; 确保处理完整的行
+    ;; 确保处理完整的行，但不包括超出选区的部分
     (save-excursion
       (goto-char start)
       (setq start (line-beginning-position))
       (goto-char end)
-      (unless (bolp)  ; 如果不在行首，移到下一行
-        (forward-line 1))
-      (setq end (point)))
-
+      ;; 如果终点不在行首且不是最后一行的结尾，则移到行尾
+      (when (and (not (bolp))
+                 (not (= end (point-max))))
+        (setq end (line-end-position))))
     ;; 检查第一行是否已注释来决定是注释还是取消注释
     (save-excursion
       (goto-char start)
@@ -73,7 +72,6 @@
               (skip-chars-forward " \t")
               (insert comment-str " "))
             (forward-line 1)))))
-
     ;; 重新缩进区域
     (indent-region start end)))
 

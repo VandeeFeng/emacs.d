@@ -386,12 +386,56 @@
   (interactive)
   ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
   (custom-set-faces
-   '(font-lock-comment-face ((t (:foreground "#787878"))))
-   '(org-level-1 ((t (:inherit outline-1 :height 1.4 :weight normal))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.3 :weight normal))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.2 :weight normal))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.1 :weight normal))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.05 :weight normal))))
+   ;; 代码块背景和边框
+   ;; '(org-block-begin-line
+   ;; ((t (:background "#343942" :foreground "#7F8490" :extend t))))
+   '(org-block-begin-line
+     ((t (:background "#252525" :extend t))))
+   '(org-block
+     ((t (:background "#252525" :extend t)))) ; GitHub dark的代码块背景色
+   '(org-block-end-line
+     ((t (:background "#252525" :foreground "#7F8490" :extend t))))
+
+   '(font-lock-comment-face
+     ((t (:foreground "#787878"))))     ; 注释
+
+   ;; 设置字符串的样式
+   '(font-lock-string-face
+     ((t (:weight normal :foreground "#96D0FF"))))
+
+   ;; 设置关键字的样式
+   '(font-lock-keyword-face
+     ((t (:weight normal :foreground "#FF7B72"))))
+
+   ;; 设置函数名的样式
+   '(font-lock-function-name-face
+     ((t (:weight normal :foreground "#D2A8FF"))))
+
+   ;; 设置变量名的样式
+   '(font-lock-variable-name-face
+     ((t (:weight normal :foreground "#FFA657"))))
+
+   ;; 设置类型的样式
+   '(font-lock-type-face
+     ((t (:weight normal :foreground "#FF7B72"))))
+
+   ;; 设置常量的样式
+   '(font-lock-constant-face
+     ((t (:weight normal :foreground "#79C0FF"))))
+
+   ;; 设置内置函数的样式
+   '(font-lock-builtin-face
+     ((t (:weight normal :foreground "#79C0FF"))))
+
+   ;; 设置文档字符串的样式
+   '(font-lock-doc-face
+     ((t (:weight normal :foreground "#768390"))))
+
+   '(org-level-1 ((t (:height 1.4 :weight normal))))
+   '(org-level-2 ((t (:height 1.3 :weight normal))))
+   '(org-level-3 ((t (:height 1.2 :weight normal))))
+   '(org-level-4 ((t (:height 1.1 :weight normal))))
+   '(org-level-5 ((t (:height 1.05 :weight normal))))
    '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
    '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
    '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
@@ -399,7 +443,7 @@
 
    ;; 设置文档标题 (#+TITLE:)
    '(org-document-title ((t (:inherit default :weight bold
-                                      :height 1.6 ; 文档标题字体大小
+                                      :height 1.5 ; 文档标题字体大小
                                       :underline nil ; 添加下划线
                                       ))))           ; 标题颜色
 
@@ -439,60 +483,64 @@
   (set-face-attribute 'mode-line nil :box nil)
   (set-face-attribute 'mode-line-inactive nil :box nil)
 
+  ;; 启用原生语法高亮
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+
+
   )
+;; (defun my/block-highlighting ()
+;; "Setup block region highlighting for Org mode."
+;; ;; Define the face for block backgrounds
+;; ;; Define the face for block backgrounds
+;; (defface org-block-region-background
+;; '((t (:extend t :background "#252525")))
+;; "Face for the entire block region including begin/end markers.")
 
-(defun my/block-highlighting ()
-  "Setup block region highlighting for Org mode."
-  ;; Define the face for block backgrounds
-  ;; Define the face for block backgrounds
-  (defface org-block-region-background
-    '((t (:extend t :background "#252525")))
-    "Face for the entire block region including begin/end markers.")
+;; (defvar block-region-overlay-pool nil
+;; "List of overlays for block region highlighting.")
 
-  (defvar block-region-overlay-pool nil
-    "List of overlays for block region highlighting.")
+;; (defun clear-block-region-overlays ()
+;; (while block-region-overlay-pool
+;; (delete-overlay (pop block-region-overlay-pool))))
 
-  (defun clear-block-region-overlays ()
-    (while block-region-overlay-pool
-      (delete-overlay (pop block-region-overlay-pool))))
-
-  (defun highlight-block-regions ()
-    (interactive)
-    (save-excursion
-      (clear-block-region-overlays)
-      (goto-char (point-min))
-      (while (re-search-forward "^[ \t]*#\\+begin_\\(src\\|quote\\|example\\)" nil t)
-        (let* ((begin-line-start (line-beginning-position))
-               (block-type (match-string 1))
-               (end-regexp (concat "^[ \t]*#\\+end_" block-type)))
-          ;; 使用 org-fold-folded-p 检查是否折叠
-          (unless (org-fold-folded-p begin-line-start)
-            (when (re-search-forward end-regexp nil t)
-              (let* ((end-line-end (line-end-position))
-                     (ov (make-overlay begin-line-start (1+ end-line-end))))
-                (overlay-put ov 'face 'org-block-region-background)
-                (overlay-put ov 'evaporate t)
-                (overlay-put ov 'priority -1)
-                (push ov block-region-overlay-pool))))))))
-  ;; 创建次要模式
-  (define-minor-mode block-region-highlight-mode
-    "Toggle background highlighting for entire block regions."
-    :lighter " BRH"
-    (if block-region-highlight-mode
-        (progn
-          (highlight-block-regions)
-          (add-hook 'post-command-hook #'highlight-block-regions nil t)
-          ;; 添加对折叠状态变化的监听
-          (add-hook 'org-fold-core-style-changed-functions #'highlight-block-regions nil t))
-      (clear-block-region-overlays)
-      (remove-hook 'post-command-hook #'highlight-block-regions t)
-      (remove-hook 'org-fold-core-style-changed-functions #'highlight-block-regions t)))
-  ;; 为 org-mode 自动启用
-  (add-hook 'org-mode-hook #'block-region-highlight-mode))
+;; (defun highlight-block-regions ()
+;; (interactive)
+;; (save-excursion
+;; (clear-block-region-overlays)
+;; (goto-char (point-min))
+;; (while (re-search-forward "^[ \t]*#\\+begin_\\(src\\|quote\\|example\\)" nil t)
+;; (let* ((begin-line-start (line-beginning-position))
+;; (block-type (match-string 1))
+;; (end-regexp (concat "^[ \t]*#\\+end_" block-type)))
+;; ;; 使用 org-fold-folded-p 检查是否折叠
+;; (unless (org-fold-folded-p begin-line-start)
+;; (when (re-search-forward end-regexp nil t)
+;; (let* ((end-line-end (line-end-position))
+;; (ov (make-overlay begin-line-start (1+ end-line-end))))
+;; (overlay-put ov 'face 'org-block-region-background)
+;; (overlay-put ov 'evaporate t)
+;; (overlay-put ov 'priority -1)
+;; (push ov block-region-overlay-pool))))))))
+;; ;; 创建次要模式
+;; (define-minor-mode block-region-highlight-mode
+;; "Toggle background highlighting for entire block regions."
+;; :lighter " BRH"
+;; (if block-region-highlight-mode
+;; (progn
+;; (highlight-block-regions)
+;; (add-hook 'post-command-hook #'highlight-block-regions nil t)
+;; ;; 添加对折叠状态变化的监听
+;; (add-hook 'org-fold-core-style-changed-functions #'highlight-block-regions nil t))
+;; (clear-block-region-overlays)
+;; (remove-hook 'post-command-hook #'highlight-block-regions t)
+;; (remove-hook 'org-fold-core-style-changed-functions #'highlight-block-regions t)))
+;; ;; 为 org-mode 自动启用
+;; (add-hook 'org-mode-hook #'block-region-highlight-mode))
 
 ;; 开启 block-highlighting
-(my/block-highlighting)
-(block-region-highlight-mode)
+;; (my/block-highlighting)
+;; (block-region-highlight-mode)
 
 ;; 在初始化时应用设置
 (add-hook 'after-init-hook #'my-org-face-settings)
@@ -643,6 +691,34 @@
 
 ;; ;; 在 Org-mode 中启用该功能
 ;; (add-hook 'org-mode-hook 'org-link-space-mode)
+
+
+
+;;----------------------------------------------
+;; org-publish
+;; ----------------------------------------------
+;; 覆盖 org-html-src-block
+;; (setq org-html-htmlize-output-type 'nil) ;禁用 Emacs 的语法高亮渲染
+(defun my/org-html-src-block (src-block _contents info)
+  "Transcode a SRC-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((lang (or (org-element-property :language src-block) "nil"))  ; 使用 "nil" 作为默认语言
+           (code (org-html-format-code src-block info))
+           (label (let ((lbl (org-element-property :name src-block)))
+                    (if lbl (org-html--anchor lbl nil info) ""))))
+      (format
+       "<div class=\"org-src-container\">\n%s%s\n</div>"
+       (if (not (string= label ""))
+           (format "<label class=\"org-src-name\">%s</label>\n" label)
+         "")
+       (format "<pre class=\"src src-%s\">%s</pre>"
+               lang code)))))
+;; 设置导出使用当前的 org-html-src-block 函数
+(advice-add 'org-html-src-block :override #'my/org-html-src-block)
+
 
 ;;----------------------------------------------
 ;; org-blog

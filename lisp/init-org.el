@@ -439,6 +439,11 @@
   (set-face-attribute 'mode-line nil :box nil)
   (set-face-attribute 'mode-line-inactive nil :box nil)
 
+  )
+
+(defun my/block-highlighting ()
+  "Setup block region highlighting for Org mode."
+  ;; Define the face for block backgrounds
   ;; Define the face for block backgrounds
   (defface org-block-region-background
     '((t (:extend t :background "#252525")))
@@ -456,18 +461,19 @@
     (save-excursion
       (clear-block-region-overlays)
       (goto-char (point-min))
-      ;; 匹配所有类型的 begin 块
       (while (re-search-forward "^[ \t]*#\\+begin_\\(src\\|quote\\|example\\)" nil t)
         (let* ((begin-line-start (line-beginning-position))
                (block-type (match-string 1))
                (end-regexp (concat "^[ \t]*#\\+end_" block-type)))
-          (when (re-search-forward end-regexp nil t)
-            (let* ((end-line-end (line-end-position))
-                   (ov (make-overlay begin-line-start (1+ end-line-end))))
-              (overlay-put ov 'face 'org-block-region-background)
-              (overlay-put ov 'evaporate t)
-              (push ov block-region-overlay-pool)))))))
-
+          ;; 使用 org-fold-folded-p 检查是否折叠
+          (unless (org-fold-folded-p begin-line-start)
+            (when (re-search-forward end-regexp nil t)
+              (let* ((end-line-end (line-end-position))
+                     (ov (make-overlay begin-line-start (1+ end-line-end))))
+                (overlay-put ov 'face 'org-block-region-background)
+                (overlay-put ov 'evaporate t)
+                (overlay-put ov 'priority -1)
+                (push ov block-region-overlay-pool))))))))
   ;; 创建次要模式
   (define-minor-mode block-region-highlight-mode
     "Toggle background highlighting for entire block regions."
@@ -475,19 +481,26 @@
     (if block-region-highlight-mode
         (progn
           (highlight-block-regions)
-          (add-hook 'post-command-hook #'highlight-block-regions nil t))
+          (add-hook 'post-command-hook #'highlight-block-regions nil t)
+          ;; 添加对折叠状态变化的监听
+          (add-hook 'org-fold-core-style-changed-functions #'highlight-block-regions nil t))
       (clear-block-region-overlays)
-      (remove-hook 'post-command-hook #'highlight-block-regions t)))
+      (remove-hook 'post-command-hook #'highlight-block-regions t)
+      (remove-hook 'org-fold-core-style-changed-functions #'highlight-block-regions t)))
+  ;; 为 org-mode 自动启用
+  (add-hook 'org-mode-hook #'block-region-highlight-mode))
 
-  )
+;; 开启 block-highlighting
+(my/block-highlighting)
+(block-region-highlight-mode)
+
 ;; 在初始化时应用设置
 (add-hook 'after-init-hook #'my-org-face-settings)
-
+;; 为新 frame 开启默认 org 美化设置
 (add-hook 'after-make-frame-functions
           (lambda (frame)
             (with-selected-frame frame
-              (my-org-face-settings)
-              (block-region-highlight-mode))))
+              (my-org-face-settings))))
 
 ;;-------------------------------------------------------------------------------
 ;;

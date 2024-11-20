@@ -13,26 +13,25 @@
 (defun my/comment-or-uncomment-region-codes ()
   "根据当前的主模式选择合适的注释符号来注释/取消注释选定区域"
   (interactive)
-  (let* ((mode-comment-pairs
-          '((emacs-lisp-mode . ";;")
-            (lisp-mode . ";;")
-            (scheme-mode . ";;")
-            (python-mode . "#")
-            (ruby-mode . "#")
-            (c-mode . "//")
-            (c++-mode . "//")
-            (java-mode . "//")
-            (js-mode . "//")
-            (js2-mode . "//")
-            (typescript-mode . "//")
-            (sh-mode . "#")
-            (shell-mode . "#")
-            (perl-mode . "#")
-            (php-mode . "//")
-            (css-mode . "/*")
-            (scss-mode . "//")
-            (sass-mode . "//")
-            (html-mode . "<!--")))
+  (let* ((mode-comment-pairs '((emacs-lisp-mode . ";;")
+                               (lisp-mode . ";;")
+                               (scheme-mode . ";;")
+                               (python-mode . "#")
+                               (ruby-mode . "#")
+                               (c-mode . "//")
+                               (c++-mode . "//")
+                               (java-mode . "//")
+                               (js-mode . "//")
+                               (js2-mode . "//")
+                               (typescript-mode . "//")
+                               (sh-mode . "#")
+                               (shell-mode . "#")
+                               (perl-mode . "#")
+                               (php-mode . "//")
+                               (css-mode . "/*")
+                               (scss-mode . "//")
+                               (sass-mode . "//")
+                               (html-mode . "<!--")))
          (comment-str (or (cdr (assoc major-mode mode-comment-pairs)) ";;"))
          ;; 获取区域
          (start (if (region-active-p)
@@ -41,37 +40,50 @@
          (end (if (region-active-p)
                   (region-end)
                 (line-end-position))))
-    ;; 确保处理完整的行，但不包括超出选区的部分
+    ;; 确保处理完整的行
     (save-excursion
       (goto-char start)
       (setq start (line-beginning-position))
       (goto-char end)
-      ;; 如果终点不在行首且不是最后一行的结尾，则移到行尾
-      (when (and (not (bolp))
-                 (not (= end (point-max))))
-        (setq end (line-end-position))))
-    ;; 检查第一行是否已注释来决定是注释还是取消注释
+      (unless (bolp) ; 如果不在行首，移到下一行
+        (forward-line 1))
+      (setq end (point)))
+    
+    ;; 检查是否所有非空行都已注释
     (save-excursion
       (goto-char start)
-      (skip-chars-forward " \t")
-      (let ((first-line-commented
-             (looking-at-p (concat (regexp-quote comment-str)))))
-        ;; 处理每一行
+      (let ((all-commented t)
+            (any-uncommented nil))
+        (while (and (< (point) end)
+                    (or all-commented any-uncommented))
+          (beginning-of-line)
+          (unless (looking-at "^[ \t]*$") ; 跳过空行
+            (if (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
+                (setq any-uncommented nil)
+              (setq all-commented nil
+                    any-uncommented t)))
+          (forward-line 1))
+        
+        ;; 根据检查结果决定注释或取消注释
         (goto-char start)
-        (if first-line-commented
+        (if all-commented
             ;; 取消注释
             (while (< (point) end)
               (beginning-of-line)
-              (when (re-search-forward (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?") (line-end-position) t)
+              (when (re-search-forward 
+                     (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?")
+                     (line-end-position) t)
                 (replace-match ""))
               (forward-line 1))
           ;; 添加注释
           (while (< (point) end)
             (beginning-of-line)
-            (unless (looking-at "^[ \t]*$")  ; 跳过空行
-              (skip-chars-forward " \t")
-              (insert comment-str " "))
+            (unless (looking-at "^[ \t]*$") ; 跳过空行
+              (unless (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
+                (skip-chars-forward " \t")
+                (insert comment-str " ")))
             (forward-line 1)))))
+    
     ;; 重新缩进区域
     (indent-region start end)))
 
@@ -83,7 +95,6 @@
   (message "Executing selected org code block...")
   (org-babel-execute-src-block))
 
-;;
 ;; 在 normal 模式下将 - 键导航到行尾
 (with-eval-after-load 'evil
   (defun move-to-end-of-line ()

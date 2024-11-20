@@ -394,14 +394,24 @@
    '(org-block
      ((t (:background "#252525" :extend t)))) ; GitHub dark的代码块背景色
    '(org-block-end-line
-     ((t (:background "#252525" :foreground "#7F8490" :extend t))))
+     ((t (:background "#252525" :extend t))))
 
    '(font-lock-comment-face
      ((t (:foreground "#787878"))))     ; 注释
 
    ;; 设置字符串的样式
-   '(font-lock-string-face
-     ((t (:weight normal :foreground "#96D0FF"))))
+   ;; '(font-lock-string-face
+   ;; ((t (:weight normal :foreground "#96D0FF"))))
+
+   ;; 设置常量的样式
+   '(font-lock-constant-face
+     ((t (:weight normal))))
+   ;; '(font-lock-constant-face
+   ;; ((t (:weight normal :foreground "#79C0FF"))))
+
+   ;; 设置内置函数的样式
+   '(font-lock-builtin-face
+     ((t (:weight normal :foreground "#79C0FF")))) ;改变前面 weight foreground 这种的颜色
 
    ;; 设置关键字的样式
    '(font-lock-keyword-face
@@ -418,14 +428,6 @@
    ;; 设置类型的样式
    '(font-lock-type-face
      ((t (:weight normal :foreground "#FF7B72"))))
-
-   ;; 设置常量的样式
-   '(font-lock-constant-face
-     ((t (:weight normal :foreground "#79C0FF"))))
-
-   ;; 设置内置函数的样式
-   '(font-lock-builtin-face
-     ((t (:weight normal :foreground "#79C0FF"))))
 
    ;; 设置文档字符串的样式
    '(font-lock-doc-face

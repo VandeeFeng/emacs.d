@@ -61,6 +61,7 @@
 (maybe-require-package 'scratch)
 (require-package 'command-log-mode)
 
+
 (maybe-require-package 'evil)
 (require 'init-misc)
 (require 'init-languages)

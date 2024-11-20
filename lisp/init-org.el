@@ -148,10 +148,9 @@
 (with-eval-after-load 'org
   (setq org-agenda-time-grid '((daily today)
                                (800 1000 1200 1400 1600 1800 2000)
-                               "......" "-----------------------------------------------------")))
+                               "......" "-----------------------------------------------------"))
 
-;; 设置TODO状态
-(with-eval-after-load 'org
+  ;; 设置TODO状态
   (setq org-todo-keywords
         '((sequence "TODO(t)" "DOING(i)" "|" "DONE(d@)")))
   (setq org-log-done 'time) ;; 每次当你将一个项从 TODO (not-done) 状态变成任意的 DONE 状态时，那么，它就会自动在标题的下面插入一行下面的内容：CLOSED: [timestamp]  https://emacsist.github.io/emacsist/orgmode/orgmode%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html#org6796967
@@ -173,6 +172,7 @@
   ;; (server-start)
   ;; (require 'org-protocol)
   :config
+  (setq org-tags-column 0) ; 如果你不希望标签固定在某一列，可以将 org-tags-column 设置为 0，这样标签会紧随标题，而不会自动对齐到特定的列。默认情况下，org-tags-column 值为 -77，即在右侧边距对齐。如果这个值较大，标签会向右偏移
   ;; 默认开启缩进
   (add-hook 'org-mode-hook #'org-indent-mode)
   ;; 完全禁用下标处理
@@ -387,11 +387,11 @@
   ;; 改变 Org-mode 各个级别标题的大小，同时保留主题颜色和样式
   (custom-set-faces
    '(font-lock-comment-face ((t (:foreground "#787878"))))
-   '(org-level-1 ((t (:inherit outline-1 :height 1.5 :weight normal))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.4 :weight normal))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.3 :weight normal))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.2 :weight normal))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.1 :weight normal))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.4 :weight normal))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.3 :weight normal))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.2 :weight normal))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.1 :weight normal))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.05 :weight normal))))
    '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
    '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
    '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
@@ -438,15 +438,57 @@
 
   (set-face-attribute 'mode-line nil :box nil)
   (set-face-attribute 'mode-line-inactive nil :box nil)
+
+  ;; Define the face for block backgrounds
+  (defface org-block-region-background
+    '((t (:extend t :background "#252525")))
+    "Face for the entire block region including begin/end markers.")
+
+  (defvar block-region-overlay-pool nil
+    "List of overlays for block region highlighting.")
+
+  (defun clear-block-region-overlays ()
+    (while block-region-overlay-pool
+      (delete-overlay (pop block-region-overlay-pool))))
+
+  (defun highlight-block-regions ()
+    (interactive)
+    (save-excursion
+      (clear-block-region-overlays)
+      (goto-char (point-min))
+      ;; 匹配所有类型的 begin 块
+      (while (re-search-forward "^[ \t]*#\\+begin_\\(src\\|quote\\|example\\)" nil t)
+        (let* ((begin-line-start (line-beginning-position))
+               (block-type (match-string 1))
+               (end-regexp (concat "^[ \t]*#\\+end_" block-type)))
+          (when (re-search-forward end-regexp nil t)
+            (let* ((end-line-end (line-end-position))
+                   (ov (make-overlay begin-line-start (1+ end-line-end))))
+              (overlay-put ov 'face 'org-block-region-background)
+              (overlay-put ov 'evaporate t)
+              (push ov block-region-overlay-pool)))))))
+
+  ;; 创建次要模式
+  (define-minor-mode block-region-highlight-mode
+    "Toggle background highlighting for entire block regions."
+    :lighter " BRH"
+    (if block-region-highlight-mode
+        (progn
+          (highlight-block-regions)
+          (add-hook 'post-command-hook #'highlight-block-regions nil t))
+      (clear-block-region-overlays)
+      (remove-hook 'post-command-hook #'highlight-block-regions t)))
+
   )
 ;; 在初始化时应用设置
 (add-hook 'after-init-hook #'my-org-face-settings)
 
-;; 在创建新frame时应用设置
 (add-hook 'after-make-frame-functions
           (lambda (frame)
             (with-selected-frame frame
-              (my-org-face-settings))))
+              (my-org-face-settings)
+              (block-region-highlight-mode))))
+
 ;;-------------------------------------------------------------------------------
 ;;
 ;; org-protocol
@@ -545,22 +587,22 @@
 (auto-space-mode t)
 
 
-(defun my-paste-with-space-after-url ()
-  "Paste and add a space after a URL if present, and between Chinese and English characters."
-  (interactive)
-  (let ((orig-point (point)))
-    (evil-paste-from-register ?*)  ; Use * register for system clipboard on Mac
-    (let ((pasted-text (buffer-substring-no-properties orig-point (point))))
-      (when (string-match "\\(https?://\\)" pasted-text)
-        (insert " "))
-      ;; Apply Chinese-English spacing to the pasted text
-      (save-excursion
-        (goto-char orig-point)
-        (while (< (point) (point-max))
-          (add-space-between-chinese-and-english)
-          (forward-char))))))
+;; (defun my-paste-with-space-after-url ()
+;; "Paste and add a space after a URL if present, and between Chinese and English characters."
+;; (interactive)
+;; (let ((orig-point (point)))
+;; (evil-paste-from-register ?*)  ; Use * register for system clipboard on Mac
+;; (let ((pasted-text (buffer-substring-no-properties orig-point (point))))
+;; (when (string-match "\\(https?://\\)" pasted-text)
+;; (insert " "))
+;; ;; Apply Chinese-English spacing to the pasted text
+;; (save-excursion
+;; (goto-char orig-point)
+;; (while (< (point) (point-max))
+;; (add-space-between-chinese-and-english)
+;; (forward-char))))))
 
-(global-set-key (kbd "C-v") 'my-paste-with-space-after-url)
+;; (global-set-key (kbd "C-v") 'my-paste-with-space-after-url)
 
 
 
@@ -589,6 +631,120 @@
 ;; ;; 在 Org-mode 中启用该功能
 ;; (add-hook 'org-mode-hook 'org-link-space-mode)
 
+;;----------------------------------------------
+;; org-blog
+;; ----------------------------------------------
+;; org-static-blog config
+
+(setq org-static-blog-publish-title "Vandee's Blog")
+(setq org-static-blog-publish-url "https://www.vandee.art/")
+(setq org-static-blog-publish-directory "~/vandee/org-blog/")
+(setq org-static-blog-posts-directory "~/vandee/org-blog/posts/")
+(setq org-static-blog-drafts-directory "~/vandee/org-blog/drafts/")
+(setq org-static-blog-enable-tags t)
+(setq org-export-with-toc t)
+(setq org-export-with-section-numbers nil)
+(setq org-static-blog-use-preview t)
+(setq org-static-blog-enable-og-tags t)
+;; (setq org-static-blog-rss-max-entries 30) ;; 设置 rss 获取文章的最大数量
+;; (setq org-static-blog-index-length 8) ;; 首页包含了最近几篇博客文章，显示在同一个页面上。首页上的条目数量可以通过设置 org-static-blog-index-length 来自定义。
+;;        <script src=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vanilla-lazyload/17.3.1/lazyload.min.js\" type=\"application/javascript\" defer></script>
+;; <script src=\"https://testingcf.jsdelivr.net/gh/vandeefeng/gitbox@main/codes/blogsummary.js\"></script>
+(setq org-static-blog-page-header
+      "<meta name=\"author\" content=\"Vandee\">
+       <meta name=\"referrer\" content=\"no-referrer\">
+       <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+
+       <link rel=\"stylesheet\" href=\"assets/css/style.css\" type=\"text/css\"/>
+       <link rel=\"stylesheet\"
+             href=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css\"/>
+       <link rel=\"stylesheet\"
+             href=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.css\"/>
+       <link rel=\"icon\" type=\"image/x-icon\" href=\"/static/favicon.ico\"/>
+
+       <script src=\"https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js\" defer></script>
+       <script src=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.umd.js\" defer></script>
+       <script src=\"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/pangu/4.0.7/pangu.min.js\" defer></script>
+       <script defer>
+         document.addEventListener(\"DOMContentLoaded\", function () {
+           pangu.spacingPage();
+         });
+       </script>
+
+       <script src=\"assets/js/app.js\" defer></script>
+       <script src=\"assets/js/copyCode.js\" defer></script>
+       <script src=\"assets/js/search.js\" defer></script>")
+
+
+;; Preamble for every page (e.g., navigation)
+(setq org-static-blog-page-preamble
+      (format "
+      <header>
+      <h1><a href=\"%s\">Vandee's Blog</a></h1>
+      <nav>
+      <a href=\"%s\">Home</a>
+      <a href=\"https://wiki.vandee.art\">Wiki</a>
+      <a href=\"archive.html\">Archive</a>
+      <a href=\"tags.html\">Tags</a>
+      <div id=\"search-container\">
+        <input type=\"text\" id=\"search-input\" placeholder=\"Search anywhere...\">
+        <i class=\"fas fa-search search-icon\"></i>
+      </div>
+      </nav>
+      </header>"
+              org-static-blog-publish-url
+              org-static-blog-publish-url))
+
+;; Postamble for every page (e.g., footer)
+(setq org-static-blog-page-postamble
+      "<div id=\"search-results\"></div>
+      <footer>
+         <p>
+            © 2022-<script>document.write(new Date().getFullYear())</script> Vandee. All rights reserved.
+         </p>
+        <div class=\"social-links\"></div>
+      </footer>
+
+      <a href=\"#top\" aria-label=\"go to top\" title=\"Go to Top (Alt + G)\"
+         class=\"top-link\" id=\"top-link\" accesskey=\"g\">
+         <i class=\"fa-solid fa-angle-up fa-2xl\"></i>
+      </a>
+
+      <script>
+        var mybutton = document.getElementById('top-link');
+        window.onscroll = function () {
+            if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+                mybutton.style.visibility = 'visible';
+                mybutton.style.opacity = '1';
+            } else {
+                mybutton.style.visibility = 'hidden';
+                mybutton.style.opacity = '0';
+            }
+        };
+      </script>")
+
+
+
+;; Content for the front page
+(setq org-static-blog-index-front-matter
+      "<h1>Vandee</h1>
+      <p>搞点摄影，喜欢音乐和艺术，保持热爱。</p>
+      <p>如果你也喜欢王小波、李志，我们就是朋友。</p>
+      <p>Stay foolish, Stay simple.</p>"
+      )
+
+(with-eval-after-load 'org-static-blog
+  (defun update-post-list (&rest _)
+    "Update the post list in post-list.json."
+    (let* ((post-list (mapcar 'org-static-blog-get-post-url
+                              (org-static-blog-get-post-filenames)))
+           (json-encoding-pretty-print t)
+           (json-data (json-encode post-list)))
+      (with-temp-file (concat org-static-blog-publish-directory "assets/post-list.json")
+        (insert json-data))
+      (message "Updated post-list.json")))
+
+  (advice-add 'org-static-blog-publish :after #'update-post-list))
 
 (provide 'init-org)
 ;;; init-org.el ends here

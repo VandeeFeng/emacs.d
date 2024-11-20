@@ -15,7 +15,10 @@
 
   (add-hook 'flymake-mode-hook 'flymake-flycheck-auto)
   (add-hook 'prog-mode-hook 'flymake-mode)
-  (add-hook 'text-mode-hook 'flymake-mode))
+  (add-hook 'text-mode-hook 'flymake-mode)
+  (remove-hook 'text-mode-hook 'flyspell-mode)
+  (remove-hook 'org-mode-hook 'flyspell-mode)
+  )
 
 (with-eval-after-load 'flymake
   ;; Provide some flycheck-like bindings in flymake mode to ease transition

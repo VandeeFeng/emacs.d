@@ -8,7 +8,25 @@
 ;;----------------------------------------------------------------------------
 ;;自定义函数
 ;;----------------------------------------------------------------------------
-;;
+;; 隐藏 macos 里 Emacs 的 menu bar https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where
+
+(defun dwim-shell-commands-macos-toggle-menu-bar-autohide ()
+  "Toggle macOS menu bar auto-hide."
+  (interactive)
+  (dwim-shell-command-on-marked-files
+   "Toggle menu bar auto-hide."
+   "current_status=$(osascript -e 'tell application \"System Events\" to get autohide menu bar of dock preferences')
+
+if [ \"$current_status\" = \"true\" ]; then
+    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to false'
+    echo \"Auto-hide disabled.\"
+else
+    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'
+    echo \"Auto-hide enabled.\"
+fi"
+   :utils "osascript"
+   :silent-success t))
+
 ;; 智能注释
 (defun my/comment-or-uncomment-region-codes ()
   "根据当前的主模式选择合适的注释符号来注释/取消注释选定区域"
@@ -45,7 +63,7 @@
       (goto-char start)
       (setq start (line-beginning-position))
       (goto-char end)
-      (unless (bolp) ; 如果不在行首，移到下一行
+      (unless (bolp)                    ; 如果不在行首，移到下一行
         (forward-line 1))
       (setq end (point)))
     

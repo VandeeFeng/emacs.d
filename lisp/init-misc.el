@@ -450,13 +450,16 @@
 
 ;; vterm
 (defun vterm-minibuffer ()
-  "Open vterm in minibuffer."
+  "Open vterm in minibuffer and enter insert state."
   (interactive)
   (let ((height (/ (frame-height) 3))) ; 设置高度为框架高度的1/3
     (with-temp-buffer
       (let ((window (split-window-vertically (- height))))
         (select-window window)
-        (vterm)))))
+        (vterm)
+        ;; 确保 evil-mode 已加载后进入 insert 状态
+        (when (bound-and-true-p evil-mode)
+          (evil-insert-state))))))
 
 ;; 定义一个更简单的命令别名
 (defalias 'vt 'vterm-minibuffer)
@@ -465,7 +468,12 @@
 (with-eval-after-load 'vterm
   (setq vterm-min-window-width 30)
   (setq vterm-kill-buffer-on-exit t)  ; 退出时自动关闭buffer
-  )
+
+  ;; 为 vterm-mode 添加 hook，确保在打开时进入 insert 状态
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (when (bound-and-true-p evil-mode)
+                (evil-insert-state)))))
 
 ;; 消除主题对终端的颜色影响
 (add-hook 'vterm-mode-hook
@@ -478,14 +486,6 @@
             (set-face-attribute 'vterm-color-magenta nil :foreground "magenta" :background "magenta")
             (set-face-attribute 'vterm-color-cyan nil :foreground "cyan" :background "cyan")
             (set-face-attribute 'vterm-color-white nil :foreground "white" :background "white")))
-
-
-
-
-
-
-
-
 
 
 ;; Misc config - yet to be placed in separate files

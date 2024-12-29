@@ -63,6 +63,7 @@
 
 
 (maybe-require-package 'evil)
+;; (require 'init-yj)
 (require 'init-misc)
 (require 'init-languages)
 (require 'init-keybindings)

@@ -115,11 +115,12 @@
 
   (set-face-attribute 'org-code nil
                       :foreground "#da8548"
-                      :background "#282c34"
+                      ;; :background "#282c34"
                       :weight 'normal)
   )
 
 (with-eval-after-load 'faces
+  (set-cursor-color "orange")
   ;; 设置默认字体和大小
   (set-face-attribute 'default nil
                       :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
@@ -164,9 +165,7 @@
   )
 
 (defun my-org-face-settings ()
-  "设置org-mode的各种face属性"
   (interactive)
-  ;; (set-cursor-color "red")
   (custom-set-faces
    ;; 代码块背景和边框
    ;; '(org-block-begin-line

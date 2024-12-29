@@ -7,12 +7,27 @@
 ;; globl settings
 ;;
 ;;------------------------------------------------------------------------------------------
+;; 在启动时自动运行一次占卜
+;; (add-hook 'emacs-startup-hook
+;; (lambda ()
+;; (with-current-buffer "*scratch*"
+;; (goto-char (point-max))
+;; (insert "\n\n;; 今日运势\n")
+;; (insert (liu-yao-divination "今天运势如何？")))))
+
+;; 禁止eww生成cookie
+;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
+(setq url-cookie-trusted-urls '()        ;不设置白名单
+      url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
 
 ;; SmoothScroll
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode t))
+(setq scroll-preserve-screen-position 'always)
 ;; Vertical Scroll
 (setq scroll-step 1)
 (setq scroll-margin 1)
-(setq scroll-conservatively 101)
+(setq scroll-conservatively 10000) ;101
 (setq scroll-up-aggressively 0.01)
 (setq scroll-down-aggressively 0.01)
 (setq auto-window-vscroll nil)

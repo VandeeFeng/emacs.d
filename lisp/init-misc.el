@@ -15,6 +15,12 @@
 ;; (insert "\n\n;; 今日运势\n")
 ;; (insert (liu-yao-divination "今天运势如何？")))))
 
+;; 启用系统复制粘贴
+;; (with-eval-after-load 'evil
+;; (define-key evil-insert-state-map (kbd "s-c") 'kill-ring-save) ; Cmd+C 复制
+;; (define-key evil-insert-state-map (kbd "s-v") 'yank) ; Cmd+V 粘贴
+;; (define-key evil-insert-state-map (kbd "s-x") 'kill-region))    ; Cmd+X 剪切
+
 ;; 禁止eww生成cookie
 ;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
 (setq url-cookie-trusted-urls '()        ;不设置白名单
@@ -493,15 +499,23 @@
 ;; 消除主题对终端的颜色影响
 (add-hook 'vterm-mode-hook
           (lambda ()
-            (set-face-attribute 'vterm-color-black nil :foreground "black" :background "black")
-            (set-face-attribute 'vterm-color-red nil :foreground "red" :background "red")
-            (set-face-attribute 'vterm-color-green nil :foreground "green" :background "green")
-            (set-face-attribute 'vterm-color-yellow nil :foreground "yellow" :background "yellow")
-            (set-face-attribute 'vterm-color-blue nil :foreground "blue" :background "blue")
-            (set-face-attribute 'vterm-color-magenta nil :foreground "magenta" :background "magenta")
-            (set-face-attribute 'vterm-color-cyan nil :foreground "cyan" :background "cyan")
-            (set-face-attribute 'vterm-color-white nil :foreground "white" :background "white")))
-
+            ;; One Dark 主题配色
+            (set-face-attribute 'vterm-color-black nil 
+                                :foreground "#282c34" :background "#282c34")
+            (set-face-attribute 'vterm-color-red nil 
+                                :foreground "#e06c75" :background "#e06c75")
+            (set-face-attribute 'vterm-color-green nil 
+                                :foreground "#98c379" :background "#98c379")
+            (set-face-attribute 'vterm-color-yellow nil 
+                                :foreground "#e5c07b" :background "#e5c07b")
+            (set-face-attribute 'vterm-color-blue nil 
+                                :foreground "#61afef" :background "#61afef")
+            (set-face-attribute 'vterm-color-magenta nil 
+                                :foreground "#c678dd" :background "#c678dd")
+            (set-face-attribute 'vterm-color-cyan nil 
+                                :foreground "#56b6c2" :background "#56b6c2")
+            (set-face-attribute 'vterm-color-white nil 
+                                :foreground "#abb2bf" :background "#abb2bf")))
 
 ;; Misc config - yet to be placed in separate files
 

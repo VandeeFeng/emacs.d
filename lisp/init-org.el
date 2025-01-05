@@ -258,6 +258,7 @@
                         (:grouptags . nil)
                         ("Python" . p)
                         ("JavaScript" . j)
+                        ("Rust" . ru)
                         (:endgroup . nil)
                         ("LLM" . ?l) ("RAG" . ?r)
                         (:startgroup . nil)

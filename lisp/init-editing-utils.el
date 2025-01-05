@@ -91,12 +91,13 @@
   (add-hook 'yaml-ts-mode-hook 'display-line-numbers-mode))
 
 
-
-(when (boundp 'display-fill-column-indicator)
-  (setq-default indicate-buffer-boundaries 'left)
-  (setq-default display-fill-column-indicator-character ?┊)
-  (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
-
+;; 设置代码辅助列宽限制竖线
+;; (when (boundp 'display-fill-column-indicator)
+;; (setq-default indicate-buffer-boundaries 'left)
+;; (setq-default display-fill-column-indicator-character ?┊)
+;; (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
+(setq-default display-fill-column-indicator nil)
+(global-display-fill-column-indicator-mode -1)
 
 
 (when (require-package 'rainbow-delimiters)

@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+;; inspired by: https://github.com/RealKai42/liu-yao-divining
+
 (require 'json)
 (require 'time-date)
 

@@ -1,3 +1,6 @@
 [submodule "site-lisp/org-remoteimg"]
 	path = site-lisp/org-remoteimg
 	url = git@github.com:gaoDean/org-remoteimg.git
+[submodule "site-lisp/gruber-darker-theme"]
+	path = site-lisp/gruber-darker-theme
+	url = git@github.com:rexim/gruber-darker-theme.git

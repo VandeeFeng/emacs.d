@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;; https://github.com/rexim/gruber-darker-theme 很简洁暗色
 ;; https://github.com/credmp/arjen-grey-theme 灰色
 ;; https://github.com/mswift42/white-sand-theme 护眼
 ;; https://github.com/sashimacs/os1-theme 护眼
@@ -54,6 +55,8 @@
   )
 
 ;; theme
+;; (require 'gruber-darker-theme)
+;; (load-theme 'gruber-darker t)
 (use-package almost-mono-themes
   :ensure t
   :config
@@ -120,7 +123,8 @@
   )
 
 (with-eval-after-load 'faces
-  (set-cursor-color "orange")
+  ;; (set-face-attribute 'default nil :background "#181818")
+  (set-cursor-color "orange") ; orange,gold1
   ;; 设置默认字体和大小
   (set-face-attribute 'default nil
                       :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
@@ -161,6 +165,9 @@
 
   ;; 设置文档字符串的样式
   (set-face-attribute 'font-lock-doc-face nil :weight 'normal :foreground "#787878")
+
+  ;; 设置当前行号颜色
+  (set-face-foreground 'line-number-current-line "gold1")
 
   )
 

@@ -27,13 +27,16 @@
       url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
 
 ;; SmoothScroll
+;; (require 'ultra-scroll)
+;; (ultra-scroll-mode 1)
+
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode t))
 (setq scroll-preserve-screen-position 'always)
 ;; Vertical Scroll
 (setq scroll-step 1)
 (setq scroll-margin 1)
-(setq scroll-conservatively 10000) ;101
+(setq scroll-conservatively 10000) ;101 , 10000
 (setq scroll-up-aggressively 0.01)
 (setq scroll-down-aggressively 0.01)
 (setq auto-window-vscroll nil)
@@ -82,7 +85,7 @@
  '(global-auto-revert-mode t))
 
 ;; 开启相对行号
-;; (setq display-line-numbers-type 'relative)  ;;不起作用
+(setq display-line-numbers-type 'relative) ;需要关闭 line-number-mode
 ;;
 ;;
 ;;;;-------------------------------------------------------------------------------------------

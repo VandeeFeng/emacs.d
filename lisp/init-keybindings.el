@@ -27,83 +27,83 @@ fi"
    :utils "osascript"
    :silent-success t))
 
-;; 智能注释
-(defun my/comment-or-uncomment-region-codes ()
-  "根据当前的主模式选择合适的注释符号来注释/取消注释选定区域"
-  (interactive)
-  (let* ((mode-comment-pairs '((emacs-lisp-mode . ";;")
-                               (lisp-mode . ";;")
-                               (scheme-mode . ";;")
-                               (python-mode . "#")
-                               (ruby-mode . "#")
-                               (c-mode . "//")
-                               (c++-mode . "//")
-                               (java-mode . "//")
-                               (js-mode . "//")
-                               (js2-mode . "//")
-                               (typescript-mode . "//")
-                               (sh-mode . "#")
-                               (shell-mode . "#")
-                               (perl-mode . "#")
-                               (php-mode . "//")
-                               (css-mode . "/*")
-                               (scss-mode . "//")
-                               (sass-mode . "//")
-                               (html-mode . "<!--")))
-         (comment-str (or (cdr (assoc major-mode mode-comment-pairs)) ";;"))
-         ;; 获取区域
-         (start (if (region-active-p)
-                    (region-beginning)
-                  (line-beginning-position)))
-         (end (if (region-active-p)
-                  (region-end)
-                (line-end-position))))
-    ;; 确保处理完整的行
-    (save-excursion
-      (goto-char start)
-      (setq start (line-beginning-position))
-      (goto-char end)
-      (unless (bolp)                    ; 如果不在行首，移到下一行
-        (forward-line 1))
-      (setq end (point)))
+;; 智能注释，太蠢了，赶不上 Emacs 原生的。。
+;; (defun my/comment-or-uncomment-region-codes ()
+;;   "根据当前的主模式选择合适的注释符号来注释/取消注释选定区域"
+;;   (interactive)
+;;   (let* ((mode-comment-pairs '((emacs-lisp-mode . ";;")
+;;                                (lisp-mode . ";;")
+;;                                (scheme-mode . ";;")
+;;                                (python-mode . "#")
+;;                                (ruby-mode . "#")
+;;                                (c-mode . "//")
+;;                                (c++-mode . "//")
+;;                                (java-mode . "//")
+;;                                (js-mode . "//")
+;;                                (js2-mode . "//")
+;;                                (typescript-mode . "//")
+;;                                (sh-mode . "#")
+;;                                (shell-mode . "#")
+;;                                (perl-mode . "#")
+;;                                (php-mode . "//")
+;;                                (css-mode . "/*")
+;;                                (scss-mode . "//")
+;;                                (sass-mode . "//")
+;;                                (html-mode . "<!--")))
+;;          (comment-str (or (cdr (assoc major-mode mode-comment-pairs)) ";;"))
+;;          ;; 获取区域
+;;          (start (if (region-active-p)
+;;                     (region-beginning)
+;;                   (line-beginning-position)))
+;;          (end (if (region-active-p)
+;;                   (region-end)
+;;                 (line-end-position))))
+;;     ;; 确保处理完整的行
+;;     (save-excursion
+;;       (goto-char start)
+;;       (setq start (line-beginning-position))
+;;       (goto-char end)
+;;       (unless (bolp)                    ; 如果不在行首，移到下一行
+;;         (forward-line 1))
+;;       (setq end (point)))
     
-    ;; 检查是否所有非空行都已注释
-    (save-excursion
-      (goto-char start)
-      (let ((all-commented t)
-            (any-uncommented nil))
-        (while (and (< (point) end)
-                    (or all-commented any-uncommented))
-          (beginning-of-line)
-          (unless (looking-at "^[ \t]*$") ; 跳过空行
-            (if (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
-                (setq any-uncommented nil)
-              (setq all-commented nil
-                    any-uncommented t)))
-          (forward-line 1))
+;;     ;; 检查是否所有非空行都已注释
+;;     (save-excursion
+;;       (goto-char start)
+;;       (let ((all-commented t)
+;;             (any-uncommented nil))
+;;         (while (and (< (point) end)
+;;                     (or all-commented any-uncommented))
+;;           (beginning-of-line)
+;;           (unless (looking-at "^[ \t]*$") ; 跳过空行
+;;             (if (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
+;;                 (setq any-uncommented nil)
+;;               (setq all-commented nil
+;;                     any-uncommented t)))
+;;           (forward-line 1))
         
-        ;; 根据检查结果决定注释或取消注释
-        (goto-char start)
-        (if all-commented
-            ;; 取消注释
-            (while (< (point) end)
-              (beginning-of-line)
-              (when (re-search-forward 
-                     (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?")
-                     (line-end-position) t)
-                (replace-match ""))
-              (forward-line 1))
-          ;; 添加注释
-          (while (< (point) end)
-            (beginning-of-line)
-            (unless (looking-at "^[ \t]*$") ; 跳过空行
-              (unless (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
-                (skip-chars-forward " \t")
-                (insert comment-str " ")))
-            (forward-line 1)))))
+;;         ;; 根据检查结果决定注释或取消注释
+;;         (goto-char start)
+;;         (if all-commented
+;;             ;; 取消注释
+;;             (while (< (point) end)
+;;               (beginning-of-line)
+;;               (when (re-search-forward 
+;;                      (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?")
+;;                      (line-end-position) t)
+;;                 (replace-match ""))
+;;               (forward-line 1))
+;;           ;; 添加注释
+;;           (while (< (point) end)
+;;             (beginning-of-line)
+;;             (unless (looking-at "^[ \t]*$") ; 跳过空行
+;;               (unless (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
+;;                 (skip-chars-forward " \t")
+;;                 (insert comment-str " ")))
+;;             (forward-line 1)))))
     
-    ;; 重新缩进区域
-    (indent-region start end)))
+;;     ;; 重新缩进区域
+;;     (indent-region start end)))
 
 
 ;; 执行代码块
@@ -447,16 +447,21 @@ input and search the whole buffer for it."
 
 (vf/leader-keys
   "SPC" '(counsel-M-x :wk "Counsel M-x")
-  "." '(find-file :wk "Find file")
+  "/" '(find-file :wk "Find file")
   "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
   "TAB TAB" '(comment-line :wk "Comment lines")
   "u" '(universal-argument :wk "Universal argument"))
 
 (vf/leader-keys
+  "g" '(ignore t :wk "GPT like")
+  "g s" '(gptel-send :wk "gpt发送")
+  "g n" '(gptel :wk "gpt新buffer")
+  "g m" '(gptel-menu :wk "gpt-send-menu")
+  )
+(vf/leader-keys
   "v" '(:ignore t :wk "Vandee")
-  "v C" '(my/comment-or-uncomment-region-codes :wk "comment or uncomment codes")
-  "v c" '(org-capture :wk "org-capture")
-  "v ." '(org-emphasize :wk "org-emphasize")
+  ;; "v C" '(my/comment-or-uncomment-region-codes :wk "comment or uncomment codes")
+  ;; "v c" '(org-capture :wk "org-capture")
   "v e" '(my-execute-src-block :wk "execute-src-block")
   "v r" '(org-roam-capture :wk "org-roam-capture")
   "v t" '(vt :wk "open vterm")
@@ -464,20 +469,9 @@ input and search the whole buffer for it."
   "v a" '(:ignore t :wk "agenda and TODO")
   "v a t" '(org-todo :wk "编辑TODO状态")
   "v a i" '(org-insert-todo-heading :wk "插入任务项")
-  "v g" '(:ignore t :wk "gpt")
-  "v g s" '(gptel-send :wk "gpt发送")
-  "v g n" '(gptel :wk "gpt新buffer")
-  "v g m" '(gptel-menu :wk "gpt-send-menu")
-  "v f" '(org-roam-node-find :wk "org-roam-node-find")
-  "v j" '((lambda () (interactive)
-            (find-file "~/Vandee/pkm/org/journal.org"))
-          :wk "go to Journals")
-  "v v" '((lambda () (interactive)
-            (find-file "~/Vandee/pkm/org/Vandee.org"))
-          :wk "go to Vandee")
 
   ;; "v T" '(my-tags-view :wk "my-tags-view")
-  "v d" '(my-insert-timestamp :wk "insert-timestamp")
+  "v t" '(my-insert-timestamp :wk "insert-timestamp")
   ;;"v r" '(my-remove-extra-spaces :wk "my-remove-extra-spaces")
   "v h" '(my-org-show-current-heading-tidily :wk "折叠其他标题")
   "v p" '(my-buffer-path :wk "pwd")
@@ -490,15 +484,22 @@ input and search the whole buffer for it."
 
 (vf/leader-keys
   "n" '(:ignore t :wk "notes")
-  "n j" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
+  ;; "n j" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
   "n i" '(org-roam-node-insert :wk "org-roam-node-insert")
   "n I" '(org-roam-node-insert-immediate :wk "org-roam-node-insert-immediate")
-  "r n" '(org-roam-capture :wk "org-roam-capture")
+  ;; "r n" '(org-roam-capture :wk "org-roam-capture")
   "n f" '(org-roam-node-find :wk "org-roam-node-find")
   "n e" '(org-export-dispatch :wk "org-export-dispatch")
   "n u" '(org-roam-ui-open :wk "org-roam-ui-open")
   "n c" '(org-capture :wk "org-capture")
-
+  "n f" '(org-roam-node-find :wk "org-roam-node-find")
+  "n j" '((lambda () (interactive)
+            (find-file "~/Vandee/pkm/org/Journal.org"))
+          :wk "go to Journals")
+  "n v" '((lambda () (interactive)
+            (find-file "~/Vandee/pkm/org/Vandee.org"))
+          :wk "go to Vandee")
+  "n ." '(org-emphasize :wk "org-emphasize")
   )
 
 (vf/leader-keys
@@ -511,15 +512,16 @@ input and search the whole buffer for it."
   "b k" '(kill-current-buffer :wk "Kill current buffer")
   "b K" '(kill-all-buffers-except-scratch :wk "Kill all buffers")
   "b D" '(kill-some-buffers :wk "Kill multiple buffers")
-  "b l" '(list-bookmarks :wk "List bookmarks")
-  "b m" '(bookmark-set :wk "Set bookmark")
+  ;; "b l" '(list-bookmarks :wk "List bookmarks")
+  ;; "b m" '(bookmark-set :wk "Set bookmark")
   "b n" '(next-buffer :wk "Next buffer")
   "b p" '(previous-buffer :wk "Previous buffer")
   "b r" '(revert-buffer :wk "Reload buffer")
   "b R" '(rename-buffer :wk "Rename buffer")
   "b s" '(basic-save-buffer :wk "Save buffer")
   "b S" '(save-some-buffers :wk "Save multiple buffers")
-  "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file"))
+  ;; "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file")
+  )
 
 
 (vf/leader-keys
@@ -527,7 +529,8 @@ input and search the whole buffer for it."
   "d d" '(dired :wk "Open dired")
   "d j" '(dired-jump :wk "Dired jump to current")
   "d n" '(neotree-dir :wk "Open directory in neotree")
-  "d p" '(peep-dired :wk "Peep-dired"))
+  "d r" '(dired-toggle-read-only :wk "dired-toggle-read-only")
+  )
 
 (vf/leader-keys
   "e" '(:ignore t :wk "Eshell/Evaluate")

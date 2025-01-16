@@ -174,7 +174,8 @@
   :config
   (setq org-tags-column 0) ; 如果你不希望标签固定在某一列，可以将 org-tags-column 设置为 0，这样标签会紧随标题，而不会自动对齐到特定的列。默认情况下，org-tags-column 值为 -77，即在右侧边距对齐。如果这个值较大，标签会向右偏移
   ;; 默认开启缩进
-  (add-hook 'org-mode-hook #'org-indent-mode)
+  (setq org-startup-indented t)
+  ;; (add-hook 'org-mode-hook #'org-indent-mode)
   ;; 完全禁用下标处理
   (setq org-export-with-sub-superscripts nil)
   (org-link-set-parameters "calibre" :follow
@@ -188,7 +189,7 @@
                              (browse-url
                               ;; we get the "zotero:"-less url, so we put it back.
                               (format "zotero:%s" zpath))))
-  (setq org-agenda-files '("~/Vandee/pkm/org/Journal.org" "~/Vandee/pkm/org/Clips.org" "~/Vandee/pkm/org/Projects.org" "~/vandee/pkm/org/Tasks.org"))
+  (setq org-agenda-files '("~/Vandee/pkm/org/Clips.org" "~/Vandee/pkm/org/Projects.org" "~/vandee/pkm/org/Tasks.org"))
   ;; (setq org-agenda-include-diary t)
   ;; (setq org-agenda-diary-file "~/Vandee/pkm/org/Journal.org")
   (setq org-directory "~/Vandee/pkm/org/")
@@ -658,7 +659,8 @@ contextual information."
       <h1><a href=\"%s\">Vandee's Blog</a></h1>
       <nav>
       <a href=\"%s\">Home</a>
-      <a href=\"https://wiki.vandee.art\">Wiki</a>
+      <a href=\"https://x.vandee.art/wiki\">Wiki</a>
+      <a href=\"https://x.vandee.art/photo\">Photo</a>
       <a href=\"archive.html\">Archive</a>
       <a href=\"tags.html\">Tags</a>
       <div id=\"search-container\">

@@ -453,7 +453,7 @@ input and search the whole buffer for it."
   "u" '(universal-argument :wk "Universal argument"))
 
 (vf/leader-keys
-  "g" '(ignore t :wk "GPT like")
+  "g" '(:ignore t :wk "GPT like")
   "g s" '(gptel-send :wk "gpt发送")
   "g n" '(gptel :wk "gpt新buffer")
   "g m" '(gptel-menu :wk "gpt-send-menu")
@@ -476,7 +476,12 @@ input and search the whole buffer for it."
   "v h" '(my-org-show-current-heading-tidily :wk "折叠其他标题")
   "v p" '(my-buffer-path :wk "pwd")
   "v s" '(my-shell-command :wk "my-minibuffer-shell")
-
+  "v v" '((lambda () (interactive)
+            (find-file "~/Vandee/pkm/org/Vandee.org"))
+          :wk "go to Vandee")
+  "v j" '((lambda () (interactive)
+            (find-file "~/Vandee/pkm/org/Journal.org"))
+          :wk "go to Journals")
   ;; "v o n" '(org-roam-capture :wk "org-roam-capture")
   ;; "v o d" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
 
@@ -493,12 +498,6 @@ input and search the whole buffer for it."
   "n u" '(org-roam-ui-open :wk "org-roam-ui-open")
   "n c" '(org-capture :wk "org-capture")
   "n f" '(org-roam-node-find :wk "org-roam-node-find")
-  "n j" '((lambda () (interactive)
-            (find-file "~/Vandee/pkm/org/Journal.org"))
-          :wk "go to Journals")
-  "n v" '((lambda () (interactive)
-            (find-file "~/Vandee/pkm/org/Vandee.org"))
-          :wk "go to Vandee")
   "n ." '(org-emphasize :wk "org-emphasize")
   )
 

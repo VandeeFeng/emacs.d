@@ -186,7 +186,36 @@
 ;; (global-set-key (kbd "C-c m") 'chinhant-grab-mac-link)
 
 
+(use-package org-cliplink
+  :ensure t
+  )
 
+;; https://emacs-china.org/t/deepseek-claude-gemini-ollama-minuet-ai-el/28715
+;; (use-package minuet
+;;   :ensure t
+;;   :init
+;;   (general-define-key
+;;    ;; use completion-in-region for completion
+;;    "M-y" #'minuet-completion-region
+;;    ;; use overlay for completion
+;;    "M-p" #'minuet-previous-suggestion ;; invoke completion or cycle to next completion
+;;    "M-n" #'minuet-next-suggestion ;; invoke completion or cycle to previous completion
+;;    "M-A" #'minuet-accept-suggestion ;; accept whole completion
+;;    "M-a" #'minuet-accept-suggestion-line ;; accept current line completion
+;;    "M-e" #'minuet-dismiss-suggestion)
+
+;;   ;; 如需启用自动补全
+;;   ;; 注意：即使不启用 minuet-auto-suggestion-mode，也可以手动触发补全
+;;   (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+
+;;   :config
+;;   (setq minuet-provider 'openai-fim-compatible)
+;;   (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:11434/v1/completions")
+;;   ;; an arbitrary non-null environment variable as placeholder
+;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+;;   )
 
 ;; gptel 设置默认ollama 模型
 (use-package gptel
@@ -197,12 +226,12 @@
    gptel-backend (gptel-make-ollama "Ollama"
                    :host "localhost:11434"
                    :stream t
-                   :models '("qwen2.5")))
+                   :models '("qwen2.5:14b")))
 
-  (gptel-make-ollama "Ollama"             ;Any name of your choosing
-    :host "localhost:11434"               ;Where it's running
-    :stream t                             ;Stream responses
-    :models '("qwen2.5:latest"))           ;List of models
+  (gptel-make-ollama "Ollama"           ;Any name of your choosing
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("qwen2.5:14b"))        ;List of models
   )
 
 

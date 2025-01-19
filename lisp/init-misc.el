@@ -161,8 +161,6 @@
 (setq
  undo-limit 80000000
  auto-save-default t
- scroll-preserve-screen-position 'always
- scroll-margin 2
  word-wrap-by-category t
  all-the-icons-scale-factor 1.0
  )

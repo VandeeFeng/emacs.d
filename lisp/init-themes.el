@@ -76,10 +76,11 @@
 
 ;; 直接在 custom.el 里设置了，不要每次都重复载入
 (custom-set-faces
-
  ;; 设置默认字体和大小
  '(default ((t (:family "Source Code Pro" :height 140 :weight light :foreground "#d1d5db"))))
- '(cursor ((t (:foreground "orange"))))
+ '(cursor ((t (:background "orange"))))
+
+ '(link ((t (:foreground "#96a6c8" :underline t))))
  ;; 设置注释的样式
  '(font-lock-comment-face ((t (:foreground "#787878"))))
 
@@ -87,30 +88,30 @@
  ;; '(font-lock-string-face ((t (:weight normal :foreground "#96D0FF"))))
 
  ;; 设置常量的样式
- '(font-lock-constant-face ((t (:weight normal))))
+ '(font-lock-constant-face ((t (:weight normal :foreground "95a99f"))))
 
  ;; 设置内置函数的样式
  '(font-lock-builtin-face ((t (:weight normal :foreground "#79C0FF"))))
 
  ;; 设置关键字的样式
- '(font-lock-keyword-face ((t (:weight normal :foreground "#FF7B72"))))
+ '(font-lock-keyword-face ((t (:weight normal :foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
 
  ;; 设置函数名的样式
- '(font-lock-function-name-face ((t (:weight normal :foreground "#D2A8FF"))))
+ '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))
 
  ;; 设置变量名的样式
- '(font-lock-variable-name-face ((t (:weight normal :foreground "#FFA657"))))
+ '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
 
  ;; 设置类型的样式
- '(font-lock-type-face ((t (:weight normal :foreground "#FF7B72"))))
+ '(font-lock-type-face ((t (:weight normal :foreground "#95a99f")))) ;#FF7B72
 
  ;; 设置文档字符串的样式
  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
 
  ;; 设置当前行号颜色
- '(line-number-current-line ((t (:foreground "gold1"))))
+ '(line-number-current-line ((t (:foreground "#ffdd33"))))
 
- ;; org 部分 -----------------------------------------------------------
+ ;; org 部分 --------------------------------------------------------
  ;; 代码块背景和边框
  ;; '(org-block-begin-line
  ;; ((t (:background "#343942" :foreground "#7F8490" :extend t))))
@@ -155,9 +156,9 @@
  ;; 设置 mode-line
  '(mode-line ((t (:box nil))))
  '(mode-line-inactive ((t (:box nil))))
- ;; org 部分 ends -----------------------------------------------------------
+ ;; org 部分 ends----------------------------------------------------
 
- ;; 插件部分 -----------------------------------------------------------------
+ ;; 插件部分 --------------------------------------------------------
  '(diff-hl-change ((t (:background nil :foreground "#ffc125"))))
  '(diff-hl-delete ((t (:background nil :foreground "#ff3030"))))
  '(diff-hl-insert ((t (:background nil :foreground "green1"))))
@@ -177,6 +178,8 @@
  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
  '(orderless-match-face-1 ((t (:foreground "gold2" :weight bold))))
+ '(vertico-current ((t (:extend nil :background "gray40" :foreground "gray100"))))
+ '(marginalia-key ((t (:foreground "#79C0FF"))))
 
  )
 

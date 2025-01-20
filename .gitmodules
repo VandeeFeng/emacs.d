@@ -4,3 +4,6 @@
 [submodule "site-lisp/gruber-darker-theme"]
 	path = site-lisp/gruber-darker-theme
 	url = git@github.com:rexim/gruber-darker-theme.git
+[submodule "site-lisp/codeium.el"]
+	path = site-lisp/codeium.el
+	url = https://github.com/Exafunction/codeium.el

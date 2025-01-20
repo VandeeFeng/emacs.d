@@ -69,8 +69,8 @@
   ;; (org-roam-dailies-capture-templates
   ;;  '(("d" "daily" plain "* %<%Y-%m-%d>\n** TODO\n- \n** Inbox\n- %?"
   ;;     :if-new (file+head "%<%Y>/%<%Y-%m-%d>.org" "#+TITLE: %<%Y-%m-%d>\n"))))
-  (org-roam-directory "~/Vandee/pkm/roam/")
-  (org-id-locations-file "~/Vandee/pkm/roam/.orgids")
+  (org-roam-directory "~/Vandee/Areas/pkm/roam/")
+  (org-id-locations-file "~/Vandee/Areas/pkm/roam/.orgids")
   (org-roam-capture-templates
    `(("n" "note" plain "%?"
       :if-new (file+head "${title}.org"
@@ -189,10 +189,10 @@
                              (browse-url
                               ;; we get the "zotero:"-less url, so we put it back.
                               (format "zotero:%s" zpath))))
-  (setq org-agenda-files '("~/Vandee/pkm/org/Clips.org" "~/Vandee/pkm/org/Projects.org" "~/vandee/pkm/org/Tasks.org"))
+  (setq org-agenda-files '("~/Vandee/Areas/org/Clips.org" "~/Vandee/Areas/org/Projects.org" "~/vandee/pkm/org/Tasks.org"))
   ;; (setq org-agenda-include-diary t)
   ;; (setq org-agenda-diary-file "~/Vandee/pkm/org/Journal.org")
-  (setq org-directory "~/Vandee/pkm/org/")
+  (setq org-directory "~/Vandee/Areas/org/")
   (global-set-key (kbd "C-c c") 'org-capture)
   ;;(setq org-default-notes-file "~/Vandee/pkm/inbox.org")
   (setq org-capture-templates nil)
@@ -204,15 +204,15 @@
   ;;              '("j" "Journal" entry (file+datetree "~/Vandee/pkm/org/Journal.org")
   ;;                "* TODOs\n* Inbox\n- %?"))
   (add-to-list 'org-capture-templates
-               '("j" "Journal" entry (file+datetree "~/Vandee/pkm/org/Journal.org")
+               '("j" "Journal" entry (file+datetree "~/Vandee/Areas/org/Journal.org")
                  "* Inbox\n- %?"))
 
   (add-hook 'org-capture-after-finalize-hook
             (lambda ()
               (when (string= (org-capture-get :key) "j")
-                (find-file "~/Vandee/pkm/org/Journal.org"))))
+                (find-file "~/Vandee/Areas/org/Journal.org"))))
   (add-to-list 'org-capture-templates
-               '("i" "Inbox" entry (file+datetree "~/Vandee/pkm/org/Inbox.org")
+               '("i" "Inbox" entry (file+datetree "~/Vandee/Areas/pkm/org/Inbox.org")
                  "* %U - %^{heading} %^g\n %?\n"))
 
   (defun my-org-goto-last-todo-headline ()
@@ -226,29 +226,29 @@
   ;;                                                 my-org-goto-last-todo-headline)
   ;;                "* TODO %i%? \n%T"))
   (add-to-list 'org-capture-templates
-               '("tt" "Task" entry (file+headline "~/Vandee/pkm/org/Tasks.org" "Tasks")
+               '("tt" "Task" entry (file+headline "~/Vandee/Areas/pkm/org/Tasks.org" "Tasks")
                  "* TODO %^{任务名}\n%T\n%a\n"))
   (add-to-list 'org-capture-templates
-               '("tp" "Project" entry (file+headline "~/Vandee/pkm/org/Projects.org" "Projects")
+               '("tp" "Project" entry (file+headline "~/Vandee/Areas/pkm/org/Projects.org" "Projects")
                  "* TODO %^{任务名}\n%T"))
 
   ;; colections
   (add-to-list 'org-capture-templates '("c" "Collections"))
   (add-to-list 'org-capture-templates
                '("cw" "Web Collections" item
-                 (file+headline "~/Vandee/pkm/org/Websites.org" "实用")
+                 (file+headline "~/Vandee/Areas/pkm/org/Websites.org" "实用")
                  "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"))
   (add-to-list 'org-capture-templates
                '("ct" "Tool Collections" item
-                 (file+headline "~/Vandee/pkm/org/Tools.org" "实用")
+                 (file+headline "~/Vandee/Areas/pkm/org/Tools.org" "实用")
                  "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"))
   (add-to-list 'org-capture-templates
                '("cc" "Clip Collections" entry
-                 (file+headline "~/Vandee/pkm/org/Clips.org" "Clips")
+                 (file+headline "~/Vandee/Areas/pkm/org/Clips.org" "Clips")
                  "* %^{heading} %^g\n%T\n\nSource: %^{source}\n\n%?"))
   (add-to-list 'org-capture-templates
                '("cC" "Code Collections" entry
-                 (file+headline "~/Vandee/pkm/org/Codes.org" "Codes")
+                 (file+headline "~/Vandee/Areas/pkm/org/Codes.org" "Codes")
                  "* %U - %^{Intro} %^G\n\nSource: %^{source}\n%?"))
 
 

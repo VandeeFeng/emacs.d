@@ -471,7 +471,7 @@ input and search the whole buffer for it."
   "v a i" '(org-insert-todo-heading :wk "插入任务项")
 
   ;; "v T" '(my-tags-view :wk "my-tags-view")
-  "v t" '(my-insert-timestamp :wk "insert-timestamp")
+  "v T" '(my-insert-timestamp :wk "insert-timestamp")
   ;;"v r" '(my-remove-extra-spaces :wk "my-remove-extra-spaces")
   "v h" '(my-org-show-current-heading-tidily :wk "折叠其他标题")
   "v p" '(my-buffer-path :wk "pwd")

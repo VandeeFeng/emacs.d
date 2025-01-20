@@ -81,6 +81,8 @@
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
+ '(highlight ((t (:background "gray35"))))
+
  ;; 设置注释的样式
  '(font-lock-comment-face ((t (:foreground "#787878"))))
 
@@ -103,7 +105,7 @@
  '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
 
  ;; 设置类型的样式
- '(font-lock-type-face ((t (:weight normal :foreground "#95a99f")))) ;#FF7B72
+ '(font-lock-type-face ((t (:foreground "#a6adac" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
 
  ;; 设置文档字符串的样式
  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
@@ -164,7 +166,6 @@
  '(diff-hl-insert ((t (:background nil :foreground "green1"))))
  '(diredfl-date-time ((t nil)))
  '(diredfl-deletion ((t nil)))
- '(diredfl-dir-heading ((t nil)))
  '(diredfl-dir-name ((t (:background "#2C2C2C2C2C2C" :foreground "#79C0FF"))))
  '(diredfl-dir-priv ((t (:background "#2C2C2C2C2C2C"))))
  '(diredfl-exec-priv ((t nil)))
@@ -175,11 +176,13 @@
  '(diredfl-rare-priv ((t nil)))
  '(diredfl-read-priv ((t nil)))
  '(diredfl-write-priv ((t nil)))
+ '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
  '(orderless-match-face-1 ((t (:foreground "gold2" :weight bold))))
  '(vertico-current ((t (:extend nil :background "gray40" :foreground "gray100"))))
  '(marginalia-key ((t (:foreground "#79C0FF"))))
+ '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
 
  )
 

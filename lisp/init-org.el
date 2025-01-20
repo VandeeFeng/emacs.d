@@ -8,6 +8,25 @@
 ;;
 ;;---------------------------------------------------------------------
 
+;; org-mode open link
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (local-set-key (kbd "RET") 'org-open-at-point)))
+
+(defun my/org-roam-open-at-point ()
+  "Open the link at point, supporting both Org and Org-roam links."
+  (interactive)
+  (if (org-in-regexp org-link-bracket-re) ; 检查是否在链接上
+      (let ((link (org-element-context)))
+        (if (string= (org-element-property :type link) "org-roam") ; 判断是否是 org-roam 链接
+            (org-roam-node-visit (org-roam-node-from-id (org-element-property :path link)))
+          (org-open-at-point))) ; 默认打开链接
+    (org-return))) ; 如果不是链接，执行换行
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (local-set-key (kbd "s-<return>") 'my/org-roam-open-at-point)))
+
 ;; org-remoteimg
 (require 'org-remoteimg)
 
@@ -614,9 +633,9 @@ contextual information."
 
 (setq org-static-blog-publish-title "Vandee's Blog")
 (setq org-static-blog-publish-url "https://www.vandee.art/")
-(setq org-static-blog-publish-directory "~/vandee/org-blog/")
-(setq org-static-blog-posts-directory "~/vandee/org-blog/posts/")
-(setq org-static-blog-drafts-directory "~/vandee/org-blog/drafts/")
+(setq org-static-blog-publish-directory "~/vandee/Areas/org-blog/")
+(setq org-static-blog-posts-directory "~/vandee/Areas/org-blog/posts/")
+(setq org-static-blog-drafts-directory "~/vandee/Areas/org-blog/drafts/")
 (setq org-static-blog-enable-tags t)
 (setq org-export-with-toc t)
 (setq org-export-with-section-numbers nil)

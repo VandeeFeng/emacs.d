@@ -3,7 +3,6 @@
 ;;; Code:
 
 ;; Customized key bindings
-;;
 
 ;;----------------------------------------------------------------------------
 ;;自定义函数
@@ -121,7 +120,8 @@ fi"
     (end-of-line))
 
   ;; 在 normal 模式下将 - 键绑定到这个函数
-  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line))
+  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
+  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line))
 
 
 
@@ -446,7 +446,7 @@ input and search the whole buffer for it."
 ;;:global-prefix "M-SPC") ;; access leader in insert mode
 
 (vf/leader-keys
-  "SPC" '(counsel-M-x :wk "Counsel M-x")
+  "SPC" '(execute-extended-command :wk "M-x") ;; counsel-M-x
   "/" '(find-file :wk "Find file")
   "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
   "TAB TAB" '(comment-line :wk "Comment lines")

@@ -26,6 +26,29 @@
 (setq url-cookie-trusted-urls '()        ;不设置白名单
       url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
 
+;;取消退出确认
+(setq confirm-kill-emacs nil)
+
+
+;; ispell
+(setq ispell-program-name "/opt/homebrew/bin/ispell")
+;;
+;;auto-wrap
+(custom-set-variables
+ '(global-visual-line-mode t)
+ '(global-auto-revert-mode t))
+
+;; 开启相对行号
+(setq display-line-numbers-type 'relative) ;需要关闭 line-number-mode
+
+;; jk 退出 insert
+(with-eval-after-load 'evil
+  (use-package key-chord
+    :ensure t
+    :config
+    (key-chord-mode 1)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
+
 ;; SmoothScroll
 ;; (require 'ultra-scroll)
 ;; (ultra-scroll-mode 1)
@@ -47,31 +70,6 @@
 (setq hscroll-step 1)
 (setq hscroll-margin 1)
 ;; -SmoothScroll
-
-
-;; jk 退出 insert
-(with-eval-after-load 'evil
-  (use-package key-chord
-    :ensure t
-    :config
-    (key-chord-mode 1)
-    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
-
-;;取消退出确认
-(setq confirm-kill-emacs nil)
-
-
-;; ispell
-(setq ispell-program-name "/opt/homebrew/bin/ispell")
-;;
-;;auto-wrap
-(custom-set-variables
- '(global-visual-line-mode t)
- '(global-auto-revert-mode t))
-
-;; 开启相对行号
-(setq display-line-numbers-type 'relative) ;需要关闭 line-number-mode
-
 
 ;;--------------------------------------------
 ;; modeline 里的彩虹猫！
@@ -102,34 +100,6 @@
 
 ;;----------------------------------------------------------------------------------
 
-;; sis
-;; https://github.com/laishulu/emacs-smart-input-source
-(use-package sis
-  :hook
-  ;; enable the /context/ and /inline region/ mode for specific buffers
-  (((text-mode prog-mode) . sis-context-mode)
-   ((text-mode prog-mode) . sis-inline-mode))
-  ;; :after evil
-  :config
-  ;; For MacOS
-  (sis-ism-lazyman-config
-   ;; English input source may be: "ABC", "US" or another one.
-   ;; "com.apple.keylayout.ABC"
-   "com.apple.keylayout.ABC"
-
-   ;; Other language input source: "rime", "sogou" or another one.
-   ;; "im.rime.inputmethod.Squirrel.Rime"
-   "im.rime.inputmethod.Squirrel.Hans")
-
-  ;; enable the /cursor color/ mode
-  ;;(sis-global-cursor-color-mode t)
-  ;; enable the /respect/ mode
-  (sis-global-respect-mode t)
-  ;; enable the /context/ mode for all buffers
-  ;; (sis-global-context-mode t)
-  ;; enable the /inline english/ mode for all buffers
-  ;; (sis-global-inline-mode t)
-  )
 
 
 ;;-------------------------------------------------------------------------------------------
@@ -184,8 +154,9 @@
 
 (use-package org-cliplink
   :ensure t
+  :defer t
   )
-
+(global-set-key (kbd "M-l") 'org-cliplink)
 
 ;; gptel 设置默认ollama 模型
 (use-package gptel
@@ -202,8 +173,42 @@
     :host "localhost:11434"             ;Where it's running
     :stream t                           ;Stream responses
     :models '("qwen2.5:14b"))           ;List of models
+
+  (gptel-make-ollama "Deepseek"           ;Any name of your choosing
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("deepseek-r1:14b"))           ;List of models
+
   )
 
+;; sis
+;; https://github.com/laishulu/emacs-smart-input-source
+(use-package sis
+  :hook
+  ;; enable the /context/ and /inline region/ mode for specific buffers
+  (((text-mode prog-mode) . sis-context-mode)
+   ((text-mode prog-mode) . sis-inline-mode))
+  ;; :after evil
+  :config
+  ;; For MacOS
+  (sis-ism-lazyman-config
+   ;; English input source may be: "ABC", "US" or another one.
+   ;; "com.apple.keylayout.ABC"
+   "com.apple.keylayout.ABC"
+
+   ;; Other language input source: "rime", "sogou" or another one.
+   ;; "im.rime.inputmethod.Squirrel.Rime"
+   "im.rime.inputmethod.Squirrel.Hans")
+
+  ;; enable the /cursor color/ mode
+  ;;(sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  ;; (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  ;; (sis-global-inline-mode t)
+  )
 
 ;; evil settings
 (use-package evil
@@ -305,6 +310,7 @@
 
 ;;neotree
 (use-package neotree
+  :defer t
   :ensure t
   :config
   (setq neo-smart-open t
@@ -466,7 +472,7 @@
   (setq vertico-buffer-display-action
         '(display-buffer-in-side-window
           (side . bottom)
-          (window-height . 0.3)         ; 高度占比
+          (window-height . 0.25)         ; 高度占比
           (window-parameters . ((no-other-window . t)
                                 (mode-line-format . none)))))
   )

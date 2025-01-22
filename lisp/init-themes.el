@@ -76,8 +76,11 @@
 
 ;; 直接在 custom.el 里设置了，不要每次都重复载入
 (custom-set-faces
+ ;; globle 部分-------------------------------------------
+ '(shadow ((t (:foreground "gray70"))))
+ '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
  ;; 设置默认字体和大小
- '(default ((t (:family "Source Code Pro" :height 140 :weight light :background "1D1F21" :foreground "#d1d5db"))))
+ '(default ((t (:family "Source Code Pro" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
@@ -111,7 +114,7 @@
  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
 
  ;; 设置当前行号颜色
- ;; '(line-number-current-line ((t (:foreground "#ffdd33"))))
+ '(line-number-current-line ((t (:foreground "#ffdd33"))))
 
  ;; org 部分 --------------------------------------------------------
  ;; 代码块背景和边框
@@ -167,8 +170,7 @@
  '(diredfl-date-time ((t nil)))
  '(diredfl-deletion ((t nil)))
  '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
- '(diredfl-dir-name ((t (:background "#2C2C2C2C2C2C" :foreground "#79C0FF"))))
- '(diredfl-dir-priv ((t (:background "#2C2C2C2C2C2C"))))
+ '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
  '(diredfl-exec-priv ((t nil)))
  '(diredfl-file-name ((t nil)))
  '(diredfl-file-suffix ((t nil)))
@@ -186,7 +188,7 @@
  '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
  '(anzu-mode-line ((t (:foreground "#79C0FF" :weight bold))))
  '(anzu-mode-line-no-match ((t (:foreground "#79C0FF"))))
-
+ '(company-preview ((t (:background "gray35"))))
  )
 
 (with-eval-after-load 'org

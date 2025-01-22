@@ -187,9 +187,11 @@
 ;; ;;(setq org-agenda-files (directory-files-recursively "~/Vandee/pkm/" "\\.org$"))
 
 (use-package org
-  :defer t
+  :defer 0.1
   ;; (server-start)
   ;; (require 'org-protocol)
+  :init
+  (setq org-modules-loaded t)
   :config
   (setq org-tags-column 0) ; 如果你不希望标签固定在某一列，可以将 org-tags-column 设置为 0，这样标签会紧随标题，而不会自动对齐到特定的列。默认情况下，org-tags-column 值为 -77，即在右侧边距对齐。如果这个值较大，标签会向右偏移
   ;; 默认开启缩进
@@ -208,10 +210,10 @@
                              (browse-url
                               ;; we get the "zotero:"-less url, so we put it back.
                               (format "zotero:%s" zpath))))
-  (setq org-agenda-files '("~/Vandee/Areas/org/Clips.org" "~/Vandee/Areas/org/Projects.org" "~/vandee/pkm/org/Tasks.org"))
+  (setq org-agenda-files '("~/Vandee/Areas/pkm/org/Clips.org" "~/Vandee/Areas/pkm/org/Projects.org" "~/vandee/Areas/pkm/org/Tasks.org"))
   ;; (setq org-agenda-include-diary t)
   ;; (setq org-agenda-diary-file "~/Vandee/pkm/org/Journal.org")
-  (setq org-directory "~/Vandee/Areas/org/")
+  (setq org-directory "~/Vandee/Areas/pkm/org/")
   (global-set-key (kbd "C-c c") 'org-capture)
   ;;(setq org-default-notes-file "~/Vandee/pkm/inbox.org")
   (setq org-capture-templates nil)
@@ -223,13 +225,13 @@
   ;;              '("j" "Journal" entry (file+datetree "~/Vandee/pkm/org/Journal.org")
   ;;                "* TODOs\n* Inbox\n- %?"))
   (add-to-list 'org-capture-templates
-               '("j" "Journal" entry (file+datetree "~/Vandee/Areas/org/Journal.org")
+               '("j" "Journal" entry (file+datetree "~/Vandee/Areas/pkm/org/Journal.org")
                  "* Inbox\n- %?"))
 
   (add-hook 'org-capture-after-finalize-hook
             (lambda ()
               (when (string= (org-capture-get :key) "j")
-                (find-file "~/Vandee/Areas/org/Journal.org"))))
+                (find-file "~/Vandee/Areas/pkm/org/Journal.org"))))
   (add-to-list 'org-capture-templates
                '("i" "Inbox" entry (file+datetree "~/Vandee/Areas/pkm/org/Inbox.org")
                  "* %U - %^{heading} %^g\n %?\n"))

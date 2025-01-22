@@ -55,13 +55,13 @@
   )
 
 ;; theme
-;; (require 'gruber-darker-theme)
-;; (load-theme 'gruber-darker t)
+(require 'gruber-darker-theme)
+(load-theme 'gruber-darker t)
 (use-package almost-mono-themes
   :ensure t
   :config
   ;; (load-theme 'almost-mono-black t)
-  (load-theme 'almost-mono-gray t)
+  ;; (load-theme 'almost-mono-gray t)
   ;; (load-theme 'almost-mono-cream t)
   ;; (load-theme 'almost-mono-white t)
   )
@@ -77,7 +77,7 @@
 ;; 直接在 custom.el 里设置了，不要每次都重复载入
 (custom-set-faces
  ;; 设置默认字体和大小
- '(default ((t (:family "Source Code Pro" :height 140 :weight light :foreground "#d1d5db"))))
+ '(default ((t (:family "Source Code Pro" :height 140 :weight light :background "1D1F21" :foreground "#d1d5db"))))
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
@@ -85,12 +85,12 @@
 
  ;; 设置注释的样式
  '(font-lock-comment-face ((t (:foreground "#787878"))))
-
+ '(font-lock-comment-delimiter-face ((t (:foreground "#787878"))))
  ;; 设置字符串的样式
  ;; '(font-lock-string-face ((t (:weight normal :foreground "#96D0FF"))))
 
  ;; 设置常量的样式
- '(font-lock-constant-face ((t (:weight normal :foreground "95a99f"))))
+ ;; '(font-lock-constant-face ((t (:weight normal :foreground "95a99f"))))
 
  ;; 设置内置函数的样式
  '(font-lock-builtin-face ((t (:weight normal :foreground "#79C0FF"))))
@@ -99,19 +99,19 @@
  '(font-lock-keyword-face ((t (:weight normal :foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
 
  ;; 设置函数名的样式
- '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))
+ ;; '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))
 
  ;; 设置变量名的样式
- '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
+ ;; '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
 
  ;; 设置类型的样式
- '(font-lock-type-face ((t (:foreground "#a6adac" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
+ ;; '(font-lock-type-face ((t (:foreground "#a6adac" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
 
  ;; 设置文档字符串的样式
  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
 
  ;; 设置当前行号颜色
- '(line-number-current-line ((t (:foreground "#ffdd33"))))
+ ;; '(line-number-current-line ((t (:foreground "#ffdd33"))))
 
  ;; org 部分 --------------------------------------------------------
  ;; 代码块背景和边框
@@ -166,23 +166,26 @@
  '(diff-hl-insert ((t (:background nil :foreground "green1"))))
  '(diredfl-date-time ((t nil)))
  '(diredfl-deletion ((t nil)))
+ '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:background "#2C2C2C2C2C2C" :foreground "#79C0FF"))))
  '(diredfl-dir-priv ((t (:background "#2C2C2C2C2C2C"))))
  '(diredfl-exec-priv ((t nil)))
  '(diredfl-file-name ((t nil)))
  '(diredfl-file-suffix ((t nil)))
+ '(diredfl-no-priv ((t nil)))
  '(diredfl-number ((t nil)))
  '(diredfl-other-priv ((t nil)))
  '(diredfl-rare-priv ((t nil)))
  '(diredfl-read-priv ((t nil)))
  '(diredfl-write-priv ((t nil)))
- '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
- '(orderless-match-face-1 ((t (:foreground "gold2" :weight bold))))
+ '(orderless-match-face-1 ((t (:foreground "#79C0FF"))))
  '(vertico-current ((t (:extend nil :background "gray40" :foreground "gray100"))))
  '(marginalia-key ((t (:foreground "#79C0FF"))))
  '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
+ '(anzu-mode-line ((t (:foreground "#79C0FF" :weight bold))))
+ '(anzu-mode-line-no-match ((t (:foreground "#79C0FF"))))
 
  )
 

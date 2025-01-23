@@ -13,20 +13,6 @@
 ;;           (lambda ()
 ;;             (local-set-key (kbd "RET") 'org-open-at-point)))
 
-(defun my/org-roam-open-at-point ()
-  "Open the link at point, supporting both Org and Org-roam links."
-  (interactive)
-  (if (org-in-regexp org-link-bracket-re) ; 检查是否在链接上
-      (let ((link (org-element-context)))
-        (if (string= (org-element-property :type link) "org-roam") ; 判断是否是 org-roam 链接
-            (org-roam-node-visit (org-roam-node-from-id (org-element-property :path link)))
-          (org-open-at-point))) ; 默认打开链接
-    (org-return))) ; 如果不是链接，执行换行
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "s-<return>") 'my/org-roam-open-at-point)))
-
 ;; org-remoteimg
 (require 'org-remoteimg)
 
@@ -193,6 +179,8 @@
   :init
   (setq org-modules-loaded t)
   :config
+  (setq org-return-follows-link t) ;;开启 return 打开链接
+  (global-set-key (kbd "s-<return>") 'org-return)
   (setq org-tags-column 0) ; 如果你不希望标签固定在某一列，可以将 org-tags-column 设置为 0，这样标签会紧随标题，而不会自动对齐到特定的列。默认情况下，org-tags-column 值为 -77，即在右侧边距对齐。如果这个值较大，标签会向右偏移
   ;; 默认开启缩进
   (setq org-startup-indented t)

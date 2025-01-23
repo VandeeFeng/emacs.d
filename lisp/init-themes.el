@@ -57,14 +57,14 @@
 ;; theme
 (require 'gruber-darker-theme)
 (load-theme 'gruber-darker t)
-(use-package almost-mono-themes
-  :ensure t
-  :config
-  ;; (load-theme 'almost-mono-black t)
-  ;; (load-theme 'almost-mono-gray t)
-  ;; (load-theme 'almost-mono-cream t)
-  ;; (load-theme 'almost-mono-white t)
-  )
+;; (use-package almost-mono-themes
+;;   :ensure t
+;;   :config
+;;   ;; (load-theme 'almost-mono-black t)
+;;   (load-theme 'almost-mono-gray t)
+;;   ;; (load-theme 'almost-mono-cream t)
+;;   ;; (load-theme 'almost-mono-white t)
+;;   )
 
 ;;---------------------------------------------------------------------
 ;;
@@ -79,6 +79,8 @@
  ;; globle 部分-------------------------------------------
  '(shadow ((t (:foreground "gray70"))))
  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
+ '(show-paren-mismatch ((t (:background "HotPink3" :foreground "white"))))
+
  ;; 设置默认字体和大小
  '(default ((t (:family "Source Code Pro" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
  '(cursor ((t (:background "orange"))))
@@ -99,7 +101,7 @@
  '(font-lock-builtin-face ((t (:weight normal :foreground "#79C0FF"))))
 
  ;; 设置关键字的样式
- '(font-lock-keyword-face ((t (:foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
+ '(font-lock-keyword-face ((t (:weight normal :foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
 
  ;; 设置函数名的样式
  ;; '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))

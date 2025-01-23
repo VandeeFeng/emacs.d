@@ -65,7 +65,7 @@ fi"
 ;;       (unless (bolp)                    ; 如果不在行首，移到下一行
 ;;         (forward-line 1))
 ;;       (setq end (point)))
-    
+
 ;;     ;; 检查是否所有非空行都已注释
 ;;     (save-excursion
 ;;       (goto-char start)
@@ -80,7 +80,7 @@ fi"
 ;;               (setq all-commented nil
 ;;                     any-uncommented t)))
 ;;           (forward-line 1))
-        
+
 ;;         ;; 根据检查结果决定注释或取消注释
 ;;         (goto-char start)
 ;;         (if all-commented
@@ -100,10 +100,9 @@ fi"
 ;;                 (skip-chars-forward " \t")
 ;;                 (insert comment-str " ")))
 ;;             (forward-line 1)))))
-    
+
 ;;     ;; 重新缩进区域
 ;;     (indent-region start end)))
-
 
 ;; 执行代码块
 (defun my-execute-src-block ()

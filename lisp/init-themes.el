@@ -90,7 +90,7 @@
  '(font-lock-comment-face ((t (:foreground "#787878"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#787878"))))
  ;; 设置字符串的样式
- ;; '(font-lock-string-face ((t (:weight normal :foreground "#96D0FF"))))
+ '(font-lock-string-face ((t (:foreground "#A1D08E")))) ;#A1D08E,#A7D08A #73c936 #96D0FF
 
  ;; 设置常量的样式
  ;; '(font-lock-constant-face ((t (:weight normal :foreground "95a99f"))))
@@ -99,7 +99,7 @@
  '(font-lock-builtin-face ((t (:weight normal :foreground "#79C0FF"))))
 
  ;; 设置关键字的样式
- '(font-lock-keyword-face ((t (:weight normal :foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
+ '(font-lock-keyword-face ((t (:foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
 
  ;; 设置函数名的样式
  ;; '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))

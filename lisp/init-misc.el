@@ -151,6 +151,11 @@
 
 ;; (global-set-key (kbd "C-c m") 'chinhant-grab-mac-link)
 
+(use-package snap-indent
+  :ensure t
+  :hook (prog-mode . snap-indent-mode)
+  :custom ((snap-indent-format 'untabify)
+           (snap-indent-on-save t)))
 
 (use-package org-cliplink
   :ensure t
@@ -291,20 +296,20 @@
   :diminish
   :config
   (setq which-key-side-window-location 'bottom
-	which-key-sort-order #'which-key-key-order-alpha
-	which-key-allow-imprecise-window-fit nil
-	which-key-sort-uppercase-first nil
-	which-key-add-column-padding 1
-	which-key-max-display-columns nil
-	which-key-min-display-lines 6
-	which-key-side-window-slot -10
-	which-key-side-window-max-height 0.25
-	which-key-idle-delay 0.8
-	which-key-max-description-length 25
-	which-key-allow-imprecise-window-fit nil
+        which-key-sort-order #'which-key-key-order-alpha
+        which-key-allow-imprecise-window-fit nil
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
+        which-key-max-display-columns nil
+        which-key-min-display-lines 6
+        which-key-side-window-slot -10
+        which-key-side-window-max-height 0.25
+        which-key-idle-delay 0.8
+        which-key-max-description-length 25
+        which-key-allow-imprecise-window-fit nil
         which-key-idle-delay 0.4
         which-key-idle-secondary-delay 0.01
-	which-key-separator " → " ))
+        which-key-separator " → " ))
 
 
 

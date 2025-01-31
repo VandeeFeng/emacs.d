@@ -122,19 +122,6 @@ fi"
   (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
   (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line))
 
-
-
-;; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#3669681
-(defun my-buffer-path ()
-  "copy buffer's full path to kill ring"
-  (interactive)
-  (let ((file-path (buffer-file-name)))
-    (when file-path
-      (kill-new (file-name-directory file-path))
-      (message "Copied parent directory path: %s" (file-name-directory file-path)))))
-
-
-
 ;; (defun my-copy-buffer-file-name (event &optional bufName)
 ;;   "Copy buffer file name to kill ring.
 ;; If no file is associated with buffer just get buffer name.
@@ -270,6 +257,15 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 ;;---------------------------------------
 ;; 文件路径和文件名相关
 ;;---------------------------------------
+;; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#3669681
+(defun my-buffer-path ()
+  "copy buffer's full path to kill ring"
+  (interactive)
+  (let ((file-path (buffer-file-name)))
+    (when file-path
+      (kill-new (file-name-directory file-path))
+      (message "Copied parent directory path: %s" (file-name-directory file-path)))))
+
 (defun my/dired-copy-absolute-path ()
   "Copy the absolute file name of the file at point in Dired."
   (interactive)
@@ -585,7 +581,7 @@ input and search the whole buffer for it."
     "d d" '(dired :wk "Open dired")
     "d j" '(dired-jump :wk "Dired jump to current")
     "d n" '(dired-copy-filename-as-kill :wk "Dired copy the file name")
-    "d p" '(my/dired-copy-absolute-path :wk "Dired copy the file name")
+    "d p" '(my/dired-copy-absolute-path :wk "Dired copy the file full path")
     "d N" '(neotree-dir :wk "Open directory in neotree")
     "d r" '(dired-toggle-read-only :wk "dired-toggle-read-only")
     )
@@ -605,7 +601,8 @@ input and search the whole buffer for it."
   (vf/leader-keys
     "f" '(:ignore t :wk "Files")
     "f n" '(my/put-buffer-name-on-clipboard :wk "Put file name on clipboard")
-    "f p" '(my/put-file-name-on-clipboard :wk "Put file name on clipboard")
+    "f p" '(my/put-file-name-on-clipboard :wk "Put full file path on clipboard")
+    "f P" '(my-buffer-path :wk "Put file parent path on clipboard")
     "f d" '(find-grep-dired :wk "Search for string in files in DIR")
     "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
     "f j" '(counsel-file-jump :wk "Jump to a file below current directory")

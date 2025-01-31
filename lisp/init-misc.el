@@ -16,30 +16,36 @@
 ;; (insert (liu-yao-divination "今天运势如何？")))))
 
 ;; 启用系统复制粘贴
-;; (with-eval-after-load 'evil
-;; (define-key evil-insert-state-map (kbd "s-c") 'kill-ring-save) ; Cmd+C 复制
-;; (define-key evil-insert-state-map (kbd "s-v") 'yank) ; Cmd+V 粘贴
-;; (define-key evil-insert-state-map (kbd "s-x") 'kill-region))    ; Cmd+X 剪切
+(global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
+(global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
 
 ;; 禁止eww生成cookie
 ;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
 (setq url-cookie-trusted-urls '()        ;不设置白名单
       url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
 
-;;取消退出确认
-(setq confirm-kill-emacs nil)
+(setq-default
+ window-combination-resize t
+ x-stretch-cursor t
+ yas-triggers-in-field t
+ )
 
+(setq
+ display-line-numbers-type 'relative ;开启相对行号，需要关闭 line-number-mode
+ ispell-program-name "/opt/homebrew/bin/ispell" ;ispell
+ confirm-kill-emacs nil ;;取消退出确认
+ undo-limit 80000000
+ auto-save-default t
+ word-wrap-by-category t
+ all-the-icons-scale-factor 1.0
+ )
+(global-subword-mode t) ;; 启用 global-subword-mode 后，Emacs 会在全局范围内使用 subword-mode，这意味着在所有的缓冲区中，你都可以进行子词的导航和编辑。这在处理代码或文本时非常有用，特别是当你需要对单个字符或字符组合进行精确编辑时。
 
-;; ispell
-(setq ispell-program-name "/opt/homebrew/bin/ispell")
-;;
 ;;auto-wrap
 (custom-set-variables
  '(global-visual-line-mode t)
  '(global-auto-revert-mode t))
 
-;; 开启相对行号
-(setq display-line-numbers-type 'relative) ;需要关闭 line-number-mode
 
 ;; jk 退出 insert
 (with-eval-after-load 'evil
@@ -74,18 +80,19 @@
 ;;--------------------------------------------
 ;; modeline 里的彩虹猫！
 ;;--------------------------------------------
+;; 不知道为什么会造成滚动卡顿
 (use-package nyan-mode
   :ensure t
+  :defer 1
   :config
-  (nyan-mode 1)
-  (setq mode-line-format
-        (list
-         '(:eval (list (nyan-create)))
-         ))
-  )
+  (setq nyan-bar-length 15);设定彩虹猫的长度
+  (setq nyan-minimum-window-width 12)
+  ;;(setq nyan-animate-nyancat t) ; 开启动画 nil 关闭
+  (nyan-mode 1))
 
 ;;---------------------------------------------------------------------------------
 ;; 显示图片
+;;----------------------------------------------------------------------------------
 ;;https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E8%AE%BE%E7%BD%AEOrg%E4%B8%AD%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E7%9A%84%E5%B0%BA%E5%AF%B8.org
 ;; (setq org-image-actual-width '(400)) 要在(org-toggle-inline-images)命令之前
 ;; 或者在文档开头加上 #+ATTR_ORG: :width 600 ，并设置(setq org-image-actual-width nil)
@@ -97,10 +104,6 @@
                            (org-toggle-inline-images)
                            (when org-startup-with-inline-images
                              (org-display-inline-images t))))
-
-;;----------------------------------------------------------------------------------
-
-
 
 ;;-------------------------------------------------------------------------------------------
 ;; 窗口大小设定
@@ -120,19 +123,6 @@
 ;;                                    (* 6 (frame-char-width)))))))
 
 
-(setq-default
- window-combination-resize t
- x-stretch-cursor t
- yas-triggers-in-field t
- )
-
-(setq
- undo-limit 80000000
- auto-save-default t
- word-wrap-by-category t
- all-the-icons-scale-factor 1.0
- )
-(global-subword-mode t) ;; 启用 global-subword-mode 后，Emacs 会在全局范围内使用 subword-mode，这意味着在所有的缓冲区中，你都可以进行子词的导航和编辑。这在处理代码或文本时非常有用，特别是当你需要对单个字符或字符组合进行精确编辑时。
 
 ;;-------------------------------------------------------------------------------------------
 ;;
@@ -469,7 +459,7 @@
   (vertico-count 15)                    ; 显示候选项数量
   (vertico-resize t)                    ; 自动调整大小
   (vertico-cycle t)                     ; 循环滚动
-
+  ;;(vterm-copy-mode t)
   ;; 使用buffer模式
   :config
   (vertico-buffer-mode)
@@ -500,6 +490,9 @@
 
 ;; 自定义 vterm 在 minibuffer 中的行为
 (with-eval-after-load 'vterm
+  (evil-define-key '(normal insert) vterm-mode-map (kbd "C-y") #'vterm-yank)
+  (evil-define-key '(normal) vterm-mode-map (kbd "p") #'vterm-yank)
+  (evil-define-key '(normal) vterm-mode-map (kbd "u") #'vterm-undo)
   (setq vterm-min-window-width 30)
   (setq vterm-kill-buffer-on-exit t)  ; 退出时自动关闭buffer
 
@@ -513,21 +506,21 @@
 (add-hook 'vterm-mode-hook
           (lambda ()
             ;; One Dark 主题配色
-            (set-face-attribute 'vterm-color-black nil 
+            (set-face-attribute 'vterm-color-black nil
                                 :foreground "#282c34" :background "#282c34")
-            (set-face-attribute 'vterm-color-red nil 
+            (set-face-attribute 'vterm-color-red nil
                                 :foreground "#e06c75" :background "#e06c75")
-            (set-face-attribute 'vterm-color-green nil 
+            (set-face-attribute 'vterm-color-green nil
                                 :foreground "#98c379" :background "#98c379")
-            (set-face-attribute 'vterm-color-yellow nil 
+            (set-face-attribute 'vterm-color-yellow nil
                                 :foreground "#e5c07b" :background "#e5c07b")
-            (set-face-attribute 'vterm-color-blue nil 
+            (set-face-attribute 'vterm-color-blue nil
                                 :foreground "#61afef" :background "#61afef")
-            (set-face-attribute 'vterm-color-magenta nil 
+            (set-face-attribute 'vterm-color-magenta nil
                                 :foreground "#c678dd" :background "#c678dd")
-            (set-face-attribute 'vterm-color-cyan nil 
+            (set-face-attribute 'vterm-color-cyan nil
                                 :foreground "#56b6c2" :background "#56b6c2")
-            (set-face-attribute 'vterm-color-white nil 
+            (set-face-attribute 'vterm-color-white nil
                                 :foreground "#abb2bf" :background "#abb2bf")))
 
 

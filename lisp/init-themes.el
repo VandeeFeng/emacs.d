@@ -173,6 +173,7 @@
  '(diredfl-deletion ((t nil)))
  '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
+ '(diredfl-dir-priv ((t nil)))
  '(diredfl-exec-priv ((t nil)))
  '(diredfl-file-name ((t nil)))
  '(diredfl-file-suffix ((t nil)))

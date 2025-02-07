@@ -544,6 +544,7 @@ input and search the whole buffer for it."
     "n" '(:ignore t :wk "notes")
     ;; "n j" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
     "n i" '(org-roam-node-insert :wk "org-roam-node-insert")
+    "n a" '(org-agenda:wk "org-agenda")
     "n I" '(org-roam-node-insert-immediate :wk "org-roam-node-insert-immediate")
     ;; "r n" '(org-roam-capture :wk "org-roam-capture")
     "n f" '(org-roam-node-find :wk "org-roam-node-find")

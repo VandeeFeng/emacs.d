@@ -77,18 +77,6 @@
 (setq hscroll-margin 1)
 ;; -SmoothScroll
 
-;;--------------------------------------------
-;; modeline 里的彩虹猫！
-;;--------------------------------------------
-;; 不知道为什么会造成滚动卡顿
-(use-package nyan-mode
-  :ensure t
-  :defer 1
-  :config
-  (setq nyan-bar-length 15);设定彩虹猫的长度
-  (setq nyan-minimum-window-width 12)
-  ;;(setq nyan-animate-nyancat t) ; 开启动画 nil 关闭
-  (nyan-mode 1))
 
 ;;---------------------------------------------------------------------------------
 ;; 显示图片

@@ -673,7 +673,7 @@ contextual information."
       <a href=\"archive.html\">Archive</a>
       <a href=\"tags.html\">Tags</a>
       <div id=\"search-container\">
-        <input type=\"text\" id=\"search-input\" placeholder=\"Search anywhere...\">
+        <input type=\"text\" id=\"search-input\" placeholder=\"e.g. Emacs PKM...\">
         <i class=\"fas fa-search search-icon\"></i>
       </div>
       </nav>

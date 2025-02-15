@@ -19,6 +19,9 @@
 (global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
 (global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
 
+;; 关闭 warning
+;; (setq warning-minimum-level :emergency)
+
 ;; 禁止eww生成cookie
 ;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
 (setq url-cookie-trusted-urls '()        ;不设置白名单

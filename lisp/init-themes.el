@@ -74,7 +74,7 @@
   :ensure t
   :defer 1
   :config
-  (setq nyan-bar-length 20);设定彩虹猫的长度
+  (setq nyan-bar-length 16);设定彩虹猫的长度
   (setq nyan-minimum-window-width 12)
   ;;(setq nyan-animate-nyancat t) ; 开启动画 nil 关闭
   (nyan-mode 1))
@@ -147,7 +147,7 @@
  ;; 设置文档标题 (#+TITLE:)
  '(org-document-title ((t (:inherit default :weight bold
                                     :height 1.5 ; 文档标题字体大小
-                                    :underline unspecified ; 添加下划线
+                                    :underline nil ; 添加下划线
                                     ))))           ; 标题颜色
 
  ;; 设置特殊关键字 (#+STARTUP: 等)
@@ -157,10 +157,10 @@
                                ))))
 
  ;; 设置时间戳颜色
- '(org-date ((t (:foreground "#61AFEF" :background unspecified :weight normal))))
+ '(org-date ((t (:foreground "#61AFEF" :background nil :weight normal))))
 
  ;; 设置 org-tags 的颜色
- '(org-tag ((t (:foreground "#8B949E" :weight normal :height 0.9 :inherit unspecified :slant normal))))
+ '(org-tag ((t (:foreground "#8B949E" :weight normal :height 0.9 :inherit nil :slant normal))))
 
  ;; 设置 org-block-begin-line 的样式
  '(org-block-begin-line ((t (:background "#252525" :foreground "#757575" :extend t :italic t))))
@@ -174,32 +174,34 @@
  ;; 设置 org-code 的样式
  '(org-code ((t (:foreground "#da8548" :weight normal))))
  ;; 设置 mode-line
- '(mode-line ((t (:box unspecified))))
- '(mode-line-inactive ((t (:box unspecified))))
+ '(mode-line ((t (:box nil))))
+ '(mode-line-inactive ((t (:box nil))))
  ;; org 部分 ends----------------------------------------------------
 
  ;; 插件部分 --------------------------------------------------------
- '(diff-hl-change ((t (:background unspecified :foreground "#ffc125"))))
- '(diff-hl-delete ((t (:background unspecified :foreground "#ff3030"))))
- '(diff-hl-insert ((t (:background unspecified :foreground "green1"))))
- '(diredfl-date-time ((t unspecified)))
- '(diredfl-deletion ((t unspecified)))
+ '(diff-hl-change ((t (:background nil :foreground "#ffc125"))))
+ '(diff-hl-delete ((t (:background nil :foreground "#ff3030"))))
+ '(diff-hl-insert ((t (:background nil :foreground "green1"))))
+ '(diredfl-date-time ((t nil)))
+ '(diredfl-deletion ((t nil)))
  '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
- '(diredfl-dir-priv ((t unspecified)))
- '(diredfl-exec-priv ((t unspecified)))
- '(diredfl-file-name ((t unspecified)))
- '(diredfl-file-suffix ((t unspecified)))
- '(diredfl-no-priv ((t unspecified)))
- '(diredfl-number ((t unspecified)))
- '(diredfl-other-priv ((t unspecified)))
- '(diredfl-rare-priv ((t unspecified)))
- '(diredfl-read-priv ((t unspecified)))
- '(diredfl-write-priv ((t unspecified)))
+ '(diredfl-dir-priv ((t nil)))
+ '(diredfl-exec-priv ((t nil)))
+ '(diredfl-file-name ((t nil)))
+ '(diredfl-file-suffix ((t nil)))
+ '(diredfl-no-priv ((t nil)))
+ '(diredfl-number ((t nil)))
+ '(diredfl-other-priv ((t nil)))
+ '(diredfl-rare-priv ((t nil)))
+ '(diredfl-read-priv ((t nil)))
+ '(diredfl-write-priv ((t nil)))
  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
- '(orderless-match-face-1 ((t (:foreground "#79C0FF"))))
- '(vertico-current ((t (:extend unspecified :background "gray40" :foreground "gray100"))))
+ '(orderless-match-face-1 ((t (:foreground "#79C0FF" :weight medium))))
+ '(orderless-match-face-2 ((t (:foreground "#79C0FF" :weight medium))))
+ '(orderless-match-face-3 ((t (:foreground "#79C0FF" :weight medium))))
+ '(vertico-current ((t (:extend nil :background "gray40" :foreground "gray100"))))
  '(marginalia-key ((t (:foreground "#79C0FF"))))
  '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
  '(anzu-mode-line ((t (:foreground "#79C0FF" :weight bold))))

@@ -562,6 +562,7 @@ input and search the whole buffer for it."
     "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
     "b d" '(bookmark-delete :wk "Delete bookmark")
     "b i" '(ibuffer :wk "Ibuffer")
+    "b v" '(view-buffer :wk "View all the buffers")
     "b k" '(kill-current-buffer :wk "Kill current buffer")
     "b K" '(kill-all-buffers-except-scratch :wk "Kill all buffers")
     "b D" '(kill-some-buffers :wk "Kill multiple buffers")
@@ -580,6 +581,7 @@ input and search the whole buffer for it."
   (vf/leader-keys
     "d" '(:ignore t :wk "Dired")
     "d d" '(dired :wk "Open dired")
+    "d c" '(dired-create-empty-file :wk "Dired create file")
     "d j" '(dired-jump :wk "Dired jump to current")
     "d n" '(dired-copy-filename-as-kill :wk "Dired copy the file name")
     "d p" '(my/dired-copy-absolute-path :wk "Dired copy the file full path")
@@ -683,6 +685,7 @@ input and search the whole buffer for it."
     "w n" '(evil-window-new :wk "New window")
     "w s" '(evil-window-split :wk "Horizontal split window")
     "w v" '(evil-window-vsplit :wk "Vertical split window")
+    "w d" '(delete-other-windows :wk "Delete other windows")
     ;; Window motions
     "w h" '(evil-window-left :wk "Window left")
     "w j" '(evil-window-down :wk "Window down")

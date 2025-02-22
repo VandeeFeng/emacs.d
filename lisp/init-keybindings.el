@@ -191,7 +191,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 (defun my-tags-view ()
   "Show all headlines for org files matching a TAGS criterion."
   (interactive)
-  (let* ((org-agenda-files '("~/Vandee/pkm"))
+  (let* ((org-agenda-files '("~/Vandee/Areas/pkm"))
          (org-tags-match-list-sublevels nil))
     (call-interactively 'org-tags-view)))
 
@@ -517,7 +517,9 @@ input and search the whole buffer for it."
     "l s" '(gptel-send :wk "gpt发送")
     "l n" '(gptel :wk "gpt新buffer")
     "l m" '(gptel-menu :wk "gpt-send-menu")
+    "l a" '(aidermacs-transient-menu :wk "aidermacs-transient-menu")
     )
+
   (vf/leader-keys
     "v" '(:ignore t :wk "Vandee")
     ;; "v C" '(my/comment-or-uncomment-region-codes :wk "comment or uncomment codes")
@@ -551,7 +553,7 @@ input and search the whole buffer for it."
     "n" '(:ignore t :wk "notes")
     ;; "n j" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
     "n i" '(org-roam-node-insert :wk "org-roam-node-insert")
-    "n a" '(org-agenda:wk "org-agenda")
+    "n a" '(org-agenda :wk "org-agenda")
     "n I" '(org-roam-node-insert-immediate :wk "org-roam-node-insert-immediate")
     ;; "r n" '(org-roam-capture :wk "org-roam-capture")
     "n f" '(org-roam-node-find :wk "org-roam-node-find")

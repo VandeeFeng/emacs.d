@@ -8,12 +8,15 @@
 ;;
 ;;------------------------------------------------------------------------------------------
 ;; 在启动时自动运行一次占卜
-;; (add-hook 'emacs-startup-hook
-;; (lambda ()
-;; (with-current-buffer "*scratch*"
-;; (goto-char (point-max))
-;; (insert "\n\n;; 今日运势\n")
-;; (insert (liu-yao-divination "今天运势如何？")))))
+(require 'gua.el
+         )
+(setq gua-llm-enabled t)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (with-current-buffer "*scratch*"
+              (goto-char (point-max))
+              (insert "\n\n;; 今日运势\n")
+              (insert (gua-divination "今天运势如何？")))))
 
 ;; 启用系统复制粘贴
 (global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w

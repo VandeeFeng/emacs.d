@@ -10,3 +10,9 @@
 [submodule "site-lisp/aidermacs"]
 	path = site-lisp/aidermacs
 	url = git@github.com:MatthewZMD/aidermacs.git
+[submodule "site-list/gua.el"]
+	path = site-list/gua.el
+	url = git@github.com:VandeeFeng/gua.el.git
+[submodule "site-lisp/gua.el"]
+	path = site-lisp/gua.el
+	url = git@github.com:VandeeFeng/gua.el.git

@@ -80,7 +80,8 @@
 (setq hscroll-margin 1)
 ;; -SmoothScroll
 
-
+;; 设置默认 compile 指令
+(setq compile-command "")
 ;;---------------------------------------------------------------------------------
 ;; 显示图片
 ;;----------------------------------------------------------------------------------
@@ -144,6 +145,17 @@
   )
 (global-set-key (kbd "M-l") 'org-cliplink)
 
+;; aidermacs
+(use-package aidermacs
+  :config
+  (setq aidermacs-default-model "ollama/qwen2.5:14b")
+  (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+  (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
+                                        ; See the Configuration section below
+  (setq aidermacs-backend 'vterm)
+  ;;(setq aidermacs-use-architect-mode t)
+  )
+
 ;; gptel 设置默认ollama 模型
 (use-package gptel
   :defer t
@@ -160,10 +172,10 @@
     :stream t                           ;Stream responses
     :models '("qwen2.5:14b"))           ;List of models
 
-  (gptel-make-ollama "Deepseek"           ;Any name of your choosing
+  (gptel-make-ollama "Deepseek"         ;Any name of your choosing
     :host "localhost:11434"             ;Where it's running
     :stream t                           ;Stream responses
-    :models '("deepseek-r1:14b"))           ;List of models
+    :models '("deepseek-r1:14b"))       ;List of models
 
   )
 

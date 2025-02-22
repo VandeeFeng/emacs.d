@@ -7,6 +7,12 @@
 ;;----------------------------------------------------------------------------
 ;;自定义函数
 ;;----------------------------------------------------------------------------
+;; compile grep
+(defun my/compile-grep-rn (pattern)
+  "Run `grep -rn` with the given PATTERN in the current directory."
+  (interactive "sGrep pattern: ")
+  (compile (format "grep -rn '%s' ." pattern)))
+
 ;; 隐藏 macos 里 Emacs 的 menu bar https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where
 
 (defun dwim-shell-commands-macos-toggle-menu-bar-autohide ()
@@ -501,15 +507,16 @@ input and search the whole buffer for it."
   (vf/leader-keys
     "SPC" '(execute-extended-command :wk "M-x") ;; counsel-M-x
     "/" '(find-file :wk "Find file")
+    "." '(compile :wk "Compile")
     "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "TAB TAB" '(comment-line :wk "Comment lines")
     "u" '(universal-argument :wk "Universal argument"))
 
   (vf/leader-keys
-    "g" '(:ignore t :wk "GPT like")
-    "g s" '(gptel-send :wk "gpt发送")
-    "g n" '(gptel :wk "gpt新buffer")
-    "g m" '(gptel-menu :wk "gpt-send-menu")
+    "l" '(:ignore t :wk "LLM like")
+    "l s" '(gptel-send :wk "gpt发送")
+    "l n" '(gptel :wk "gpt新buffer")
+    "l m" '(gptel-menu :wk "gpt-send-menu")
     )
   (vf/leader-keys
     "v" '(:ignore t :wk "Vandee")
@@ -665,6 +672,7 @@ input and search the whole buffer for it."
     "s d" '(my/search-cwd :wk "Search cwd")
     "s D" '(my/search-other-cwd :wk "Search another dictionary")
     "s b" '(my/search-buffer :wk "Search buffer")
+    "s c" '(my/compile-grep-rn :wk "Compile grep")
     )
 
   (vf/leader-keys

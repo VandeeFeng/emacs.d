@@ -9,4 +9,4 @@
 	url = https://github.com/Exafunction/codeium.el
 [submodule "site-lisp/aidermacs"]
 	path = site-lisp/aidermacs
-	url = https://github.com/MatthewZMD/aidermacs
+	url = git@github.com:MatthewZMD/aidermacs.git

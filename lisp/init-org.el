@@ -50,13 +50,21 @@
 (use-package ob-rust
   :ensure t)
 
+;; 代码块格式设置
+;; (setq org-src-tab-acts-natively t)               ;; 在代码块中使用原生的tab行为
+;; (setq org-adapt-indentation nil)                 ;; 禁止自动缩进
+;; (setq org-src-ask-before-returning-to-edit-buffer nil)  ;; 编辑代码块时不询问
+;; (setq org-html-htmlize-output-type 'nil) ;禁用 Emacs 的语法高亮渲染
+;; 代码块缩进设置
+(setq org-src-preserve-indentation t)            ;; 保持原始缩进
+(setq org-edit-src-content-indentation 0)        ;; 设置代码块的基础缩进为0
+(setq org-export-babel-evaluate nil)
 
 ;; 折叠标题层级
 ;; https://emacs-china.org/t/org-startup-show2levels/16499
 ;; 可单独配置 #+STARTUP: show2levels
 ;;(setq org-startup-folded 'show2levels)
 
-;;(setq org-adapt-indentation t)
 
 ;;-------------------------------------------------------------------------------
 ;;
@@ -593,32 +601,103 @@
 ;;----------------------------------------------
 ;; org-publish
 ;; ----------------------------------------------
-;; 覆盖 org-html-src-block
-;; (setq org-html-htmlize-output-type 'nil) ;禁用 Emacs 的语法高亮渲染
+
 (defun my/org-html-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to HTML.
 CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
   (if (org-export-read-attribute :attr_html src-block :textarea)
       (org-html--textarea-block src-block)
-    (let* ((lang (or (org-element-property :language src-block) "nil"))  ; 使用 "nil" 作为默认语言
+    (let* ((lang (or (org-element-property :language src-block) "nil")) ; 使用 "nil" 作为默认语言
            (code (org-html-format-code src-block info))
            (label (let ((lbl (org-element-property :name src-block)))
                     (if lbl (org-html--anchor lbl nil info) ""))))
-      (format
-       "<div class=\"org-src-container\">\n%s%s\n</div>"
-       (if (not (string= label ""))
-           (format "<label class=\"org-src-name\">%s</label>\n" label)
-         "")
-       (format "<pre class=\"src src-%s\">%s</pre>"
-               lang code)))))
-;; 设置导出使用当前的 org-html-src-block 函数
-(advice-add 'org-html-src-block :override #'my/org-html-src-block)
+      (format "<div class=\"org-src-container\">\n%s%s\n</div>"
+              (if (not (string= label ""))
+                  (format "<label class=\"org-src-name\">%s</label>\n" label)
+                "")
+              (format "<pre class=\"src src-%s\">%s</pre>"
+                      lang
+                      (replace-regexp-in-string "[ \t\n]*$" "" code))))))
+
+(defun my/org-html-fontify-code (code lang)
+  "Fontify CODE block using LANG mode.
+This is a modified version that prevents sh-mode indentation."
+  (with-temp-buffer
+    (insert code)
+    (let ((inhibit-message t))  ; 抑制所有消息
+      (delay-mode-hooks        ; 延迟模式钩子
+        (let ((major-mode nil) ; 清除主模式
+              (sh-basic-offset 0)
+              (sh-indentation 0)
+              (indent-line-function 'ignore)
+              (before-change-functions nil)
+              (after-change-functions nil)
+              (org-src-preserve-indentation t))
+          (cond
+           ;; 对于 shell 脚本特殊处理
+           ((member lang '("sh" "bash" "shell"))
+            (progn
+              (fundamental-mode)
+              (font-lock-mode 1)))
+           ;; 对于没有指定语言的代码块
+           ((or (null lang) (string= lang "nil") (string= lang ""))
+            (progn
+              (fundamental-mode)
+              (font-lock-mode 1)))
+           ;; 其他语言正常处理
+           (t
+            (let ((mode-name (intern (concat lang "-mode"))))
+              (if (fboundp mode-name)
+                  (funcall mode-name)
+                ;; 如果找不到对应的模式，使用 fundamental-mode
+                (fundamental-mode)
+                (font-lock-mode 1))))))))
+    (font-lock-ensure)
+    (buffer-string)))
+
+;; 替换原有的代码高亮函数和代码块处理函数
+(with-eval-after-load 'org-static-blog
+  (advice-add 'org-html-fontify-code :override #'my/org-html-fontify-code)
+  (advice-add 'org-html-src-block :override #'my/org-html-src-block))
+
+;; 确保 sh-mode 不会自动设置缩进
+(with-eval-after-load 'sh-script
+  (setq sh-basic-offset 0)
+  (setq sh-indentation 0)
+  (advice-add 'sh-set-indent :override #'ignore))
+
+;; 修改 org-static-blog 的发布过程
+(defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
+  "Advice to control indentation during file publishing."
+  (let ((before-save-hook nil)         ; 清空保存钩子
+        (after-save-hook nil)          ; 清空保存后钩子
+        (write-file-functions nil)     ; 清空写文件函数
+        (indent-line-function #'ignore) ; 禁用行缩进
+        (org-src-preserve-indentation t)
+        (org-edit-src-content-indentation 0)
+        ;; shell 相关设置
+        (sh-basic-offset 0)
+        (sh-indentation 0)
+        ;; org 导出设置
+        (org-html-indent nil)
+        ;; 其他缩进控制
+        (indent-tabs-mode nil)
+        (tab-width 0))
+    (apply orig-fun args)))
+
+(with-eval-after-load 'org-static-blog
+  (advice-add 'org-static-blog-publish-file :around #'my/org-static-blog-publish-file-advice))
 
 
-;;----------------------------------------------
+;; https://taxodium.ink/org-publish-blog.html ,开启内容折叠
+;; (setq org-html-html5-fancy t)
+;; (setq org-html-doctype "html5")
+
+;; ;;----------------------------------------------
 ;; org-blog
 ;; ----------------------------------------------
+;; https://github.com/bastibe/org-static-blog/blob/master/org-static-blog.el
 ;; org-static-blog config
 
 (setq org-static-blog-publish-title "Vandee's Blog")

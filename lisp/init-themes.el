@@ -215,6 +215,7 @@
   (setq org-src-tab-acts-natively t)
   ;; 设置行内make up，直接显示*粗体*，/斜体/，=高亮=，~代码~
   (setq org-hide-emphasis-markers t)
+  (setq org-fontify-quote-and-verse-blocks t) ;;开启之后 quote 的 block 才会有背景色
   )
 
 ;; (with-eval-after-load 'faces

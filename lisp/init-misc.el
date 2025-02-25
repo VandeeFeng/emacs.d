@@ -8,17 +8,21 @@
 ;;
 ;;------------------------------------------------------------------------------------------
 ;; 在启动时自动运行一次占卜
-;; (require 'gua.el
-;;          )
-;; (setq gua-llm-enabled t)
+(require 'gua.el)
+(setq gua-llm-enabled t)
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda ()
 ;;             (with-current-buffer "*scratch*"
 ;;               (goto-char (point-max))
 ;;               (insert "\n\n;; 今日运势\n")
-;;               (insert (gua-divination "今天运势如何？")))))
+;;               (gua-divination
+;;                "今天运势如何？"
+;;                (lambda (result)
+;;                  (with-current-buffer "*scratch*"
+;;                    (goto-char (point-max))
+;;                    (insert result)))))))
 
-;; 启用系统复制粘贴
+;; ;; 启用系统复制粘贴
 (global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
 (global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
 
@@ -499,8 +503,7 @@
   (evil-define-key '(normal insert) vterm-mode-map (kbd "C-y") #'vterm-yank)
   (evil-define-key '(normal) vterm-mode-map (kbd "p") #'vterm-yank)
   (evil-define-key '(normal) vterm-mode-map (kbd "u") #'vterm-undo)
-  (setq vterm-min-window-width 30)
-  (setq vterm-kill-buffer-on-exit t)  ; 退出时自动关闭buffer
+  (evil-define-key 'normal vterm-mode-map (kbd "q") #'delete-window)
 
   ;; 为 vterm-mode 添加 hook，确保在打开时进入 insert 状态
   (add-hook 'vterm-mode-hook

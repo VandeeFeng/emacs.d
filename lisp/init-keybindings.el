@@ -7,6 +7,16 @@
 ;;----------------------------------------------------------------------------
 ;;自定义函数
 ;;----------------------------------------------------------------------------
+;; org 标题链接
+(defun my/org-get-current-headline-link ()
+  "Get the org-mode link for the current headline."
+  (interactive)
+  (let ((headline (org-get-heading)))
+    (when headline
+      (let ((link (concat "[[file:" (buffer-file-name) "::*" headline "][" headline "]]")))
+        (kill-new link) ; Copy to kill-ring (clipboard)
+        (message "Org-mode link for current headline copied to clipboard.")))))
+
 ;; compile grep
 (defun my/compile-grep-rn (pattern)
   "Run `grep -rn` with the given PATTERN in the current directory."
@@ -618,7 +628,8 @@ input and search the whole buffer for it."
     "f d" '(find-grep-dired :wk "Search for string in files in DIR")
     "f g" '(counsel-grep-or-swiper :wk "Search for string current file")
     "f j" '(counsel-file-jump :wk "Jump to a file below current directory")
-    "f l" '(counsel-locate :wk "Locate a file")
+    ;; "f l" '(counsel-locate :wk "Locate a file")
+    "f l" '(my/org-get-current-headline-link :wk "org-get-current-headline-link")
     "f r" '(recentf :wk "Find recent files")
     "f u" '(sudo-edit-find-file :wk "Sudo find file")
     "f U" '(sudo-edit :wk "Sudo edit file"))

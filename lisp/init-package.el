@@ -49,7 +49,7 @@
 (use-package auto-package-update
   :if (not (daemonp))
   :custom
-  (auto-package-update-interval 21) ;; in days
+  (auto-package-update-interval 90) ;; in days
   (auto-package-update-prompt-before-update t)
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)

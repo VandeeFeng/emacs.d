@@ -747,8 +747,8 @@ This is a modified version that prevents sh-mode indentation."
       <h1><a href=\"%s\">Vandee's Blog</a></h1>
       <nav>
       <a href=\"%s\">Home</a>
-      <a href=\"https://x.vandee.art/wiki\">Wiki</a>
-      <a href=\"https://x.vandee.art/photo\">Photo</a>
+      <a href=\"https://x404.xyz/wiki\">Wiki</a>
+      <a href=\"https://x404.xyz/photo\">Photo</a>
       <a href=\"archive.html\">Archive</a>
       <a href=\"tags.html\">Tags</a>
       <div id=\"search-container\">

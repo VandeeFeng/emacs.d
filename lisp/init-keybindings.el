@@ -19,9 +19,9 @@
 
 ;; compile grep
 (defun my/compile-grep-rn (pattern)
-  "Run `grep -rn` with the given PATTERN in the current directory."
+  "Run `grep -irn` with the given PATTERN in the current directory."
   (interactive "sGrep pattern: ")
-  (compile (format "grep -rn '%s' ." pattern)))
+  (compile (format "grep -irn '%s' ." pattern)))
 
 ;; 隐藏 macos 里 Emacs 的 menu bar https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where
 

@@ -7,6 +7,55 @@
 ;;----------------------------------------------------------------------------
 ;;自定义函数
 ;;----------------------------------------------------------------------------
+
+(defun my/org-datetree-progress-bar ()
+  "Scan the datetree in the current Org file and insert a custom progress bar."
+  (interactive)
+  (let* ((file (buffer-file-name))
+         (today (current-time))
+         (current-year (nth 5 (decode-time today)))
+         (total-days (date-days-in-year current-year))
+         (year-start (encode-time 0 0 0 1 1 current-year))
+         (day-of-year (1+ (- (time-to-days today) (time-to-days year-start))))
+         (days-so-far 0)
+         (progress-bar-width 20)
+         progress-bar)
+
+    (unless (and file (string-match-p "\\.org$" file))
+      (error "Not in an Org file"))
+
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward (format "^\\*\\*\\* %d-\\([0-1][0-9]\\)-\\([0-3][0-9]\\)" current-year) nil t)
+        (setq days-so-far (1+ days-so-far))))
+
+    (let* ((progress (if (and (numberp day-of-year) (numberp total-days) (> total-days 0))
+                         (/ (float day-of-year) total-days)
+                       0.0))
+           (filled-bars (floor (* progress progress-bar-width)))
+           (empty-bars (- progress-bar-width filled-bars)))
+
+      (setq progress-bar (concat "["
+                                 (make-string filled-bars ?█)
+                                 (make-string empty-bars ?-)
+                                 "] "
+                                 (format "%.1f%%" (* progress 100))))
+
+      (message "Year: %d, Day of Year: %d, Total Days: %d, Progress: %.2f"
+               current-year day-of-year total-days progress))
+
+    (insert (format "\n* Progress for %d\n%s\n" current-year progress-bar))))
+
+(defun date-days-in-year (year)
+  "Return the number of days in YEAR."
+  (if (and (numberp year)
+           (= (% year 4) 0)
+           (or (not (= (% year 100) 0))
+               (= (% year 400) 0)))
+      366
+    365))
+
+
 ;; org 标题链接
 (defun my/org-get-current-headline-link ()
   "Get the org-mode link for the current headline."
@@ -14,7 +63,7 @@
   (let ((headline (org-get-heading)))
     (when headline
       (let ((link (concat "[[file:" (buffer-file-name) "::*" headline "][" headline "]]")))
-        (kill-new link) ; Copy to kill-ring (clipboard)
+        (kill-new link)                ; Copy to kill-ring (clipboard)
         (message "Org-mode link for current headline copied to clipboard.")))))
 
 ;; compile grep
@@ -103,7 +152,7 @@ fi"
 ;;             ;; 取消注释
 ;;             (while (< (point) end)
 ;;               (beginning-of-line)
-;;               (when (re-search-forward 
+;;               (when (re-search-forward
 ;;                      (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?")
 ;;                      (line-end-position) t)
 ;;                 (replace-match ""))

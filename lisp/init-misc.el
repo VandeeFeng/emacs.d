@@ -692,6 +692,7 @@
 
 ;; https://emacs-china.org/t/deepseek-claude-gemini-ollama-minuet-ai-el/28715
 ;; (use-package minuet
+;;   :ensure t
 ;;   :bind
 ;;   (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
 ;;    ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
@@ -740,14 +741,14 @@
   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
   ;; or on a hook
   ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
+  ;;           (lambda ()
+  ;;             (setq-local completion-at-point-functions '(codeium-completion-at-point))))
 
-  ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
+  ;; ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
   ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local completion-at-point-functions
-  ;;             (list (cape-capf-super #'codeium-completion-at-point #'lsp-completion-at-point)))))
+  ;;           (lambda ()
+  ;;             (setq-local completion-at-point-functions
+  ;;                         (list (cape-capf-super #'codeium-completion-at-point #'lsp-completion-at-point)))))
   ;; an async company-backend is coming soon!
 
   ;; codeium-completion-at-point is autoloaded, but you can

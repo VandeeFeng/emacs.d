@@ -4,8 +4,186 @@
 
 
 ;; ==============================================
-;; mutiple cursor
+;; editing functions
 ;; ==============================================
+
+(defun my/remember-init ()
+  "Remember current position and setup."
+  (interactive)
+  (point-to-register 8)
+  (message "Have remember one position"))
+
+(defun my/remember-jump ()
+  "Jump to latest position and setup."
+  (interactive)
+  (let ((tmp (point-marker)))
+    (jump-to-register 8)
+    (set-register 8 tmp))
+  (message "Have back to remember position"))
+
+;; org 标题链接
+(defun my/org-get-current-headline-link ()
+  "Get the org-mode link for the current headline."
+  (interactive)
+  (let ((headline (org-get-heading)))
+    (when headline
+      (let ((link (concat "[[file:" (buffer-file-name) "::*" headline "][" headline "]]")))
+        (kill-new link)                ; Copy to kill-ring (clipboard)
+        (message "Org-mode link for current headline copied to clipboard.")))))
+
+;; compile grep
+(defun my/compile-grep-rn (pattern)
+  "Run `grep -irn` with the given PATTERN in the current directory."
+  (interactive "sGrep pattern: ")
+  (compile (format "grep -irn '%s' ." pattern)))
+
+;; 执行代码块
+(defun my-execute-src-block ()
+  "Execute the selected org code block and display a message."
+  (interactive)
+  (message "Executing selected org code block...")
+  (org-babel-execute-src-block))
+
+;; 在 normal 模式下将 - 键导航到行尾
+(with-eval-after-load 'evil
+  (defun move-to-end-of-line ()
+    "Move the cursor to the end of the current line."
+    (interactive)
+    (end-of-line))
+
+  ;; 在 normal 模式下将 - 键绑定到这个函数
+  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
+  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line))
+
+;;在minibuffer里使用shell指令
+;;https://stackoverflow.com/questions/10121944/passing-emacs-variables-to-minibuffer-shell-commands
+(defun my-shell-command (command &optional output-buffer error-buffer)
+  "Run a shell command with the current file (or marked dired files).
+In the shell command, the file(s) will be substituted wherever a '%' is."
+  (interactive (list (read-from-minibuffer "Shell command: "
+                                           nil nil nil 'shell-command-history)
+                     current-prefix-arg
+                     shell-command-default-error-buffer))
+  (cond ((buffer-file-name)
+         (setq command (replace-regexp-in-string "%" (buffer-file-name) command nil t)))
+        ((and (equal major-mode 'dired-mode) (save-excursion (dired-move-to-filename)))
+         (setq command (replace-regexp-in-string "%" (mapconcat 'identity (dired-get-marked-files) " ") command nil t))))
+  (shell-command command output-buffer error-buffer))
+
+
+
+;; 显示当前 heading 内容并折叠其他
+;; https://emacs-china.org/t/org-mode/23205
+(defun my-org-show-current-heading-tidily ()
+  "Show next entry, keeping other entries closed."
+  (interactive)
+  (if (save-excursion (end-of-line) (outline-invisible-p))
+      (progn (org-show-entry) (show-children))
+    (save-excursion
+      (outline-back-to-heading)
+      (unless (and (bolp) (org-on-heading-p))
+        (org-up-heading-safe)
+        (hide-subtree)
+        (error "Boundary reached"))
+      (org-overview)
+      (org-reveal t)
+      (org-show-entry)
+      (show-children))
+    ))
+
+
+(defun my-insert-timestamp ()
+  "Insert a custom formatted timestamp."
+  (interactive)
+  (insert (format-time-string "<%Y-%m-%d %a %H:%M>")))
+
+(defun my-tags-view ()
+  "Show all headlines for org files matching a TAGS criterion."
+  (interactive)
+  (let* ((org-agenda-files '("~/Vandee/Areas/pkm"))
+         (org-tags-match-list-sublevels nil))
+    (call-interactively 'org-tags-view)))
+
+;;---------------------------------------
+;; 文件路径和文件名相关
+;;---------------------------------------
+;; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#3669681
+(defun my-buffer-path ()
+  "copy buffer's full path to kill ring"
+  (interactive)
+  (let ((file-path (buffer-file-name)))
+    (when file-path
+      (kill-new (file-name-directory file-path))
+      (message "Copied parent directory path: %s" (file-name-directory file-path)))))
+
+(defun my/dired-copy-absolute-path ()
+  "Copy the absolute file name of the file at point in Dired."
+  (interactive)
+  (dired-copy-filename-as-kill 0)) ; 使用前缀参数 0 表示绝对路径
+
+;; https://github.com/rexim/dotfiles/blob/master/.emacs.rc/misc-rc.el
+(defun rc/buffer-file-name ()
+  (if (equal major-mode 'dired-mode)
+      default-directory
+    (buffer-file-name)))
+
+(defun rc/parent-directory (path)
+  (file-name-directory (directory-file-name path)))
+
+(defun rc/root-anchor (path anchor)
+  (cond
+   ((string= anchor "") nil)
+   ((file-exists-p (concat (file-name-as-directory path) anchor)) path)
+   ((string-equal path "/") nil)
+   (t (rc/root-anchor (rc/parent-directory path) anchor))))
+
+(defun rc/clipboard-org-mode-file-link (anchor)
+  (interactive "sRoot anchor: ")
+  (let* ((root-dir (rc/root-anchor default-directory anchor))
+         (org-mode-file-link (format "file:%s::%d"
+                                     (if root-dir
+                                         (file-relative-name (rc/buffer-file-name) root-dir)
+                                       (rc/buffer-file-name))
+                                     (line-number-at-pos))))
+    (kill-new org-mode-file-link)
+    (message org-mode-file-link)))
+
+;; Taken from here:
+;; http://stackoverflow.com/questions/2416655/file-path-to-clipboard-in-emacs
+(defun my/put-file-name-on-clipboard ()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (rc/buffer-file-name)))
+    (when filename
+      (kill-new filename)
+      (message filename))))
+
+(defun my/put-buffer-name-on-clipboard ()
+  "Put the current buffer name on the clipboard"
+  (interactive)
+  (kill-new (buffer-name))
+  (message (buffer-name)))
+
+(defun rc/kill-autoloads-buffers ()
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (let ((name (buffer-name buffer)))
+      (when (string-match-p "-autoloads.el" name)
+        (kill-buffer buffer)
+        (message "Killed autoloads buffer %s" name)))))
+
+
+;; ==========================================
+;; packages
+;; ==========================================
+
+;; thing-edit
+;; https://github.com/manateelazycat/thing-edit
+(require 'thing-edit)
+
+;; ==============================================
+;; mutiple cursor
+
 ;; https://github.com/emacs-evil/evil-surround
 (use-package evil-surround
   :ensure t
@@ -71,6 +249,7 @@
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
 ;; mutiple edit ends here
+;; ========================================
 
 (require-package 'unfill)
 

@@ -16,3 +16,6 @@
 [submodule "site-lisp/gua.el"]
 	path = site-lisp/gua.el
 	url = git@github.com:VandeeFeng/gua.el.git
+[submodule "site-lisp/thing-edit"]
+	path = site-lisp/thing-edit
+	url = git@github.com:manateelazycat/thing-edit.git

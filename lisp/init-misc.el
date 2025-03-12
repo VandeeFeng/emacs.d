@@ -691,108 +691,117 @@
 ;; ----------------------------------------------------------
 
 ;; https://emacs-china.org/t/deepseek-claude-gemini-ollama-minuet-ai-el/28715
-;; (use-package minuet
-;;   :ensure t
-;;   :bind
-;;   (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
-;;    ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
-;;    ("C-c m" . #'minuet-configure-provider)
-;;    :map minuet-active-mode-map
-;;    ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
-;;    ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
-;;    ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
-;;    ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
-;;    ;; Accept the first line of completion, or N lines with a numeric-prefix:
-;;    ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
-;;    ("M-a" . #'minuet-accept-suggestion-line)
-;;    ("M-e" . #'minuet-dismiss-suggestion))
+;; https://github.com/milanglacier/minuet-ai.el
+(use-package minuet
+  :ensure t
+  :bind
+  (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+   ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
+   ("C-c m" . #'minuet-configure-provider)
+   :map minuet-active-mode-map
+   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+   ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+   ;; Accept the first line of completion, or N lines with a numeric-prefix:
+   ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+   ("M-a" . #'minuet-accept-suggestion-line)
+   ("M-e" . #'minuet-dismiss-suggestion))
 
-;;   :init
-;;   ;; if you want to enable auto suggestion.
-;;   ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
-;;   (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
-;;   (add-to-list 'completion-at-point-functions #'minuet-auto-suggestion-mode)
+  :init
+  ;; if you want to enable auto suggestion.
+  ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
+  (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+  ;; (add-to-list 'completion-at-point-functions #'minuet-auto-suggestion-mode)
 
-;;   :config
-;;   (setq minuet-provider 'openai-fim-compatible)
-;;   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
-;;   ;; I recommend beginning with a small context window size and incrementally
-;;   ;; expanding it, depending on your local computing power. A context window
-;;   ;; of 512, serves as an good starting point to estimate your computing
-;;   ;; power. Once you have a reliable estimate of your local computing power,
-;;   ;; you should adjust the context window to a larger value.
-;;   (setq minuet-context-window 512)
-;;   (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
-;;   ;; an arbitrary non-null environment variable as placeholder
-;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
-;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5:14b")
+  :config
+  (setq minuet-provider 'openai-fim-compatible)
+  (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+  ;; I recommend beginning with a small context window size and incrementally
+  ;; expanding it, depending on your local computing power. A context window
+  ;; of 512, serves as an good starting point to estimate your computing
+  ;; power. Once you have a reliable estimate of your local computing power,
+  ;; you should adjust the context window to a larger value.
+  (setq minuet-context-window 512)
+  (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
+  ;; an arbitrary non-null environment variable as placeholder
+  (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+  (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:7b")
 
-;;   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
+
+(with-eval-after-load 'minuet
+  (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))
+         (api-key (and auth-info (plist-get auth-info :secret)))) ; 使用 :secret 获取 API key
+    (if api-key
+        (plist-put minuet-gemini-options :api-key api-key )
+      (plist-put minuet-gemini-options :model "gemini-2.0-flash")))
+  )
 
 
 ;; codeium
-(use-package codeium
-  ;; if you use straight
-  ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
-  ;; otherwise, make sure that the codeium.el file is on load-path
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-  ;; or on a hook
-  ;; (add-hook 'python-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local completion-at-point-functions '(codeium-completion-at-point))))
+;; (use-package codeium
+;;   ;; if you use straight
+;;   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
+;;   ;; otherwise, make sure that the codeium.el file is on load-path
+;;   :init
+;;   ;; use globally
+;;   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+;;   ;; or on a hook
+;;   ;; (add-hook 'python-mode-hook
+;;   ;;           (lambda ()
+;;   ;;             (setq-local completion-at-point-functions '(codeium-completion-at-point))))
 
-  ;; ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-  ;; (add-hook 'python-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local completion-at-point-functions
-  ;;                         (list (cape-capf-super #'codeium-completion-at-point #'lsp-completion-at-point)))))
-  ;; an async company-backend is coming soon!
+;;   ;; ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
+;;   ;; (add-hook 'python-mode-hook
+;;   ;;           (lambda ()
+;;   ;;             (setq-local completion-at-point-functions
+;;   ;;                         (list (cape-capf-super #'codeium-completion-at-point #'lsp-completion-at-point)))))
+;;   ;; an async company-backend is coming soon!
 
-  ;; codeium-completion-at-point is autoloaded, but you can
-  ;; optionally set a timer, which might speed up things as the
-  ;; codeium local language server takes ~0.2s to start up
-  ;; (add-hook 'emacs-startup-hook
-  ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
+;;   ;; codeium-completion-at-point is autoloaded, but you can
+;;   ;; optionally set a timer, which might speed up things as the
+;;   ;; codeium local language server takes ~0.2s to start up
+;;   ;; (add-hook 'emacs-startup-hook
+;;   ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
 
-  ;; :defer t ;; lazy loading, if you want
-  :config
-  (setq use-dialog-box nil) ;; do not use popup boxes
+;;   ;; :defer t ;; lazy loading, if you want
+;;   :config
+;;   (setq use-dialog-box nil) ;; do not use popup boxes
 
-  ;; if you don't want to use customize to save the api-key
-  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+;;   ;; if you don't want to use customize to save the api-key
+;;   ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
 
-  ;; get codeium status in the modeline
-  (setq codeium-mode-line-enable
-        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-  ;; alternatively for a more extensive mode-line
-  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+;;   ;; get codeium status in the modeline
+;;   (setq codeium-mode-line-enable
+;;         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+;;   (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+;;   ;; alternatively for a more extensive mode-line
+;;   ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
 
-  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-  (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-  ;; you can also set a config for a single buffer like this:
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local codeium/editor_options/tab_size 4)))
+;;   ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+;;   (setq codeium-api-enabled
+;;         (lambda (api)
+;;           (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+;;   ;; you can also set a config for a single buffer like this:
+;;   ;; (add-hook 'python-mode-hook
+;;   ;;     (lambda ()
+;;   ;;         (setq-local codeium/editor_options/tab_size 4)))
 
-  ;; You can overwrite all the codeium configs!
-  ;; for example, we recommend limiting the string sent to codeium for better performance
-  (defun my-codeium/document/text ()
-    (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-  ;; if you change the text, you should also change the cursor_offset
-  ;; warning: this is measured by UTF-8 encoded bytes
-  (defun my-codeium/document/cursor_offset ()
-    (codeium-utf8-byte-length
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-  (setq codeium/document/text 'my-codeium/document/text)
-  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+;;   ;; You can overwrite all the codeium configs!
+;;   ;; for example, we recommend limiting the string sent to codeium for better performance
+;;   (defun my-codeium/document/text ()
+;;     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+;;   ;; if you change the text, you should also change the cursor_offset
+;;   ;; warning: this is measured by UTF-8 encoded bytes
+;;   (defun my-codeium/document/cursor_offset ()
+;;     (codeium-utf8-byte-length
+;;      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+;;   (setq codeium/document/text 'my-codeium/document/text)
+;;   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
-;; ends ----------------------------------------------------------
+;; ;; ends ----------------------------------------------------------
 
 
 ;; Misc config - yet to be placed in separate files

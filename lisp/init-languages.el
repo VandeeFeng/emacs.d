@@ -66,17 +66,17 @@
 
 ;;jupter
 ;;https://github.com/emacs-jupyter/jupyter
-(use-package jupyter
-  ;; :elpaca t
-  :ensure t
-  :defer t
-  :custom
-  (org-babel-jupyter-override-src-block "python")
-  :config
-  (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia"))
-  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
-                                                       (:session . "py")
-                                                       (:kernel . "base"))))
+;; (use-package jupyter
+;;   ;; :elpaca t
+;;   :ensure t
+;;   :defer t
+;;   :custom
+;;   (org-babel-jupyter-override-src-block "python")
+;;   :config
+;;   (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia"))
+;;   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+;;                                                        (:session . "py")
+;;                                                        (:kernel . "base"))))
 
 
 

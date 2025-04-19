@@ -7,6 +7,18 @@
 ;; editing functions
 ;; ==============================================
 
+;; jk 退出 insert
+(with-eval-after-load 'evil
+  (use-package key-chord
+    :ensure t
+    :config
+    (key-chord-mode 1)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
+
+;; 启用系统复制粘贴
+(global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
+(global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
+
 (defun my/remember-init ()
   "Remember current position and setup."
   (interactive)
@@ -22,14 +34,43 @@
   (message "Have back to remember position"))
 
 ;; org 标题链接
+;; (defun my/org-get-current-headline-link ()
+;;   "Get the org-mode link for the current headline, removing tags and preceding spaces."
+;;   (interactive)
+;;   (let* ((headline (org-get-heading))
+;;          (headline-without-tags (replace-regexp-in-string " +:[a-zA-Z0-9_:]*$" "" headline)))
+;;     (when headline-without-tags
+;;       (let ((link (concat "[[file:" (buffer-file-name) "::*" headline-without-tags "][" headline-without-tags "]]")))
+;;         (kill-new link)
+;;         (message "Org-mode link for current headline (without tags) copied to clipboard.")))))
+
 (defun my/org-get-current-headline-link ()
-  "Get the org-mode link for the current headline."
+  "Get the org-mode link for the current headline, removing TODO keywords, tags, and preceding spaces."
   (interactive)
-  (let ((headline (org-get-heading)))
-    (when headline
-      (let ((link (concat "[[file:" (buffer-file-name) "::*" headline "][" headline "]]")))
-        (kill-new link)                ; Copy to kill-ring (clipboard)
-        (message "Org-mode link for current headline copied to clipboard.")))))
+  (let* ((headline (org-get-heading))
+         (todo-keywords-list (car org-todo-keywords-1)) ; 获取第一个关键词集合
+         (todo-keywords (if (listp todo-keywords-list) ; 检查是否是列表
+                            todo-keywords-list      ; 如果是列表，直接使用
+                          '("TODO" "DOING" "DONE" "WAITING" "HOLD" "CANCELLED"))) ; 否则提供一个默认列表
+         (headline-without-todo headline)
+         headline-without-tags
+         trimmed-headline)
+
+    ;; 移除 TODO 关键词
+    (dolist (keyword todo-keywords)
+      (when (string-prefix-p (concat keyword " ") headline)
+        (setq headline-without-todo (string-remove-prefix (concat keyword " ") headline))))
+
+    ;; 移除末尾的标签
+    (setq headline-without-tags (replace-regexp-in-string " +:[a-zA-Z0-9_:]*$" "" headline-without-todo))
+
+    ;; 移除标题前后的空格
+    (setq trimmed-headline (string-trim-left headline-without-tags))
+
+    (when trimmed-headline
+      (let ((link (concat "[[file:" (buffer-file-name) "::*" trimmed-headline "][" trimmed-headline "]]")))
+        (kill-new link)
+        (message "Org-mode link for current headline (without TODOs and tags) copied to clipboard.")))))
 
 ;; compile grep
 (defun my/compile-grep-rn (pattern)
@@ -53,7 +94,15 @@
 
   ;; 在 normal 模式下将 - 键绑定到这个函数
   (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
-  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line))
+  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line)
+  (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
+  (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
+  (define-key evil-insert-state-map (kbd "C-a" )'beginning-of-line)
+  (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
+  (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
+  (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
+
+  )
 
 ;;在minibuffer里使用shell指令
 ;;https://stackoverflow.com/questions/10121944/passing-emacs-variables-to-minibuffer-shell-commands
@@ -185,11 +234,11 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 ;; mutiple cursor
 
 ;; https://github.com/emacs-evil/evil-surround
-(use-package evil-surround
-  :ensure t
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
+;; (use-package evil-surround
+;;   :ensure t
+;;   :after evil
+;;   :config
+;;   (global-evil-surround-mode 1))
 
 ;; https://github.com/hlissner/evil-multiedit
 ;; https://github.com/gabesoft/evil-mc

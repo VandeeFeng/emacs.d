@@ -716,7 +716,7 @@ This is a modified version that prevents sh-mode indentation."
 ;; <script src=\"https://testingcf.jsdelivr.net/gh/vandeefeng/gitbox@main/codes/blogsummary.js\"></script>
 (setq org-static-blog-page-header
       "<meta name=\"author\" content=\"Vandee\">
-       <meta name=\"referrer\" content=\"no-referrer\">
+       <meta name=\"referrer\" content=\"origin-when-cross-origin\">
        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 
        <link rel=\"stylesheet\" href=\"assets/css/style.css\" type=\"text/css\"/>
@@ -737,6 +737,7 @@ This is a modified version that prevents sh-mode indentation."
 
        <script src=\"assets/js/app.js\" defer></script>
        <script src=\"assets/js/copyCode.js\" defer></script>
+       <script src=\"assets/js/shiba.js\" defer></script>
        <script src=\"assets/js/search.js\" defer></script>")
 
 
@@ -745,6 +746,7 @@ This is a modified version that prevents sh-mode indentation."
       (format "
       <header>
       <h1><a href=\"%s\">Vandee's Blog</a></h1>
+      <img class=\"shiba\" width=\"100px\" src=\"assets/shiba_gif/shiba_idle_8fps.gif\">
       <nav>
       <a href=\"%s\">Home</a>
       <a href=\"https://x404.xyz/wiki\">Wiki</a>

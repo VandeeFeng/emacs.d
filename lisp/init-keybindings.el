@@ -424,12 +424,13 @@ input and search the whole buffer for it."
   (vf/leader-keys
     "c" '(:ignore t :wk "Coding")
     "c p" '(my/remember-init :wk "Remember current position")
-    "c b" '(my/remeber-jump :wk "Jump back to latest position")
-    "c c s" '(thing-copy-sentence :wk "thing copy sentence")
-    "c c e" '(thing-copy-to-line-end :wk "thing copy to line end")
-    "c c b" '(thing-copy-to-line-beginning :wk "thing copy to line beginning")
+    "c j" '(my/remember-jump :wk "Jump back to latest position")
+    ;; "c c" '(:ignore t :wk "thing copy")
+    "c s" '(thing-copy-sentence :wk "thing copy sentence")
+    "c w" '(thing-copy-word :wk "thing copy word")
+    "c e" '(thing-copy-to-line-end :wk "thing copy to line end")
+    "c b" '(thing-copy-to-line-beginning :wk "thing copy to line beginning")
     )
-
 
   (vf/leader-keys
     "l" '(:ignore t :wk "LLM like")

@@ -11,7 +11,7 @@
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
 ;; 在启动时自动运行一次占卜
-(require 'gua.el)
+(require 'gua)
 (setq gua-llm-enabled t)
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda ()
@@ -25,9 +25,6 @@
 ;;                    (goto-char (point-max))
 ;;                    (insert result)))))))
 
-;; ;; 启用系统复制粘贴
-(global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
-(global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
 
 ;; 关闭 warning
 ;; (setq warning-minimum-level :emergency)
@@ -58,15 +55,6 @@
 (custom-set-variables
  '(global-visual-line-mode t)
  '(global-auto-revert-mode t))
-
-
-;; jk 退出 insert
-(with-eval-after-load 'evil
-  (use-package key-chord
-    :ensure t
-    :config
-    (key-chord-mode 1)
-    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
 ;; SmoothScroll
 ;; (require 'ultra-scroll)
@@ -166,7 +154,7 @@
   ;;(setq aidermacs-use-architect-mode t)
   )
 
-;; gptel 设置默认ollama 模型
+;; gptel 设置默认模型
 (use-package gptel
   :defer t
   :config
@@ -176,9 +164,9 @@
         (setq
          gptel-model "Gemini"
          gptel-backend (gptel-make-gemini "Gemini"
-                         :stream t
-                         :key api-key
-                         :models '("gemini-2.0-flash"))
+                                          :stream t
+                                          :key api-key
+                                          :models '("gemini-2.0-flash"))
          )
       (error "未在 auth-source 中找到 Gemini API 密钥！请检查您的 auth-source 配置。")))
 
@@ -189,14 +177,14 @@
   ;;                 :models '("qwen2.5:14b")))
 
   (gptel-make-ollama "Ollama"           ;Any name of your choosing
-    :host "localhost:11434"             ;Where it's running
-    :stream t                           ;Stream responses
-    :models '("qwen2.5:14b"))           ;List of models
+                     :host "localhost:11434"             ;Where it's running
+                     :stream t                           ;Stream responses
+                     :models '("qwen2.5:14b"))           ;List of models
 
   (gptel-make-ollama "Deepseek"         ;Any name of your choosing
-    :host "localhost:11434"             ;Where it's running
-    :stream t                           ;Stream responses
-    :models '("deepseek-r1:14b"))       ;List of models
+                     :host "localhost:11434"             ;Where it's running
+                     :stream t                           ;Stream responses
+                     :models '("deepseek-r1:14b"))       ;List of models
 
   ;; https://github.com/karthink/gptel/issues/514
   (gptel-make-tool
@@ -506,7 +494,8 @@
   :ensure t
   :after (company org)
   :custom
-  (company-org-block-edit-style 'auto) ;; 'auto, 'inline, or 'prompt
+  (company-org-block-edit-style 'inline) ;; 'auto, 'inline, or 'prompt
+  ;; 妈的，一直之前用的 auto,会弹出一个 minibuffer
   :config
   ;; 添加到 company-backends
   (add-to-list 'company-backends 'company-org-block)
@@ -727,7 +716,7 @@
   ;; an arbitrary non-null environment variable as placeholder
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:7b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 

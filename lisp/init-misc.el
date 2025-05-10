@@ -11,7 +11,7 @@
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
 ;; 在启动时自动运行一次占卜
-(require 'gua)
+(require 'gua.el)
 (setq gua-llm-enabled t)
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda ()
@@ -327,9 +327,23 @@
 
   )
 
+;; 输入法
+(require 'rime)
+(setq rime-user-data-dir "~/.config/fcitx/rime")
+(require 'posframe)
+(setq rime-posframe-properties
+      (list :background-color "#333333"
+            :foreground-color "#dcdccc"
+            ;; :font "WenQuanYi Micro Hei Mono-14"
+            :internal-border-width 10))
+(setq default-input-method "rime"
+      rime-show-candidate 'posframe)
+(global-set-key (kbd "C-SPC") 'toggle-input-method)
+
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source
 (use-package sis
+  :ensure t
   :hook
   ;; enable the /context/ and /inline region/ mode for specific buffers
   (((text-mode prog-mode) . sis-context-mode)
@@ -337,15 +351,7 @@
   ;; :after evil
   :config
   ;; For MacOS
-  (sis-ism-lazyman-config
-   ;; English input source may be: "ABC", "US" or another one.
-   ;; "com.apple.keylayout.ABC"
-   "com.apple.keylayout.ABC"
-
-   ;; Other language input source: "rime", "sogou" or another one.
-   ;; "im.rime.inputmethod.Squirrel.Rime"
-   "im.rime.inputmethod.Squirrel.Hans")
-
+  (sis-ism-lazyman-config "british" "rime" 'fcitx5)
   ;; enable the /cursor color/ mode
   ;;(sis-global-cursor-color-mode t)
   ;; enable the /respect/ mode
@@ -602,7 +608,7 @@
 
 ;; vertico
 (use-package vertico
-  ;;:ensure t
+  :ensure t
   :init
   (vertico-mode)
   ;; 不同的显示样式配置
@@ -624,109 +630,59 @@
                                 (mode-line-format . none)))))
   )
 
-;; vterm
-(defun vterm-minibuffer ()
-  "Open vterm in minibuffer and enter insert state."
-  (interactive)
-  (let ((height (/ (frame-height) 3))) ; 设置高度为框架高度的1/3
-    (with-temp-buffer
-      (let ((window (split-window-vertically (- height))))
-        (select-window window)
-        (vterm)
-        ;; 确保 evil-mode 已加载后进入 insert 状态
-        (when (bound-and-true-p evil-mode)
-          (evil-insert-state))))))
-
-;; 定义一个更简单的命令别名
-(defalias 'vt 'vterm-minibuffer)
-
-;; 自定义 vterm 在 minibuffer 中的行为
-(with-eval-after-load 'vterm
-  (evil-define-key '(normal insert) vterm-mode-map (kbd "C-y") #'vterm-yank)
-  (evil-define-key '(normal) vterm-mode-map (kbd "p") #'vterm-yank)
-  (evil-define-key '(normal) vterm-mode-map (kbd "u") #'vterm-undo)
-  (evil-define-key 'normal vterm-mode-map (kbd "q") #'delete-window)
-
-  ;; 为 vterm-mode 添加 hook，确保在打开时进入 insert 状态
-  (add-hook 'vterm-mode-hook
-            (lambda ()
-              (when (bound-and-true-p evil-mode)
-                (evil-insert-state)))))
-
-;; 消除主题对终端的颜色影响
-(add-hook 'vterm-mode-hook
-          (lambda ()
-            ;; One Dark 主题配色
-            (set-face-attribute 'vterm-color-black nil
-                                :foreground "#282c34" :background "#282c34")
-            (set-face-attribute 'vterm-color-red nil
-                                :foreground "#e06c75" :background "#e06c75")
-            (set-face-attribute 'vterm-color-green nil
-                                :foreground "#98c379" :background "#98c379")
-            (set-face-attribute 'vterm-color-yellow nil
-                                :foreground "#e5c07b" :background "#e5c07b")
-            (set-face-attribute 'vterm-color-blue nil
-                                :foreground "#61afef" :background "#61afef")
-            (set-face-attribute 'vterm-color-magenta nil
-                                :foreground "#c678dd" :background "#c678dd")
-            (set-face-attribute 'vterm-color-cyan nil
-                                :foreground "#56b6c2" :background "#56b6c2")
-            (set-face-attribute 'vterm-color-white nil
-                                :foreground "#abb2bf" :background "#abb2bf")))
-
-
 ;; ----------------------------------------------------------
 ;; 自动补全
 ;; ----------------------------------------------------------
 
 ;; https://emacs-china.org/t/deepseek-claude-gemini-ollama-minuet-ai-el/28715
 ;; https://github.com/milanglacier/minuet-ai.el
-(use-package minuet
-  :ensure t
-  :bind
-  (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
-   ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
-   ("C-c m" . #'minuet-configure-provider)
-   :map minuet-active-mode-map
-   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
-   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
-   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
-   ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
-   ;; Accept the first line of completion, or N lines with a numeric-prefix:
-   ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
-   ("M-a" . #'minuet-accept-suggestion-line)
-   ("M-e" . #'minuet-dismiss-suggestion))
+;; (use-package minuet
+;;   :ensure t
+;;   :defer t
+;;   :bind
+;;   (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+;;    ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
+;;    ("C-c m" . #'minuet-configure-provider)
+;;    :map minuet-active-mode-map
+;;    ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+;;    ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+;;    ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+;;    ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+;;    ;; Accept the first line of completion, or N lines with a numeric-prefix:
+;;    ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+;;    ("M-a" . #'minuet-accept-suggestion-line)
+;;    ("M-e" . #'minuet-dismiss-suggestion))
 
-  :init
-  ;; if you want to enable auto suggestion.
-  ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
-  (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
-  ;; (add-to-list 'completion-at-point-functions #'minuet-auto-suggestion-mode)
+;;   :init
+;;   ;; if you want to enable auto suggestion.
+;;   ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
+;;   (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+;;   ;; (add-to-list 'completion-at-point-functions #'minuet-auto-suggestion-mode)
 
-  :config
-  (setq minuet-provider 'openai-fim-compatible)
-  (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
-  ;; I recommend beginning with a small context window size and incrementally
-  ;; expanding it, depending on your local computing power. A context window
-  ;; of 512, serves as an good starting point to estimate your computing
-  ;; power. Once you have a reliable estimate of your local computing power,
-  ;; you should adjust the context window to a larger value.
-  (setq minuet-context-window 512)
-  (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
-  ;; an arbitrary non-null environment variable as placeholder
-  (plist-put minuet-openai-fim-compatible-options :name "Ollama")
-  (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+;;   :config
+;;   (setq minuet-provider 'openai-fim-compatible)
+;;   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+;;   ;; I recommend beginning with a small context window size and incrementally
+;;   ;; expanding it, depending on your local computing power. A context window
+;;   ;; of 512, serves as an good starting point to estimate your computing
+;;   ;; power. Once you have a reliable estimate of your local computing power,
+;;   ;; you should adjust the context window to a larger value.
+;;   (setq minuet-context-window 512)
+;;   (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
+;;   ;; an arbitrary non-null environment variable as placeholder
+;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
 
-  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
+;;   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 
-(with-eval-after-load 'minuet
-  (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))
-         (api-key (and auth-info (plist-get auth-info :secret)))) ; 使用 :secret 获取 API key
-    (if api-key
-        (plist-put minuet-gemini-options :api-key api-key )
-      (plist-put minuet-gemini-options :model "gemini-2.0-flash")))
-  )
+;; (with-eval-after-load 'minuet
+;;   (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))
+;;          (api-key (and auth-info (plist-get auth-info :secret)))) ; 使用 :secret 获取 API key
+;;     (if api-key
+;;         (plist-put minuet-gemini-options :api-key api-key )
+;;       (plist-put minuet-gemini-options :model "gemini-2.0-flash")))
+;;   )
 
 
 ;; codeium

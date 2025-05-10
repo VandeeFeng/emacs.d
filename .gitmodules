@@ -4,9 +4,6 @@
 [submodule "site-lisp/gruber-darker-theme"]
 	path = site-lisp/gruber-darker-theme
 	url = git@github.com:rexim/gruber-darker-theme.git
-[submodule "site-lisp/codeium.el"]
-	path = site-lisp/codeium.el
-	url = https://github.com/Exafunction/codeium.el
 [submodule "site-lisp/aidermacs"]
 	path = site-lisp/aidermacs
 	url = git@github.com:MatthewZMD/aidermacs.git
@@ -19,3 +16,9 @@
 [submodule "site-lisp/thing-edit"]
 	path = site-lisp/thing-edit
 	url = git@github.com:manateelazycat/thing-edit.git
+[submodule "site-lisp/emacs-rime"]
+	path = site-lisp/emacs-rime
+	url = git@github.com:DogLooksGood/emacs-rime.git
+[submodule "site-lisp/emacs-libvterm"]
+	path = site-lisp/emacs-libvterm
+	url = git@github.com:akermu/emacs-libvterm.git

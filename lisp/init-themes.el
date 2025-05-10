@@ -95,7 +95,7 @@
  '(show-paren-mismatch ((t (:background "HotPink3" :foreground "white"))))
 
  ;; 设置默认字体和大小
- '(default ((t (:family "Source Code Pro" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
+ '(default ((t (:family "GeistMono Nerd Font" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))

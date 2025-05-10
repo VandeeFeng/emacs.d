@@ -60,7 +60,7 @@
 (require-package 'diminish)
 (maybe-require-package 'scratch)
 (require-package 'command-log-mode)
-
+(require-package 'auto-package-update)
 
 (maybe-require-package 'evil)
 (require 'init-misc)

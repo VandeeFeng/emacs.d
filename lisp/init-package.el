@@ -6,7 +6,8 @@
 ;; MelpaPackages
 ;; Select the folder to store packages
 ;; Comment / Uncomment to use desired sites
-(setq package-user-dir (expand-file-name "elpa-29.4" user-emacs-directory)
+(setq package-user-dir
+      (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version) user-emacs-directory)
       package-archives
       '(("gnu"   . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")

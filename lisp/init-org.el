@@ -244,29 +244,35 @@
   ;;                "* TODO %i%? \n%T"))
   (add-to-list 'org-capture-templates
                '("tt" "Task" entry (file+headline "~/Vandee/Areas/pkm/org/Tasks.org" "Tasks")
-                 "* TODO %^{任务名}\n%T\n%a\n"))
+                 "* TODO %^{任务名}\n%T\n%a\n"
+                 :prepend t))
   (add-to-list 'org-capture-templates
-               '("tp" "Project" entry (file+headline "~/Vandee/Areas/pkm/org/Projects.org" "Projects")
-                 "* TODO %^{任务名}\n%T"))
-
+               '("tp" "Project" entry
+                 (file+headline "~/Vandee/Areas/pkm/org/Projects.org" "Projects")
+                 "* TODO %^{任务名}\n%T"
+                 :prepend t))
   ;; colections
   (add-to-list 'org-capture-templates '("c" "Collections"))
   (add-to-list 'org-capture-templates
                '("cw" "Web Collections" item
                  (file+headline "~/Vandee/Areas/pkm/org/Websites.org" "实用")
-                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"))
+                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"
+                 :prepend t))
   (add-to-list 'org-capture-templates
                '("ct" "Tool Collections" item
                  (file+headline "~/Vandee/Areas/pkm/org/Tools.org" "实用")
-                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"))
+                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"
+                 :prepend t))
   (add-to-list 'org-capture-templates
                '("cc" "Clip Collections" entry
                  (file+headline "~/Vandee/Areas/pkm/org/Clips.org" "Clips")
-                 "* %^{heading} %^g\n%T\n\nSource: %^{source}\n\n%?"))
+                 "* %^{heading} %^g\n%T\n\nSource: %^{source}\n\n%?"
+                 :prepend t))
   (add-to-list 'org-capture-templates
                '("cC" "Code Collections" entry
                  (file+headline "~/Vandee/Areas/pkm/org/Codes.org" "Codes")
-                 "* %U - %^{Intro} %^G\n\nSource: %^{source}\n%?"))
+                 "* %U - %^{Intro} %^G\n\nSource: %^{source}\n%?"
+                 :prepend t))
 
 
 

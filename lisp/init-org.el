@@ -65,6 +65,18 @@
 ;; 可单独配置 #+STARTUP: show2levels
 ;;(setq org-startup-folded 'show2levels)
 
+;; https://github.com/yibie/org-include-inline
+;; (require 'org-include-inline)
+;; ;; Auto-enable in all Org buffers
+;; (setq org-include-inline-auto-enable-in-org-mode t)
+
+;; ;; Customize maximum lines to display
+;; (setq org-include-inline-max-lines-to-display 100)
+
+;; Customize the display face
+;; (set-face-attribute 'org-include-inline-face nil
+;;                     :background "black"
+;;                     :foreground "white")
 
 ;;-------------------------------------------------------------------------------
 ;;

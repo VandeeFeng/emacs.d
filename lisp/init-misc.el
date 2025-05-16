@@ -330,11 +330,12 @@
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source
 (use-package sis
-  :hook
-  ;; enable the /context/ and /inline region/ mode for specific buffers
-  (((text-mode prog-mode) . sis-context-mode)
-   ((text-mode prog-mode) . sis-inline-mode))
-  ;; :after evil
+  :ensure t
+  :after evil
+  ;; :hook
+  ;; ;; enable the /context/ and /inline region/ mode for specific buffers
+  ;; (((text-mode prog-mode) . sis-context-mode)
+  ;;  ((text-mode prog-mode) . sis-inline-mode))
   :config
   ;; For MacOS
   (sis-ism-lazyman-config

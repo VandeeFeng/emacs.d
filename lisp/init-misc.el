@@ -7,6 +7,185 @@
 ;; globl settings
 ;;
 ;;------------------------------------------------------------------------------------------
+
+;; auto-notes
+;; uvicorn app.main:app --reload
+(require 'websocket)
+(require 'json)
+(require 'corfu)
+
+
+(defun run-uvicorn-server-uv ()
+  "Run uv python -m uvicorn app.main:app --reload in a new async shell using absolute path."
+  (interactive)
+  (let ((default-directory "/Users/fandi/Vandee/Projects/auto-notes/"))
+    (async-shell-command
+     "uv run uvicorn app.main:app --reload"
+     "*Uvicorn Server*")))
+
+;; Common websocket connection function
+(defvar corfu-ws-endpoint-rag "ws://localhost:8000/api/v1/ws/complete/rag/emacs-corfu"
+  "WebSocket endpoint for RAG-based completion.")
+
+(defvar corfu-ws-endpoint-vector "ws://localhost:8000/api/v1/ws/complete/vector/emacs-corfu"
+  "WebSocket endpoint for vector-based completion.")
+
+(defvar corfu-ws--client nil
+  "WebSocket client connection.")
+
+(defvar corfu-ws--current-endpoint nil
+  "Current WebSocket endpoint in use.")
+
+(defvar corfu-ws--pending nil
+  "Callback function to be called when receiving completion response.")
+
+(defvar corfu-ws--debounce-timer nil
+  "Timer for debouncing completion requests.")
+
+(defvar corfu-ws--debounce-delay 0.3
+  "Delay in seconds for debouncing completion requests.")
+
+(defun corfu-ws-connect (endpoint)
+  "Establish websocket connection to ENDPOINT if not already connected."
+  (when (and corfu-ws--client
+             (websocket-openp corfu-ws--client)
+             (not (string= endpoint corfu-ws--current-endpoint)))
+    (websocket-close corfu-ws--client)
+    (setq corfu-ws--client nil))
+
+  (unless (and corfu-ws--client (websocket-openp corfu-ws--client))
+    (setq corfu-ws--client
+          (websocket-open
+           endpoint
+           :on-message (lambda (_ws frame)
+                         (let* ((data (websocket-frame-payload frame))
+                                (json (json-parse-string data :object-type 'alist))
+                                (suggestions (mapcar (lambda (item)
+                                                       (alist-get 'text item))
+                                                     (alist-get 'suggestions json))))
+                           (when corfu-ws--pending
+                             (funcall corfu-ws--pending suggestions)
+                             (setq corfu-ws--pending nil))))))
+    (setq corfu-ws--current-endpoint endpoint)))
+
+(defun corfu-ws-request-debounced (prefix callback endpoint max-results)
+  "Debounced version of corfu-ws-request."
+  (when corfu-ws--debounce-timer
+    (cancel-timer corfu-ws--debounce-timer))
+  (setq corfu-ws--debounce-timer
+        (run-with-timer corfu-ws--debounce-delay nil
+                        #'corfu-ws-request prefix callback endpoint max-results)))
+
+(defun corfu-ws-request (prefix callback endpoint max-results)
+  "Send completion request for PREFIX to ENDPOINT, call CALLBACK with results.
+Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
+  (corfu-ws-connect endpoint)
+  (let* ((request (json-encode `(("text" . ,prefix)
+                                 ("cursor_position" . ,(length prefix))
+                                 ("max_results" . ,(or max-results 5))))))
+    (setq corfu-ws--pending callback)
+    (websocket-send-text corfu-ws--client request)))
+
+(defun corfu-ws-capf (endpoint max-results)
+  "Create a completion-at-point-function using ENDPOINT and MAX-RESULTS suggestions."
+  (let* ((start (save-excursion (skip-syntax-backward "w_") (point)))
+         (end (point)))
+    (list start end
+          (lambda (str pred action)
+            (if (eq action 'metadata)
+                '(metadata (category . corfu-ws))
+              (let ((cont (lambda (cands)
+                            (funcall completion-in-region-function start end cands))))
+                (if (string= endpoint corfu-ws-endpoint-rag)
+                    ;; Use debounced version for RAG completion
+                    (corfu-ws-request-debounced (buffer-substring-no-properties start end) cont endpoint max-results)
+                  ;; Use normal version for vector completion
+                  (corfu-ws-request (buffer-substring-no-properties start end) cont endpoint max-results))
+                nil))))))
+
+;; Specific completion functions for different modes
+(defun corfu-ws-complete-rag ()
+  "Manually trigger RAG-based completion with single result."
+  (interactive)
+  (let ((completion-at-point-functions (list (lambda () (corfu-ws-capf corfu-ws-endpoint-rag 1)))))
+    (completion-at-point)))
+
+(defun corfu-ws-complete-vector ()
+  "Manually trigger vector-based completion with multiple results."
+  (interactive)
+  (let ((completion-at-point-functions (list (lambda () (corfu-ws-capf corfu-ws-endpoint-vector 5)))))
+    (completion-at-point)))
+
+;; origin
+;; (defun corfu-ws-connect-vector ()
+;;   (unless (and corfu-ws--client (websocket-openp corfu-ws--client))
+;;     (setq corfu-ws--client
+;;           (websocket-open
+;;            "ws://localhost:8000/api/v1/ws/complete/rag/emacs-corfu"
+;;            :on-message (lambda (_ws frame)
+;;                          (let* ((data (websocket-frame-payload frame))
+;;                                 (json (json-parse-string data :object-type 'alist))
+;;                                 (suggestions (mapcar (lambda (item)
+;;                                                        (alist-get 'text item))
+;;                                                      (alist-get 'suggestions json))))
+;;                            (when corfu-ws--pending
+;;                              (funcall corfu-ws--pending suggestions)
+;;                              (setq corfu-ws--pending nil))))))))
+
+;; (defun corfu-ws-request-vector (prefix callback)
+;;   (corfu-ws-connect-vector)
+;;   (let* ((request (json-encode `(("text" . ,prefix)
+;;                                  ("cursor_position" . ,(length prefix))
+;;                                  ("max_results" . 5)))))
+;;     (setq corfu-ws--pending callback)
+;;     (websocket-send-text corfu-ws--client request)))
+
+
+;; ;; (defun corfu-ws-capf ()
+;; ;;   "A completion-at-point-function for corfu using websocket backend."
+;; ;;   (let* ((end (point))
+;; ;;          ;; 获取当前单词的开始位置，用于显示补全
+;; ;;          (word-start (save-excursion (skip-syntax-backward "w_") (point)))
+;; ;;          ;; 获取行首位置，用于上下文
+;; ;;          (line-start (line-beginning-position)))
+;; ;;     (list word-start end
+;; ;;           (lambda (str pred action)
+;; ;;             (if (eq action 'metadata)
+;; ;;                 '(metadata (category . corfu-ws))
+;; ;;               (let ((cont (lambda (cands)
+;; ;;                             (funcall completion-in-region-function word-start end cands))))
+;; ;;                 ;; 发送从行首到光标的所有内容
+;; ;;                 (corfu-ws--request (buffer-substring-no-properties line-start end) cont)
+;; ;;                 nil))))))
+
+;; (defun corfu-ws-capf-vector ()
+;;   "A completion-at-point-function for corfu using websocket backend."
+;;   (let* ((start (save-excursion (skip-syntax-backward "w_") (point)))
+;;          (end (point)))
+;;     (list start end
+;;           (lambda (str pred action)
+;;             (if (eq action 'metadata)
+;;                 '(metadata (category . corfu-ws))
+;;               (let ((cont (lambda (cands)
+;;                             (funcall completion-in-region-function start end cands))))
+;;                 (corfu-ws-request-rag (buffer-substring-no-properties start end) cont)
+;;                 nil))))))
+
+
+;; ;; (add-hook 'completion-at-point-functions #'corfu-ws-capf)
+
+;; (defun corfu-ws-complete-vector ()
+;;   "Manually trigger websocket completion at point."
+;;   (interactive)
+;;   (let ((completion-at-point-functions '(corfu-ws-capf-vector)))
+;;     (completion-at-point)))
+
+
+(global-set-key (kbd "C-c v") #'corfu-ws-complete-vector)
+(global-set-key (kbd "C-c r") #'corfu-ws-complete-rag)
+
+;; auto-notes ends
+
 ;; set .authinfo file path
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
@@ -130,6 +309,13 @@
 ;;   (insert (grab-mac-link 'safari 'org)))
 
 ;; (global-set-key (kbd "C-c m") 'chinhant-grab-mac-link)
+
+;; yasnippet
+(require 'yasnippet)
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"                 ;; personal snippets
+        ))
+(yas-global-mode 1) ;; or M-x yas-reload-all if you've started YASnippet already.
 
 (use-package snap-indent
   :ensure t

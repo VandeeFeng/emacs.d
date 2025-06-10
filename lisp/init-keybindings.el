@@ -3,12 +3,12 @@
 ;;; Code:
 
 ;; Customized key bindings
-
+;; 还有一部分的自定义函数在 init-editing-utils.el
 ;;----------------------------------------------------------------------------
 ;;自定义函数
 ;;----------------------------------------------------------------------------
 
-(global-set-key (kbd "M-w") 'kill-current-buffer)
+(global-set-key (kbd "M-w") 'evil-window-delete)
 
 (with-eval-after-load 'evil
   (define-key evil-insert-state-map (kbd "C-j") 'next-line)
@@ -179,68 +179,68 @@ fi"
 
 
 ;; 自定义搜索
-(defun my-build-or-regexp-by-keywords (keywords)
-  "构建or语法的正则"
-  (let (wordlist tmp regexp)
-    (setq wordlist (split-string keywords " "))
-    (dolist (word wordlist)
-      (setq tmp (format "(%s)" word))
-      (if regexp (setq regexp (concat regexp "|")))
-      (setq regexp (concat regexp tmp)))
-    regexp
-    ))
+;; (defun my-build-or-regexp-by-keywords (keywords)
+;;   "构建or语法的正则"
+;;   (let (wordlist tmp regexp)
+;;     (setq wordlist (split-string keywords " "))
+;;     (dolist (word wordlist)
+;;       (setq tmp (format "(%s)" word))
+;;       (if regexp (setq regexp (concat regexp "|")))
+;;       (setq regexp (concat regexp tmp)))
+;;     regexp
+;;     ))
 
-(defun my-build-and-regexp-by-keywords (keywords)
-  "构建and语法的正则"
-  (let (reg wlist fullreg reglist)
-    (setq wlist (split-string keywords " "))
-    (dolist (w1 wlist)
-      (setq reg w1)
-      (dolist (w2 wlist)
-        (unless (string-equal w1 w2)
-          (setq reg (format "%s.*%s" reg w2))))
-      (setq reg (format "(%s)" reg))
-      (add-to-list 'reglist reg)
-      )
-    ;; 还要反过来一次
-    (dolist (w1 wlist)
-      (setq reg w1)
-      (dolist (w2 (reverse wlist))
-        (unless (string-equal w1 w2)
-          (setq reg (format "%s.*%s" reg w2))))
-      (setq reg (format "(%s)" reg))
-      (add-to-list 'reglist reg)
-      )
+;; (defun my-build-and-regexp-by-keywords (keywords)
+;;   "构建and语法的正则"
+;;   (let (reg wlist fullreg reglist)
+;;     (setq wlist (split-string keywords " "))
+;;     (dolist (w1 wlist)
+;;       (setq reg w1)
+;;       (dolist (w2 wlist)
+;;         (unless (string-equal w1 w2)
+;;           (setq reg (format "%s.*%s" reg w2))))
+;;       (setq reg (format "(%s)" reg))
+;;       (add-to-list 'reglist reg)
+;;       )
+;;     ;; 还要反过来一次
+;;     (dolist (w1 wlist)
+;;       (setq reg w1)
+;;       (dolist (w2 (reverse wlist))
+;;         (unless (string-equal w1 w2)
+;;           (setq reg (format "%s.*%s" reg w2))))
+;;       (setq reg (format "(%s)" reg))
+;;       (add-to-list 'reglist reg)
+;;       )
 
-    (dolist (r reglist)
-      (if fullreg (setq fullreg (concat fullreg "|")))
-      (setq fullreg (concat fullreg r)))
+;;     (dolist (r reglist)
+;;       (if fullreg (setq fullreg (concat fullreg "|")))
+;;       (setq fullreg (concat fullreg r)))
 
-    fullreg
-    ))
+;;     fullreg
+;;     ))
 
-(defun my-search-or-by-rg ()
-  "以空格分割关键词，以or条件搜索多个关键词的内容
-  如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
-  "
-  (interactive)
-  (let* ((keywords (read-string "Or Search(rg): "))
-         (regexp (eye--build-or-regexp-by-keywords keywords)))
-    (message "search regexp:%s" regexp)
-    (color-rg-search-input regexp)
-    ))
+;; (defun my-search-or-by-rg ()
+;;   "以空格分割关键词，以or条件搜索多个关键词的内容
+;;   如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
+;;   "
+;;   (interactive)
+;;   (let* ((keywords (read-string "Or Search(rg): "))
+;;          (regexp (eye--build-or-regexp-by-keywords keywords)))
+;;     (message "search regexp:%s" regexp)
+;;     (color-rg-search-input regexp)
+;;     ))
 
 
-(defun my-search-and-by-rg ()
-  "以空格分割关键词，以and条件搜索同时包含多个关键词的内容
-  如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
-  "
-  (interactive)
-  (let* ((keywords (read-string "And Search(rg): "))
-         (regexp (eye--build-and-regexp-by-keywords keywords)))
-    (message "search regexp:%s" regexp)
-    (color-rg-search-input regexp)
-    ))
+;; (defun my-search-and-by-rg ()
+;;   "以空格分割关键词，以and条件搜索同时包含多个关键词的内容
+;;   如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
+;;   "
+;;   (interactive)
+;;   (let* ((keywords (read-string "And Search(rg): "))
+;;          (regexp (eye--build-and-regexp-by-keywords keywords)))
+;;     (message "search regexp:%s" regexp)
+;;     (color-rg-search-input regexp)
+;;     ))
 
 ;;---------------------------------------------
 ;; Search
@@ -372,7 +372,7 @@ input and search the whole buffer for it."
 
 
 ;; org-mode realtime editor
-(defvar my-org-preview-file (expand-file-name "org-preview.html" "~/.config/emacs/.local/cache/")
+(defvar my-org-preview-file (expand-file-name "org-preview.html" "~/.emacs.d/cache/")
   "用于存放 Org 文件实时预览的固定 HTML 文件路径。")
 
 (defvar my-org-preview-active nil

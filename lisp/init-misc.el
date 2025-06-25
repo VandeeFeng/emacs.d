@@ -18,7 +18,7 @@
 (defun run-uvicorn-server-uv ()
   "Run uv python -m uvicorn app.main:app --reload in a new async shell using absolute path."
   (interactive)
-  (let ((default-directory "/Users/fandi/Vandee/Projects/auto-notes/"))
+  (let ((default-directory "/Users/fandi/Vandee/Projects/nonotes/"))
     (async-shell-command
      "uv run uvicorn app.main:app --reload"
      "*Uvicorn Server*")))
@@ -350,9 +350,9 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
         (setq
          gptel-model "Gemini"
          gptel-backend (gptel-make-gemini "Gemini"
-                                          :stream t
-                                          :key api-key
-                                          :models '("gemini-2.0-flash"))
+                         :stream t
+                         :key api-key
+                         :models '("gemini-2.0-flash"))
          )
       (error "未在 auth-source 中找到 Gemini API 密钥！请检查您的 auth-source 配置。")))
 
@@ -363,14 +363,14 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;;                 :models '("qwen2.5:14b")))
 
   (gptel-make-ollama "Ollama"           ;Any name of your choosing
-                     :host "localhost:11434"             ;Where it's running
-                     :stream t                           ;Stream responses
-                     :models '("qwen2.5:14b"))           ;List of models
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("qwen2.5:14b"))           ;List of models
 
   (gptel-make-ollama "Deepseek"         ;Any name of your choosing
-                     :host "localhost:11434"             ;Where it's running
-                     :stream t                           ;Stream responses
-                     :models '("deepseek-r1:14b"))       ;List of models
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("deepseek-r1:14b"))       ;List of models
 
   ;; https://github.com/karthink/gptel/issues/514
   (gptel-make-tool

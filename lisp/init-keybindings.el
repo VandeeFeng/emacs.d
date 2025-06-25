@@ -388,7 +388,7 @@ input and search the whole buffer for it."
     (with-temp-file my-org-preview-file
       (insert html))))
 
-(defun my-org-toggle-preview ()
+(defun my-org-preview ()
   "手动控制 Org 文件的 HTML 预览开关。"
   (interactive)
   (if my-org-preview-active

@@ -719,8 +719,8 @@ This is a modified version that prevents sh-mode indentation."
 ;; org-static-blog config
 
 (setq org-static-blog-publish-title "Vandee's Blog")
-(setq org-static-blog-publish-url "https://www.vandee.art/")
-(setq org-static-blog-publish-directory "~/vandee/Areas/org-blog/")
+(setq org-static-blog-publish-url "https://www.vandee.art/blog/")
+(setq org-static-blog-publish-directory "~/vandee/Areas/org-blog/blog")
 (setq org-static-blog-posts-directory "~/vandee/Areas/org-blog/posts/")
 (setq org-static-blog-drafts-directory "~/vandee/Areas/org-blog/drafts/")
 (setq org-static-blog-enable-tags t)
@@ -737,12 +737,12 @@ This is a modified version that prevents sh-mode indentation."
        <meta name=\"referrer\" content=\"origin-when-cross-origin\">
        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
 
-       <link rel=\"stylesheet\" href=\"assets/css/style.css\" type=\"text/css\"/>
+       <link rel=\"stylesheet\" href=\"assets/css/blog-style.css\" type=\"text/css\"/>
        <link rel=\"stylesheet\"
              href=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css\"/>
        <link rel=\"stylesheet\"
              href=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.css\"/>
-       <link rel=\"icon\" type=\"image/x-icon\" href=\"/static/favicon.ico\"/>
+       <link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\"/>
 
        <script src=\"https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js\" defer></script>
        <script src=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.umd.js\" defer></script>
@@ -825,7 +825,7 @@ This is a modified version that prevents sh-mode indentation."
                               (org-static-blog-get-post-filenames)))
            (json-encoding-pretty-print t)
            (json-data (json-encode post-list)))
-      (with-temp-file (concat org-static-blog-publish-directory "assets/post-list.json")
+      (with-temp-file (concat org-static-blog-publish-directory "/assets/post-list.json")
         (insert json-data))
       (message "Updated post-list.json")))
 

@@ -7,6 +7,12 @@
 ;; editing functions
 ;; ==============================================
 
+;; Harper
+;; https://writewithharper.com/docs/integrations/emacs
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-server-programs
+;;                '(text-mode . ("harper-ls" "--stdio"))))
+
 ;; jk 退出 insert
 (with-eval-after-load 'evil
   (use-package key-chord

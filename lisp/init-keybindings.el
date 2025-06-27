@@ -470,23 +470,16 @@ input and search the whole buffer for it."
     "v j" '((lambda () (interactive)
               (find-file "~/Vandee/Areas/pkm/org/Journal.org"))
             :wk "go to Journals")
-    ;; "v o n" '(org-roam-capture :wk "org-roam-capture")
-    ;; "v o d" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
-
     )
 
   (vf/leader-keys
     "n" '(:ignore t :wk "notes")
-    ;; "n j" '(org-roam-dailies-capture-today :wk "org-roam-dailies-capture-today")
-    "n i" '(org-roam-node-insert :wk "org-roam-node-insert")
+    "n i" '(denote-link :wk "denote-link-insert")
     "n a" '(org-agenda :wk "org-agenda")
-    "n I" '(org-roam-node-insert-immediate :wk "org-roam-node-insert-immediate")
-    ;; "r n" '(org-roam-capture :wk "org-roam-capture")
-    "n f" '(org-roam-node-find :wk "org-roam-node-find")
+    "n f" '(denote :wk "denote-find")
     "n e" '(org-export-dispatch :wk "org-export-dispatch")
     "n u" '(org-roam-ui-open :wk "org-roam-ui-open")
     "n c" '(org-capture :wk "org-capture")
-    "n f" '(org-roam-node-find :wk "org-roam-node-find")
     "n ." '(org-emphasize :wk "org-emphasize")
     )
 

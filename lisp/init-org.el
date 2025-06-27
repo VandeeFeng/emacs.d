@@ -13,6 +13,105 @@
 ;;           (lambda ()
 ;;             (local-set-key (kbd "RET") 'org-open-at-point)))
 
+;;-------------------------------------------------------------------------------
+;;
+;; denote
+;;
+;;-------------------------------------------------------------------------------
+;; https://protesilaos.com/emacs/denote#h:58c4746b-b0d8-4896-9d88-a99b1d487231
+;; https://github.com/protesilaos/denote
+;; https://www.youtube.com/watch?v=mLzFJcLpDFI
+(use-package denote
+  :ensure t
+  :defer t
+  :hook
+  (;; If you use Markdown or plain text files, then you want to make
+   ;; the Denote links clickable (Org renders links as buttons right
+   ;; away)
+   (text-mode . denote-fontify-links-mode-maybe)
+   ;; Apply colours to Denote names in Dired.  This applies to all
+   ;; directories.  Check `denote-dired-directories' for the specific
+   ;; directories you may prefer instead.  Then, instead of
+   ;; `denote-dired-mode', use `denote-dired-mode-in-directories'.
+   (dired-mode . denote-dired-mode))
+  :bind
+  ;; Denote DOES NOT define any key bindings.  This is for the user to
+  ;; decide.  For example:
+  ( :map global-map
+    ("C-c n n" . denote)
+    ("C-c n d" . denote-dired)
+    ("C-c n g" . denote-grep)
+    ;; If you intend to use Denote with a variety of file types, it is
+    ;; easier to bind the link-related commands to the `global-map', as
+    ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
+    ;; `markdown-mode-map', and/or `text-mode-map'.
+    ("C-c n l" . denote-link)
+    ("C-c n L" . denote-add-links)
+    ("C-c n b" . denote-backlinks)
+    ("C-c n q c" . denote-query-contents-link) ; create link that triggers a grep
+    ("C-c n q f" . denote-query-filenames-link) ; create link that triggers a dired
+    ;; Note that `denote-rename-file' can work from any context, not just
+    ;; Dired bufffers.  That is why we bind it here to the `global-map'.
+    ("C-c n r" . denote-rename-file)
+    ("C-c n R" . denote-rename-file-using-front-matter)
+
+    ;; Key bindings specifically for Dired.
+    :map dired-mode-map
+    ("C-c C-d C-i" . denote-dired-link-marked-notes)
+    ("C-c C-d C-r" . denote-dired-rename-files)
+    ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
+    ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter))
+
+  :config
+  ;; Remember to check the doc string of each of those variables.
+  (setq denote-directory (expand-file-name "~/vandee/Areas/pkm/denotes/"))
+  (setq denote-save-buffers nil)
+  (setq denote-known-keywords '("Thinking" "Philosophy" "Hacking" "Coding"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  (setq denote-prompts '(title keywords))
+  (setq denote-excluded-directories-regexp nil)
+  (setq denote-excluded-keywords-regexp nil)
+  (setq denote-rename-confirmations '(rewrite-front-matter modify-file-name))
+  (setq denote-org-front-matter
+        "#+TITLE:      %s
+#+DATE:       %s
+#+FILETAGS:   %s
+#+IDENTIFIER: %s
+\n")
+
+  ;; Pick dates, where relevant, with Org's advanced interface:
+  (setq denote-date-prompt-use-org-read-date t)
+
+  ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
+  (denote-rename-buffer-mode 1))
+
+(defvar prot-dired--limit-hist '()
+  "Minibuffer history for `prot-dired-limit-regexp'.")
+
+;;;###autoload
+(defun prot-dired-limit-regexp (regexp omit)
+  "Limit Dired to keep files matching REGEXP.
+
+With optional OMIT argument as a prefix (\\[universal-argument]),
+exclude files matching REGEXP.
+
+Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
+  (interactive
+   (list
+    (read-regexp
+     (concat "Files "
+             (when current-prefix-arg
+               (propertize "NOT " 'face 'warning))
+             "matching PATTERN: ")
+     nil 'prot-dired--limit-hist)
+    current-prefix-arg))
+  (dired-mark-files-regexp regexp)
+  (unless omit (dired-toggle-marks))
+  (dired-do-kill-lines))
+
+;;; denote ends
+
 ;; org-remoteimg
 (require 'org-remoteimg)
 
@@ -83,6 +182,7 @@
 ;; org-roam
 ;;
 ;;-------------------------------------------------------------------------------
+;; 转为使用 denote
 ;;(setq org-roam-dailies-directory "~/Vandee/pkm/Journals/")
 ;;(setq org-export-with-toc nil) ;;禁止生成toc
 (use-package org-roam
@@ -103,11 +203,12 @@
       :unnarrowed t))
    )
   (org-roam-completion-everywhere t)
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n I" . org-roam-node-insert-immediate)
-         ("C-c n c" . org-roam-capture)
+  :bind (
+         ;;("C-c n l" . org-roam-buffer-toggle)
+         ;;("C-c n f" . org-roam-node-find)
+         ;;("C-c n i" . org-roam-node-insert)
+         ;;("C-c n I" . org-roam-node-insert-immediate)
+         ;;("C-c n c" . org-roam-capture)
          ;;("C-c n j" . org-roam-dailies-capture-today)
          ;;("C-c n n" . my/org-roam-find-notes)
          ;;("C-c n t" . my/org-roam-capture-task)

@@ -190,7 +190,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
 ;; 在启动时自动运行一次占卜
-(require 'gua)
+(require 'gua.el)
 (setq gua-llm-enabled t)
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda ()
@@ -350,9 +350,9 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
         (setq
          gptel-model "Gemini"
          gptel-backend (gptel-make-gemini "Gemini"
-                         :stream t
-                         :key api-key
-                         :models '("gemini-2.0-flash"))
+                                          :stream t
+                                          :key api-key
+                                          :models '("gemini-2.0-flash"))
          )
       (error "未在 auth-source 中找到 Gemini API 密钥！请检查您的 auth-source 配置。")))
 
@@ -363,14 +363,14 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;;                 :models '("qwen2.5:14b")))
 
   (gptel-make-ollama "Ollama"           ;Any name of your choosing
-    :host "localhost:11434"             ;Where it's running
-    :stream t                           ;Stream responses
-    :models '("qwen2.5:14b"))           ;List of models
+                     :host "localhost:11434"             ;Where it's running
+                     :stream t                           ;Stream responses
+                     :models '("qwen2.5:14b"))           ;List of models
 
   (gptel-make-ollama "Deepseek"         ;Any name of your choosing
-    :host "localhost:11434"             ;Where it's running
-    :stream t                           ;Stream responses
-    :models '("deepseek-r1:14b"))       ;List of models
+                     :host "localhost:11434"             ;Where it's running
+                     :stream t                           ;Stream responses
+                     :models '("deepseek-r1:14b"))       ;List of models
 
   ;; https://github.com/karthink/gptel/issues/514
   (gptel-make-tool
@@ -523,16 +523,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; (((text-mode prog-mode) . sis-context-mode)
   ;;  ((text-mode prog-mode) . sis-inline-mode))
   :config
-  ;; For MacOS
-  (sis-ism-lazyman-config
-   ;; English input source may be: "ABC", "US" or another one.
-   ;; "com.apple.keylayout.ABC"
-   "com.apple.keylayout.ABC"
-
-   ;; Other language input source: "rime", "sogou" or another one.
-   ;; "im.rime.inputmethod.Squirrel.Rime"
-   "im.rime.inputmethod.Squirrel.Hans")
-
+  (sis-ism-lazyman-config "1" "2" 'fcitx5)
   ;; enable the /cursor color/ mode
   ;;(sis-global-cursor-color-mode t)
   ;; enable the /respect/ mode
@@ -810,56 +801,6 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
           (window-parameters . ((no-other-window . t)
                                 (mode-line-format . none)))))
   )
-
-;; vterm
-(defun vterm-minibuffer ()
-  "Open vterm in minibuffer and enter insert state."
-  (interactive)
-  (let ((height (/ (frame-height) 3))) ; 设置高度为框架高度的1/3
-    (with-temp-buffer
-      (let ((window (split-window-vertically (- height))))
-        (select-window window)
-        (vterm)
-        ;; 确保 evil-mode 已加载后进入 insert 状态
-        (when (bound-and-true-p evil-mode)
-          (evil-insert-state))))))
-
-;; 定义一个更简单的命令别名
-(defalias 'vt 'vterm-minibuffer)
-
-;; 自定义 vterm 在 minibuffer 中的行为
-(with-eval-after-load 'vterm
-  (evil-define-key '(normal insert) vterm-mode-map (kbd "C-y") #'vterm-yank)
-  (evil-define-key '(normal) vterm-mode-map (kbd "p") #'vterm-yank)
-  (evil-define-key '(normal) vterm-mode-map (kbd "u") #'vterm-undo)
-  (evil-define-key 'normal vterm-mode-map (kbd "q") #'delete-window)
-
-  ;; 为 vterm-mode 添加 hook，确保在打开时进入 insert 状态
-  (add-hook 'vterm-mode-hook
-            (lambda ()
-              (when (bound-and-true-p evil-mode)
-                (evil-insert-state)))))
-
-;; 消除主题对终端的颜色影响
-(add-hook 'vterm-mode-hook
-          (lambda ()
-            ;; One Dark 主题配色
-            (set-face-attribute 'vterm-color-black nil
-                                :foreground "#282c34" :background "#282c34")
-            (set-face-attribute 'vterm-color-red nil
-                                :foreground "#e06c75" :background "#e06c75")
-            (set-face-attribute 'vterm-color-green nil
-                                :foreground "#98c379" :background "#98c379")
-            (set-face-attribute 'vterm-color-yellow nil
-                                :foreground "#e5c07b" :background "#e5c07b")
-            (set-face-attribute 'vterm-color-blue nil
-                                :foreground "#61afef" :background "#61afef")
-            (set-face-attribute 'vterm-color-magenta nil
-                                :foreground "#c678dd" :background "#c678dd")
-            (set-face-attribute 'vterm-color-cyan nil
-                                :foreground "#56b6c2" :background "#56b6c2")
-            (set-face-attribute 'vterm-color-white nil
-                                :foreground "#abb2bf" :background "#abb2bf")))
 
 
 ;; ----------------------------------------------------------

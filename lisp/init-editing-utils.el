@@ -21,9 +21,15 @@
     (key-chord-mode 1)
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
+(with-eval-after-load 'evil
+  (define-key evil-insert-state-map (kbd "C-j") 'next-line)
+  (define-key evil-insert-state-map (kbd "C-k") 'previous-line))
+
+(global-set-key (kbd "s-c") 'kill-ring-save)
+(global-set-key (kbd "s-v") 'yank)
+
 ;; 启用系统复制粘贴
-(global-set-key  (kbd "M-c") 'kill-ring-save) ; Cmd+C 复制 => command+w
-(global-set-key (kbd "M-v") 'yank) ; Cmd+V 粘贴 => control+y
+(setq select-enable-clipboard t)
 
 (defun my/remember-init ()
   "Remember current position and setup."

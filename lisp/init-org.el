@@ -64,7 +64,7 @@
 
   :config
   ;; Remember to check the doc string of each of those variables.
-  (setq denote-directory (expand-file-name "~/Vandee/Areas/pkm/denotes/"))
+  (setq denote-directory (expand-file-name "/home/vandee/Vandee/Areas/pkm/denotes/"))
   (setq denote-save-buffers nil)
   (setq denote-known-keywords '("Thinking" "Philosophy" "Hacking" "Coding"))
   (setq denote-infer-keywords t)

@@ -8,11 +8,7 @@
 ;;自定义函数
 ;;----------------------------------------------------------------------------
 
-(global-set-key (kbd "M-w") 'evil-window-delete)
-
-(with-eval-after-load 'evil
-  (define-key evil-insert-state-map (kbd "C-j") 'next-line)
-  (define-key evil-insert-state-map (kbd "C-k") 'previous-line))
+;; (global-set-key (kbd "M-w") 'evil-window-delete)
 
 (defun my/org-datetree-progress-bar ()
   "Scan the datetree in the current Org file and insert a custom progress bar."

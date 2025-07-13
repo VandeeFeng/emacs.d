@@ -311,7 +311,10 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;; (global-set-key (kbd "C-c m") 'chinhant-grab-mac-link)
 
 ;; yasnippet
-(require 'yasnippet)
+(use-package yasnippet
+  :ensure t
+  )
+
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"                 ;; personal snippets
         ))
@@ -350,9 +353,9 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
         (setq
          gptel-model "Gemini"
          gptel-backend (gptel-make-gemini "Gemini"
-                                          :stream t
-                                          :key api-key
-                                          :models '("gemini-2.0-flash"))
+                         :stream t
+                         :key api-key
+                         :models '("gemini-2.0-flash"))
          )
       (error "未在 auth-source 中找到 Gemini API 密钥！请检查您的 auth-source 配置。")))
 
@@ -363,14 +366,14 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;;                 :models '("qwen2.5:14b")))
 
   (gptel-make-ollama "Ollama"           ;Any name of your choosing
-                     :host "localhost:11434"             ;Where it's running
-                     :stream t                           ;Stream responses
-                     :models '("qwen2.5:14b"))           ;List of models
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("qwen2.5:14b"))           ;List of models
 
   (gptel-make-ollama "Deepseek"         ;Any name of your choosing
-                     :host "localhost:11434"             ;Where it's running
-                     :stream t                           ;Stream responses
-                     :models '("deepseek-r1:14b"))       ;List of models
+    :host "localhost:11434"             ;Where it's running
+    :stream t                           ;Stream responses
+    :models '("deepseek-r1:14b"))       ;List of models
 
   ;; https://github.com/karthink/gptel/issues/514
   (gptel-make-tool
@@ -513,6 +516,21 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
   )
 
+;; 输入法
+;; rime
+(require 'rime)
+(setq rime-share-data-dir "~/.local/share/fcitx5/rime")
+(setq rime-user-data-dir "~/.config/emacs-rime")
+(require 'posframe)
+(setq rime-posframe-properties
+      (list :background-color "#333333"
+            :foreground-color "#dcdccc"
+            ;; :font "WenQuanYi Micro Hei Mono-14"
+            :internal-border-width 10))
+(setq default-input-method "rime"
+      rime-show-candidate 'posframe)
+(global-set-key (kbd "C-SPC") 'toggle-input-method)
+
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source
 (use-package sis
@@ -523,7 +541,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; (((text-mode prog-mode) . sis-context-mode)
   ;;  ((text-mode prog-mode) . sis-inline-mode))
   :config
-  (sis-ism-lazyman-config "1" "2" 'fcitx5)
+  (sis-ism-lazyman-config "keyoboard-us" "rime" 'fcitx5)
   ;; enable the /cursor color/ mode
   ;;(sis-global-cursor-color-mode t)
   ;; enable the /respect/ mode

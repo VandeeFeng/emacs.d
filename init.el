@@ -61,6 +61,12 @@
 (maybe-require-package 'scratch)
 (require-package 'command-log-mode)
 
+(maybe-require-package 'evil)
+(require 'init-misc)
+(require 'init-languages)
+(require 'init-keybindings)
+(require 'init-package)
+
 (require 'init-frame-hooks)
 (require 'init-xterm)
 (require 'init-themes)
@@ -169,11 +175,7 @@
            (treesit-available-p))
   (require 'init-treesitter))
 
-(maybe-require-package 'evil)
-(require 'init-misc)
-(require 'init-languages)
-(require 'init-keybindings)
-(require 'init-package)
+
 
 
 

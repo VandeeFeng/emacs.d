@@ -821,9 +821,9 @@ This is a modified version that prevents sh-mode indentation."
 
 (setq org-static-blog-publish-title "Vandee's Blog")
 (setq org-static-blog-publish-url "https://www.vandee.art/blog/")
-(setq org-static-blog-publish-directory "~/vandee/Areas/org-blog/blog")
-(setq org-static-blog-posts-directory "~/vandee/Areas/org-blog/posts/")
-(setq org-static-blog-drafts-directory "~/vandee/Areas/org-blog/drafts/")
+(setq org-static-blog-publish-directory "~/Vandee/Areas/org-blog/blog")
+(setq org-static-blog-posts-directory "~/Vandee/Areas/org-blog/posts/")
+(setq org-static-blog-drafts-directory "~/Vandee/Areas/org-blog/drafts/")
 (setq org-static-blog-enable-tags t)
 (setq org-export-with-toc t)
 (setq org-export-with-section-numbers nil)

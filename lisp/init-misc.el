@@ -541,7 +541,8 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; (((text-mode prog-mode) . sis-context-mode)
   ;;  ((text-mode prog-mode) . sis-inline-mode))
   :config
-  (sis-ism-lazyman-config "keyoboard-us" "rime" 'fcitx5)
+  (sis-ism-lazyman-config "1" "2" 'fcitx5)
+  ;; (sis-ism-lazyman-config "british" "rime" 'fcitx5) ;; 使用内置的 rime 的时候
   ;; enable the /cursor color/ mode
   ;;(sis-global-cursor-color-mode t)
   ;; enable the /respect/ mode

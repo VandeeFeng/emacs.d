@@ -505,6 +505,8 @@ input and search the whole buffer for it."
   (vf/leader-keys
     "d" '(:ignore t :wk "Dired")
     "d d" '(dired :wk "Open dired")
+    "d f" '(dired-x-find-file :wk "Dired find file")
+    "d u" '(dired-up-directory :wk "Dired go to up dictionary")
     "d c" '(dired-create-empty-file :wk "Dired create file")
     "d j" '(dired-jump :wk "Dired jump to current")
     "d n" '(dired-copy-filename-as-kill :wk "Dired copy the file name")

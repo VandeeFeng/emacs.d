@@ -355,7 +355,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
          gptel-backend (gptel-make-gemini "Gemini"
                          :stream t
                          :key api-key
-                         :models '("gemini-2.0-flash"))
+                         :models '("gemini-2.5-flash"))
          )
       (error "未在 auth-source 中找到 Gemini API 密钥！请检查您的 auth-source 配置。")))
 
@@ -368,7 +368,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   (gptel-make-ollama "Ollama"           ;Any name of your choosing
     :host "localhost:11434"             ;Where it's running
     :stream t                           ;Stream responses
-    :models '("qwen2.5:14b"))           ;List of models
+    :models '("qwen3:1.7b"))           ;List of models
 
   (gptel-make-ollama "Deepseek"         ;Any name of your choosing
     :host "localhost:11434"             ;Where it's running
@@ -518,18 +518,18 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
 ;; 输入法
 ;; rime
-(require 'rime)
-(setq rime-share-data-dir "~/.local/share/fcitx5/rime")
-(setq rime-user-data-dir "~/.config/emacs-rime")
-(require 'posframe)
-(setq rime-posframe-properties
-      (list :background-color "#333333"
-            :foreground-color "#dcdccc"
-            ;; :font "WenQuanYi Micro Hei Mono-14"
-            :internal-border-width 10))
-(setq default-input-method "rime"
-      rime-show-candidate 'posframe)
-(global-set-key (kbd "C-SPC") 'toggle-input-method)
+;; (require 'rime)
+;; (setq rime-share-data-dir "~/.local/share/fcitx5/rime")
+;; (setq rime-user-data-dir "~/.config/emacs-rime")
+;; (require 'posframe)
+;; (setq rime-posframe-properties
+;;       (list :background-color "#333333"
+;;             :foreground-color "#dcdccc"
+;;             ;; :font "WenQuanYi Micro Hei Mono-14"
+;;             :internal-border-width 10))
+;; (setq default-input-method "rime"
+;;       rime-show-candidate 'posframe)
+;; (global-set-key (kbd "C-SPC") 'toggle-input-method)
 
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source
@@ -863,7 +863,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; an arbitrary non-null environment variable as placeholder
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:1.5b")
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 

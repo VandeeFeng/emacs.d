@@ -68,6 +68,11 @@
   (setq denote-save-buffers nil)
   (setq denote-known-keywords '("Thinking" "Philosophy" "Hacking" "Coding"))
   (setq denote-infer-keywords t)
+  (setq denote-file-name-slug-functions
+        '((title . denote-sluggify-title)
+          (keyword . identity)
+          (signature . denote-sluggify-signature)
+          ))
   (setq denote-sort-keywords t)
   (setq denote-prompts '(title keywords))
   (setq denote-excluded-directories-regexp nil)
@@ -79,6 +84,8 @@
 #+FILETAGS:   %s
 #+IDENTIFIER: %s
 \n")
+
+  (setq denote-keywords-transform (lambda (keyword) keyword))
 
   ;; Pick dates, where relevant, with Org's advanced interface:
   (setq denote-date-prompt-use-org-read-date t)

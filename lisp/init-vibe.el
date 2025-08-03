@@ -3,6 +3,8 @@
 
 ;;; Code:
 
+;; set .authinfo file path
+(setq auth-sources '("~/.emacs.d/.authinfo"))
 
 ;; aidermacs
 (use-package aidermacs

@@ -24,23 +24,60 @@
 ;;-------------------------------------------------------------------------
 ;;Python
 
-(use-package conda
-  :defer t
-  :config
-  (setq conda-anaconda-home "~/miniconda3/")
-  (defun conda-setup ()
-    (conda-env-initialize-interactive-shells)
-    (conda-env-initialize-eshell)
-    (conda-env-autoactivate-mode t)
-    (setq conda-env-home-directory "~/miniconda3/"))
+;; ruff
+;; via: https://stackoverflow.com/questions/79555604/run-ruff-in-emacs
+(add-hook 'python-mode-hook 'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("ruff" "server")))
+  (add-hook 'after-save-hook 'eglot-format))
 
-  (use-package eshell
-    :hook (eshell-mode . conda-setup))
 
-  (use-package python
-    :hook (python-mode . conda-setup)))
+;; (maybe-require-package 'ruff-format)
+;; (add-hook 'python-mode-hook 'ruff-format-on-save-mode)
 
-;;(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)) ;; 默认使用 python-ts-mode，需要安装 python 的 treesitter
+(defun ruff-check ()
+  (interactive)
+  (let ((current-file (buffer-file-name)))
+    (if current-file
+        (async-shell-command
+         (format "ruff check --select ALL %s" (shell-quote-argument current-file))
+         )
+      )
+    )
+  )
+
+(defun ruff-fix ()
+  (interactive)
+  (let ((current-file (buffer-file-name)))
+    (if current-file
+        (progn
+          (shell-command
+           (format "ruff check --select ALL --fix %s" (shell-quote-argument current-file))
+           )
+          (revert-buffer t t t)
+          )
+      )
+    )
+  )
+
+;; (use-package conda
+;;   :defer t
+;;   :config
+;;   (setq conda-anaconda-home "~/miniconda3/")
+;;   (defun conda-setup ()
+;;     (conda-env-initialize-interactive-shells)
+;;     (conda-env-initialize-eshell)
+;;     (conda-env-autoactivate-mode t)
+;;     (setq conda-env-home-directory "~/miniconda3/"))
+
+;;   (use-package eshell
+;;     :hook (eshell-mode . conda-setup))
+
+;;   (use-package python
+;;     :hook (python-mode . conda-setup)))
+
+;; ;;(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)) ;; 默认使用 python-ts-mode，需要安装 python 的 treesitter
 ;; ;;python black
 ;; (after! python
 ;;   :preface

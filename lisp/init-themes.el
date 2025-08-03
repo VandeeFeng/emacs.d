@@ -88,6 +88,16 @@
 ;; https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-ui.el
 
 ;; 直接在 custom.el 里设置了，不要每次都重复载入
+;; (set-fontset-font t 'han (font-spec :family "LXGW WenKai Mono" :height 140)) ;;单独设置Emacsclient的字体不会变
+
+;; 自定义fontset
+(create-fontset-from-fontset-spec
+ "-*-monospace-normal-r-normal--14-*-*-*-c-*-fontset-myfontset")
+
+(set-fontset-font "fontset-myfontset" 'han (font-spec :family "LXGW WenKai Mono"))
+
+(set-fontset-font "fontset-myfontset" 'ascii (font-spec :family "Geistmono Nerd Font"))
+
 (custom-set-faces
  ;; globle 部分-------------------------------------------
  '(shadow ((t (:foreground "gray70"))))
@@ -95,7 +105,8 @@
  '(show-paren-mismatch ((t (:background "HotPink3" :foreground "white"))))
 
  ;; 设置默认字体和大小
- '(default ((t (:family "GeistMono Nerd Font" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
+ ;; '(default ((t (:family "GeistMono Nerd Font" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
+ '(default ((t (:font "fontset-myfontset" :height 140 :background "#1D1F21" :foreground "#d1d5db"))))
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
@@ -123,7 +134,7 @@
  ;; '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
 
  ;; 设置类型的样式
- ;; '(font-lock-type-face ((t (:foreground "#a6adac" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
+ ;; '(font-lock-type-face ((t (:foreground "#9DA3A2" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
 
  ;; 设置文档字符串的样式
  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
@@ -184,7 +195,7 @@
  '(diff-hl-insert ((t (:background nil :foreground "green1"))))
  '(diredfl-date-time ((t nil)))
  '(diredfl-deletion ((t nil)))
- '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
+ ;; '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
  '(diredfl-dir-priv ((t nil)))
  '(diredfl-exec-priv ((t nil)))

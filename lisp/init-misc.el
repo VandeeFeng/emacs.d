@@ -8,13 +8,14 @@
 ;;
 ;;------------------------------------------------------------------------------------------
 
-(defun my-modify-syntax-for-chinese ()
-  "Modify syntax table to treat each Chinese character as a word."
-  (modify-syntax-entry ?\\ "w" (standard-syntax-table)) ; 避免反斜杠干扰
-  (dolist (char (number-sequence #x4e00 #x9fff)) ; 汉字的 Unicode 范围
-    (modify-syntax-entry char "w" (standard-syntax-table))))
+;; 没作用
+;; (defun my-modify-syntax-for-chinese ()
+;;   "Modify syntax table to treat each Chinese character as a word."
+;;   (modify-syntax-entry ?\\ "w" (standard-syntax-table)) ; 避免反斜杠干扰
+;;   (dolist (char (number-sequence #x4e00 #x9fff)) ; 汉字的 Unicode 范围
+;;     (modify-syntax-entry char "w" (standard-syntax-table))))
 
-(add-hook 'evil-local-mode-hook 'my-modify-syntax-for-chinese)
+;; (add-hook 'evil-local-mode-hook 'my-modify-syntax-for-chinese)
 
 ;; auto-notes
 ;; uvicorn app.main:app --reload
@@ -26,7 +27,7 @@
 (defun run-uvicorn-server-uv ()
   "Run uv python -m uvicorn app.main:app --reload in a new async shell using absolute path."
   (interactive)
-  (let ((default-directory "/Users/fandi/Vandee/Projects/nonotes/"))
+  (let ((default-directory "~/Vandee/Projects/NoNotes/"))
     (async-shell-command
      "uv run uvicorn app.main:app --reload"
      "*Uvicorn Server*")))
@@ -193,9 +194,6 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 (global-set-key (kbd "C-c r") #'corfu-ws-complete-rag)
 
 ;; auto-notes ends
-
-;; set .authinfo file path
-(setq auth-sources '("~/.emacs.d/.authinfo"))
 
 ;; 在启动时自动运行一次占卜
 (require 'gua.el)

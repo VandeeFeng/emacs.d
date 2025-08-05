@@ -19,7 +19,7 @@
 
 ;; auto-notes
 ;; uvicorn app.main:app --reload
-(require 'websocket)
+(maybe-require-package 'websocket)
 (require 'json)
 (require 'corfu)
 

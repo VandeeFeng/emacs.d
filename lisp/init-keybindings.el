@@ -417,18 +417,25 @@ input and search the whole buffer for it."
 
   (vf/leader-keys
     "SPC" '(execute-extended-command :wk "M-x") ;; counsel-M-x
-    "/" '(find-file :wk "Find file")
+    ;; "/" '(find-file :wk "Find file")
     "." '(compile :wk "Compile")
-    "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
+    ;; "=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "TAB TAB" '(comment-line :wk "Comment lines")
-    "u" '(universal-argument :wk "Universal argument"))
+    ;; "u" '(universal-argument :wk "Universal argument")
+    )
+
+  (vf/leader-keys
+    "m" '(:ignore t :wk "Mark")
+    "m p" '(my/remember-init :wk "Remember current position")
+    "m j" '(my/remember-jump :wk "Jump back to latest position")
+    "m s" '(mc--mark-symbol-at-point :wk "mark symbol at point")
+    )
 
   (vf/leader-keys
     "c" '(:ignore t :wk "Coding")
-    "c p" '(my/remember-init :wk "Remember current position")
-    "c j" '(my/remember-jump :wk "Jump back to latest position")
     ;; "c c" '(:ignore t :wk "thing copy")
-    "c s" '(thing-copy-sentence :wk "thing copy sentence")
+    "c s" '(thing-copy-symbol :wk "thing copy symbol")
+    "c S" '(thing-copy-sentence :wk "thing copy sentence")
     "c w" '(thing-copy-word :wk "thing copy word")
     "c e" '(thing-copy-to-line-end :wk "thing copy to line end")
     "c b" '(thing-copy-to-line-beginning :wk "thing copy to line beginning")

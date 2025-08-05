@@ -29,9 +29,13 @@
 (add-hook 'python-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server")))
-  (add-hook 'after-save-hook 'eglot-format))
+               '(python-mode . ("ruff" "server"))))
 
+;; Format python buffers using eglot before saving.major-mode hook, which then adds a buffer-local hook.
+(defun python-eglot-format-on-save ()
+  "Add eglot-format-buffer to before-save-hook, but only for this buffer."
+  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
+(add-hook 'python-mode-hook #'python-eglot-format-on-save)
 
 ;; (maybe-require-package 'ruff-format)
 ;; (add-hook 'python-mode-hook 'ruff-format-on-save-mode)

@@ -8,10 +8,10 @@
 (let ((gls (executable-find "gls")))
   (when gls (setq insert-directory-program gls)))
 
-(when (maybe-require-package 'diredfl)
-  (with-eval-after-load 'dired
-    (diredfl-global-mode)
-    (require 'dired-x)))
+;; (when (maybe-require-package 'diredfl)
+;;   (with-eval-after-load 'dired
+;;     (diredfl-global-mode)
+;;     (require 'dired-x)))
 
 ;; Hook up dired-x global bindings without loading it up-front
 (define-key ctl-x-map "\C-j" 'dired-jump)

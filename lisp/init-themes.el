@@ -195,7 +195,7 @@
  '(diff-hl-insert ((t (:background nil :foreground "green1"))))
  '(diredfl-date-time ((t nil)))
  '(diredfl-deletion ((t nil)))
- ;; '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
+ '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
  '(diredfl-dir-priv ((t nil)))
  '(diredfl-exec-priv ((t nil)))

@@ -349,10 +349,12 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;;       (list :background-color "#333333"
 ;;             :foreground-color "#dcdccc"
 ;;             ;; :font "WenQuanYi Micro Hei Mono-14"
-;;             :internal-border-width 10))
+;;             :internal-border-width 10
+;;             :override-redirect t))
+;;
 ;; (setq default-input-method "rime"
 ;;       rime-show-candidate 'posframe)
-;; (global-set-key (kbd "C-SPC") 'toggle-input-method)
+;; (global-set-key (kbd "M-SPC") 'toggle-input-method)
 
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source

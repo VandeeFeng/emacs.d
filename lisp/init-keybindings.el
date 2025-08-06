@@ -10,6 +10,8 @@
 
 ;; (global-set-key (kbd "M-w") 'evil-window-delete)
 
+(global-unset-key (kbd "C-SPC")) ;; 和我习惯的切换输入法快捷键冲突了,这个快捷键系统默认绑定的是 set-mark-command
+
 (defun my/org-datetree-progress-bar ()
   "Scan the datetree in the current Org file and insert a custom progress bar."
   (interactive)

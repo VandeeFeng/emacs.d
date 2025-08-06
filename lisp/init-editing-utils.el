@@ -256,6 +256,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 ;; https://github.com/gabesoft/evil-mc
 (use-package evil-multiedit
   :ensure t
+  :defer t
   :after evil
   ;; :init
   ;; (setq evil-multiedit-dwim-motion-keys nil)

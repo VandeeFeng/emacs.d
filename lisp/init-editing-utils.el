@@ -6,12 +6,13 @@
 ;; ==============================================
 ;; editing functions
 ;; ==============================================
+;; 其他常用操作在 file:/home/vandee/Vandee/Areas/pkm/org/Code_Notes.org::*编辑
 
-;; Harper
-;; https://writewithharper.com/docs/integrations/emacs
-;; (with-eval-after-load 'eglot
-;;   (add-to-list 'eglot-server-programs
-;;                '(text-mode . ("harper-ls" "--stdio"))))
+(global-set-key (kbd "s-c") 'kill-ring-save)
+(global-set-key (kbd "s-v") 'yank)
+
+;; 启用系统复制粘贴
+(setq select-enable-clipboard t)
 
 ;; jk 退出 insert
 (with-eval-after-load 'evil
@@ -21,16 +22,49 @@
     (key-chord-mode 1)
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
+;; Mark
 (with-eval-after-load 'evil
+  (define-prefix-command 'my/mark-map)
+  (define-key evil-normal-state-map (kbd "m") 'my/mark-map)
+
+  (define-key my/mark-map (kbd "m") 'mc--mark-symbol-at-point)
+  (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
+  (define-key my/mark-map (kbd "M-s") 'thing-cut-symbol)
+  (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
+  (define-key my/mark-map (kbd "M-S") 'thing-cut-sentence)
+  (define-key my/mark-map (kbd "w") 'thing-copy-word)
+  (define-key my/mark-map (kbd "M-w") 'thing-cut-word)
+  )
+
+;; (define-prefix-command 'my/mark-map)
+;; (global-set-key (kbd "M-c") 'my/mark-map)
+;; (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
+;; (define-key my/mark-map (kbd "M-s") 'thing-cut-symbol)
+;; (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
+;; (define-key my/mark-map (kbd "M-S") 'thing-cut-sentence)
+;; (define-key my/mark-map (kbd "w") 'thing-copy-word)
+;; (define-key my/mark-map (kbd "M-w") 'thing-cut-word)
+
+;; Move
+(with-eval-after-load 'evil
+  (defun move-to-end-of-line ()
+    "Move the cursor to the end of the current line."
+    (interactive)
+    (end-of-line))
+
+  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
+  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line)
+  (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
+  (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
+  (define-key evil-insert-state-map (kbd "C-a" )'beginning-of-line)
+  (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
+  (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
+  (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
   (define-key evil-insert-state-map (kbd "C-j") 'next-line)
-  (define-key evil-insert-state-map (kbd "C-k") 'previous-line))
+  (define-key evil-insert-state-map (kbd "C-k") 'previous-line)
+  )
 
-(global-set-key (kbd "s-c") 'kill-ring-save)
-(global-set-key (kbd "s-v") 'yank)
-
-;; 启用系统复制粘贴
-(setq select-enable-clipboard t)
-
+;; jump and return
 (defun my/remember-init ()
   "Remember current position and setup."
   (interactive)
@@ -96,25 +130,6 @@
   (interactive)
   (message "Executing selected org code block...")
   (org-babel-execute-src-block))
-
-;; 在 normal 模式下将 - 键导航到行尾
-(with-eval-after-load 'evil
-  (defun move-to-end-of-line ()
-    "Move the cursor to the end of the current line."
-    (interactive)
-    (end-of-line))
-
-  ;; 在 normal 模式下将 - 键绑定到这个函数
-  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
-  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line)
-  (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
-  (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
-  (define-key evil-insert-state-map (kbd "C-a" )'beginning-of-line)
-  (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
-
-  )
 
 ;;在minibuffer里使用shell指令
 ;;https://stackoverflow.com/questions/10121944/passing-emacs-variables-to-minibuffer-shell-commands
@@ -312,6 +327,23 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 
 ;; mutiple edit ends here
 ;; ========================================
+
+;; Harper
+;; https://writewithharper.com/docs/integrations/emacs
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-server-programs
+;;                '(text-mode . ("harper-ls" "--stdio"))))
+
+;; outline-indent
+;; https://github.com/jamescherti/outline-indent.el
+
+;; (use-package outline-indent
+;;   :ensure t
+;;   :defer t
+;;   :commands outline-indent-minor-mode
+;;   :custom
+;;   (outline-indent-ellipsis " ▼"))
+
 
 (require-package 'unfill)
 

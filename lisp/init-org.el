@@ -326,7 +326,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                              (browse-url
                               ;; we get the "zotero:"-less url, so we put it back.
                               (format "zotero:%s" zpath))))
-  (setq org-agenda-files '("~/Vandee/Areas/pkm/org/Clips.org" "~/Vandee/Areas/pkm/org/Projects.org" "~/vandee/Areas/pkm/org/Tasks.org"))
+  (setq org-agenda-files '("~/Vandee/Areas/pkm/org/Clips.org" "~/Vandee/Areas/pkm/org/Projects.org" "~/Vandee/Areas/pkm/org/Tasks.org"))
   ;; (setq org-agenda-include-diary t)
   ;; (setq org-agenda-diary-file "~/Vandee/pkm/org/Journal.org")
   (setq org-directory "~/Vandee/Areas/pkm/org/")

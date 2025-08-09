@@ -29,11 +29,11 @@
 
   (define-key my/mark-map (kbd "m") 'mc--mark-symbol-at-point)
   (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
-  (define-key my/mark-map (kbd "M-s") 'thing-cut-symbol)
+  (define-key my/mark-map (kbd "C-s") 'thing-cut-symbol)
   (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
-  (define-key my/mark-map (kbd "M-S") 'thing-cut-sentence)
+  (define-key my/mark-map (kbd "C-S") 'thing-cut-sentence)
   (define-key my/mark-map (kbd "w") 'thing-copy-word)
-  (define-key my/mark-map (kbd "M-w") 'thing-cut-word)
+  (define-key my/mark-map (kbd "C-w") 'thing-cut-word)
   )
 
 ;; (define-prefix-command 'my/mark-map)

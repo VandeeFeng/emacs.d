@@ -391,7 +391,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (add-to-list 'org-capture-templates
                '("cC" "Code Collections" entry
                  (file+headline "~/Vandee/Areas/pkm/org/Codes.org" "Codes")
-                 "* %U - %^{Intro} %^G\n\nSource: %^{source}\n%?"
+                 "* %U - %^{Intro} %^G\n\nSource: %^{source}\n\n%?"
                  :prepend t))
 
 

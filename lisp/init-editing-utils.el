@@ -27,6 +27,8 @@
   (define-prefix-command 'my/mark-map)
   (define-key evil-normal-state-map (kbd "m") 'my/mark-map)
 
+  (define-key my/mark-map (kbd "p") 'my/remember-init)
+  (define-key my/mark-map (kbd "j") 'my/remember-jump)
   (define-key my/mark-map (kbd "m") 'mc--mark-symbol-at-point)
   (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
   (define-key my/mark-map (kbd "C-s") 'thing-cut-symbol)
@@ -62,6 +64,8 @@
   (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
   (define-key evil-insert-state-map (kbd "C-j") 'next-line)
   (define-key evil-insert-state-map (kbd "C-k") 'previous-line)
+  (global-set-key (kbd "C-l") 'forward-char)
+  (global-set-key (kbd "S-<backspace>") 'delete-char)
   )
 
 ;; jump and return

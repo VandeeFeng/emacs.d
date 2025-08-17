@@ -19,7 +19,7 @@
 
 ;; auto-notes
 ;; uvicorn app.main:app --reload
-(maybe-require-package 'websocket)
+;; (maybe-require-package 'websocket)
 (require 'json)
 (require 'corfu)
 
@@ -339,22 +339,21 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 (global-set-key (kbd "M-l") 'org-cliplink)
 
 
-;; 输入法
 ;; rime
 ;; (require 'rime)
 ;; (setq rime-share-data-dir "~/.local/share/fcitx5/rime")
 ;; (setq rime-user-data-dir "~/.config/emacs-rime")
 ;; (require 'posframe)
 ;; (setq rime-posframe-properties
-;;       (list :background-color "#333333"
-;;             :foreground-color "#dcdccc"
+;;       (list :background-color "#1D1F21"
+;;             :foreground-color "#d1d5db"
 ;;             ;; :font "WenQuanYi Micro Hei Mono-14"
 ;;             :internal-border-width 10
 ;;             :override-redirect t))
-;;
+
 ;; (setq default-input-method "rime"
-;;       rime-show-candidate 'posframe)
-;; (global-set-key (kbd "M-SPC") 'toggle-input-method)
+;;       rime-show-candidate 'popup)  ;;posframe 会出现 Emacs frame 变色的问题
+;; (global-set-key (kbd "C-SPC") 'toggle-input-method)
 
 ;; sis
 ;; https://github.com/laishulu/emacs-smart-input-source

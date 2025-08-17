@@ -100,6 +100,7 @@
 
 (custom-set-faces
  ;; globle 部分-------------------------------------------
+ '(popup-tip-face ((t (:background "#1D1F21" :foreground "#d1d5db"))))
  '(shadow ((t (:foreground "gray70"))))
  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
  '(show-paren-mismatch ((t (:background "HotPink3" :foreground "white"))))

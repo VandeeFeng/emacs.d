@@ -7,6 +7,12 @@
 ;; globl settings
 ;;
 ;;------------------------------------------------------------------------------------------
+;; https://github.com/xenodium/ready-player
+;; https://xenodium.com/ready-player-mode/
+(use-package ready-player
+  :ensure t
+  :config
+  (ready-player-mode +1))
 
 ;; 没作用
 ;; (defun my-modify-syntax-for-chinese ()

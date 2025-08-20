@@ -257,7 +257,7 @@
   ;; an arbitrary non-null environment variable as placeholder
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:1.5b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b")
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 
@@ -266,7 +266,7 @@
          (api-key (and auth-info (plist-get auth-info :secret)))) ; 使用 :secret 获取 API key
     (if api-key
         (plist-put minuet-gemini-options :api-key api-key )
-      (plist-put minuet-gemini-options :model "gemini-2.0-flash")))
+      (plist-put minuet-gemini-options :model "gemini-2.5-flash")))
   )
 
 

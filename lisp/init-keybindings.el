@@ -426,12 +426,13 @@ input and search the whole buffer for it."
     ;; "u" '(universal-argument :wk "Universal argument")
     )
 
-  (vf/leader-keys
-    "m" '(:ignore t :wk "Mark")
-    "m p" '(my/remember-init :wk "Remember current position")
-    "m j" '(my/remember-jump :wk "Jump back to latest position")
-    "m s" '(mc--mark-symbol-at-point :wk "mark symbol at point")
-    )
+  ;; (vf/leader-keys
+  ;;   "m" '(:ignore t :wk "Mark")
+  ;;   "m p" '(my/remember-init :wk "Remember current position")
+  ;;   "m j" '(my/remember-jump :wk "Jump back to latest position")
+  ;;   ;; "m s" '(mc--mark-symbol-at-point :wk "mark symbol at point")
+  ;;   "m s" '(mark-sexp :wk "mark symbol at point")
+  ;;   )
 
   (vf/leader-keys
     "c" '(:ignore t :wk "Coding")

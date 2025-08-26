@@ -22,3 +22,6 @@
 [submodule "site-lisp/org-include-inline"]
 	path = site-lisp/org-include-inline
 	url = git@github.com:yibie/org-include-inline.git
+[submodule "site-lisp/Emacs-Hoarder"]
+	path = site-lisp/Emacs-Hoarder
+	url = git@github.com:VandeeFeng/Emacs-Hoarder.git

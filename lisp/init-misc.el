@@ -7,6 +7,9 @@
 ;; globl settings
 ;;
 ;;------------------------------------------------------------------------------------------
+
+(require 'hoarder)
+
 ;; https://github.com/xenodium/ready-player
 ;; https://xenodium.com/ready-player-mode/
 (use-package ready-player

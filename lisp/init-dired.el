@@ -24,6 +24,7 @@
 
 (when (maybe-require-package 'diff-hl)
   (with-eval-after-load 'dired
+    (require 'dired-x)
     (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
 
 (provide 'init-dired)

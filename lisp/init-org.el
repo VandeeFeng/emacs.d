@@ -342,7 +342,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   ;;                "* TODOs\n* Inbox\n- %?"))
   (add-to-list 'org-capture-templates
                '("j" "Journal" entry (file+datetree "~/Vandee/Areas/pkm/org/Journal.org")
-                 "* Inbox\n- %?"))
+                 "* TIL\n* Inbox\n- %?"))
 
   (add-hook 'org-capture-after-finalize-hook
             (lambda ()

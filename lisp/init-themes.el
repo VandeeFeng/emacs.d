@@ -143,6 +143,9 @@
  ;; 设置当前行号颜色
  '(line-number-current-line ((t (:foreground "#ffdd33"))))
 
+ ;; 设置行号颜色
+ '(line-number ((t (:foreground "gray30"))))
+
  ;; org 部分 --------------------------------------------------------
  ;; 代码块背景和边框
  ;; '(org-block-begin-line

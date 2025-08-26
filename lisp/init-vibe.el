@@ -241,7 +241,7 @@
   :init
   ;; if you want to enable auto suggestion.
   ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
-  (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+  ;; (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
   ;; (add-to-list 'completion-at-point-functions #'minuet-auto-suggestion-mode)
 
   :config

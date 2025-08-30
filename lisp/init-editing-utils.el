@@ -2,6 +2,16 @@
 ;;; Commentary:
 ;;; Code:
 
+;; ==============================================
+;; languages setting
+;; ==============================================
+
+;; set c mode indent
+(defun my/c-mode-style ()
+  (setq c-default-style "k&r")
+  (setq c-basic-offset 4)
+  )
+(add-hook 'c-mode-hook 'my/c-mode-style)
 
 ;; ==============================================
 ;; editing functions
@@ -26,6 +36,15 @@
 (with-eval-after-load 'evil
   (define-prefix-command 'my/mark-map)
   (define-key evil-normal-state-map (kbd "m") 'my/mark-map)
+
+  ;; ;; 下面这段可以实现连续按 m 执行 mark-sexp，但是就不会显示按键绑定提示了
+  ;; (defun my/smart-mark-sexp ()
+  ;;   "If mark is active, call `mark-sexp`, otherwise enter `my/mark-map`."
+  ;;   (interactive)
+  ;;   (if mark-active
+  ;;       (call-interactively 'mark-sexp)
+  ;;     (set-transient-map my/mark-map)))
+  ;; (define-key evil-normal-state-map (kbd "m") 'my/smart-mark-sexp)
 
   (define-key my/mark-map (kbd "p") 'my/remember-init)
   (define-key my/mark-map (kbd "j") 'my/remember-jump)

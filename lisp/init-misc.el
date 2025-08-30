@@ -314,6 +314,9 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;;
 ;;-------------------------------------------------------------------------------------------
 
+;; pdf
+(maybe-require-package 'pdf-tools)
+
 ;; 获取网页标题
 
 ;; https://emacs-china.org/t/emacs-firefox-org-link/23661/18

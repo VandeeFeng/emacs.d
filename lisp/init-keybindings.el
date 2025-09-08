@@ -462,6 +462,7 @@ input and search the whole buffer for it."
     ;; "v C" '(my/comment-or-uncomment-region-codes :wk "comment or uncomment codes")
     ;; "v c" '(org-capture :wk "org-capture")
     "v e" '(my-execute-src-block :wk "execute-src-block")
+    "v g" '(magit :wk "magit")
     ;; "v r" '(org-roam-capture :wk "org-roam-capture")
     "v t" '(vt :wk "open vterm")
     ;; "v t s" '(org-set-tags-command :wk "插入TAGS")

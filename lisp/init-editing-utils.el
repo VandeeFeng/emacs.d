@@ -98,6 +98,22 @@
   (global-set-key (kbd "S-<backspace>") 'delete-char)
   )
 
+;; magit
+(with-eval-after-load 'magit
+  (define-key magit-status-mode-map (kbd "J") #'magit-status-jump)
+  (define-key magit-status-mode-map (kbd "K") #'magit-discard)
+  (define-key magit-status-mode-map (kbd "j") #'magit-section-forward)
+  (define-key magit-status-mode-map (kbd "k") #'magit-section-backward)
+
+  (dolist (map '(magit-mode-map magit-status-mode-map magit-log-mode-map magit-diff-mode-map))
+    (when (boundp map)
+      ;; (define-key (symbol-value map) (kbd "j") #'magit-section-forward)
+      ;; (define-key (symbol-value map) (kbd "k") #'magit-section-backward)
+      (define-key (symbol-value map) (kbd "j") #'next-line)
+      (define-key (symbol-value map) (kbd "k") #'previous-line))
+    )
+  )
+
 ;; jump and return
 (defun my/remember-init ()
   "Remember current position and setup."

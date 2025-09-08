@@ -538,8 +538,8 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
                                    'company-org-block))))
 
 ;;corfu
-;;
 (use-package corfu
+  :ensure t
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'

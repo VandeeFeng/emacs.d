@@ -6,12 +6,14 @@
 ;; languages setting
 ;; ==============================================
 
-;; set c mode indent
-(defun my/c-mode-style ()
-  (setq c-default-style "k&r")
-  (setq c-basic-offset 4)
-  )
-(add-hook 'c-mode-hook 'my/c-mode-style)
+;; indentation
+(setq-default indent-tabs-mode nil)
+
+(setq c-default-style "k&r"
+      c-basic-offset 4)
+
+(setq sh-basic-offset 2
+      sh-indentation 2)
 
 ;; ==============================================
 ;; editing functions
@@ -49,6 +51,7 @@
   (define-key my/mark-map (kbd "p") 'my/remember-init)
   (define-key my/mark-map (kbd "j") 'my/remember-jump)
   (define-key my/mark-map (kbd "m") 'mark-sexp)
+  (define-key my/mark-map (kbd "d") 'mark-defun)
   (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
   (define-key my/mark-map (kbd "S") 'thing-cut-symbol)
   ;; (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
@@ -283,6 +286,12 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 ;; ==========================================
 ;; packages
 ;; ==========================================
+
+;; 快速移动当前行内容，感觉和原生的差不多
+;; 现在用的是https://github.com/wyuenho/move-dup
+;;(use-package move-text)
+;; (global-set-key (kbd "M-S-<up>") 'move-text-up)
+;; (global-set-key (kbd "M-S-<down>") 'move-text-down)
 
 ;; thing-edit
 ;; https://github.com/manateelazycat/thing-edit

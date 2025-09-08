@@ -382,6 +382,11 @@ input and search the whole buffer for it."
 
 (defun my-org-preview-in-browser ()
   "更新浏览器中的 Org 文件预览。"
+  ;; 从文件路径中获取目录名
+  (let ((cache-dir (file-name-directory my-org-preview-file)))
+    ;; 如果目录不存在，则创建它
+    (unless (file-directory-p cache-dir)
+      (make-directory cache-dir t)))
   (let ((html (my-org-generate-html)))
     (with-temp-file my-org-preview-file
       (insert html))))

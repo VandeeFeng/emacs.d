@@ -59,7 +59,7 @@
   (define-key my/mark-map (kbd "w") 'thing-copy-word)
   (define-key my/mark-map (kbd "W") 'thing-cut-word)
   (define-key my/mark-map (kbd "-") 'thing-copy-to-line-end)
-  (define-key my/mark-map (kbd "+") 'thing-cut-to-line-end)
+  (define-key my/mark-map (kbd "_") 'thing-cut-to-line-end)
   (define-key my/mark-map (kbd "0") 'thing-copy-to-line-beginning)
   (define-key my/mark-map (kbd ")") 'thing-cut-to-line-beginning)
   )

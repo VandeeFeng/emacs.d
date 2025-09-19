@@ -12,7 +12,12 @@
 (when (or (memq window-system '(mac ns x pgtk))
           (unless (memq system-type '(ms-dos windows-nt))
             (daemonp)))
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env
+   "HOARDER_SERVER_URL")
+  (exec-path-from-shell-copy-env
+   "HOARDER_API_KEY")
+  )
 
 (provide 'init-exec-path)
 ;;; init-exec-path.el ends here

@@ -8,6 +8,25 @@
 ;;
 ;;------------------------------------------------------------------------------------------
 
+;; auto insert header of .el files
+(require 'autoinsert)
+(auto-insert-mode 1)
+(setq auto-insert-query nil)
+(define-auto-insert
+  "\\.el\\'"
+  '("Emacs Lisp file header\n"
+    ";;; " (file-name-nondirectory buffer-file-name) " --- " _ "-*- lexical-binding: t -*-" "\n"
+    ";; Author: Vandee\n"
+    ";; Created: " (format-time-string "%Y-%m-%d") "\n"
+    ";; Keywords: \n"
+    ";;; Commentary:\n"
+    ";;; Code:\n\n\n"
+    ";;; " (file-name-nondirectory buffer-file-name) " ends here\n"))
+
+
+;;------------------------------
+;; nonote
+;;------------------------------
 (require 'hoarder)
 
 ;; https://github.com/xenodium/ready-player
@@ -202,7 +221,10 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 (global-set-key (kbd "C-c v") #'corfu-ws-complete-vector)
 (global-set-key (kbd "C-c r") #'corfu-ws-complete-rag)
 
-;; auto-notes ends
+
+;;------------------------------
+;; nonote ends
+;;------------------------------
 
 ;; 在启动时自动运行一次占卜
 (require 'gua.el)
@@ -538,6 +560,8 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
                                    'company-org-block))))
 
 ;;corfu
+(require-package 'corfu)
+
 (use-package corfu
   :ensure t
   ;; Optional customizations

@@ -2,33 +2,31 @@
 ;;; Commentary:
 ;;; Code:
 
-;;-------------------------------------------------------------------------------------------
-;;
+;;==============================
 ;; globl settings
-;;
-;;------------------------------------------------------------------------------------------
+;;==============================
 
-;; auto insert header of .el files
-(require 'autoinsert)
-(auto-insert-mode 1)
-(setq auto-insert-query nil)
-(define-auto-insert
-  "\\.el\\'"
-  '("Emacs Lisp file header\n"
-    ";;; " (file-name-nondirectory buffer-file-name) " --- " _ "-*- lexical-binding: t -*-" "\n"
-    ";; Author: Vandee\n"
-    ";; Created: " (format-time-string "%Y-%m-%d") "\n"
-    ";; Keywords: \n"
-    ";;; Commentary:\n"
-    ";;; Code:\n\n\n"
-    ";;; " (file-name-nondirectory buffer-file-name) " ends here\n"))
+;; use sanityinc/headeries-elisp instead
+;; ;; auto insert header of .el files
+;; (require 'autoinsert)
+;; (auto-insert-mode 1)
+;; (setq auto-insert-query nil)
+;; (define-auto-insert
+;;   "\\.el\\'"
+;;   '("Emacs Lisp file header\n"
+;;     ";;; " (file-name-nondirectory buffer-file-name) " --- " _ "-*- lexical-binding: t -*-" "\n"
+;;     ";; Author: Vandee\n"
+;;     ";; Created: " (format-time-string "%Y-%m-%d") "\n"
+;;     ";; Keywords: \n"
+;;     ";;; Commentary:\n"
+;;     ";;; Code:\n\n\n"
+;;     ";;; " (file-name-nondirectory buffer-file-name) " ends here\n"))
 
+;; empv.el
+;; https://github.com/isamert/empv.el
+;; (require 'empv)
 
-;;------------------------------
-;; nonote
-;;------------------------------
-(require 'hoarder)
-
+;; ready-player
 ;; https://github.com/xenodium/ready-player
 ;; https://xenodium.com/ready-player-mode/
 (use-package ready-player
@@ -45,7 +43,11 @@
 
 ;; (add-hook 'evil-local-mode-hook 'my-modify-syntax-for-chinese)
 
-;; auto-notes
+;;------------------------------
+;; nonote
+;;------------------------------
+(require 'hoarder)
+
 ;; uvicorn app.main:app --reload
 ;; (maybe-require-package 'websocket)
 (require 'json)
@@ -296,9 +298,8 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
 ;; 设置默认 compile 指令
 (setq compile-command "")
-;;---------------------------------------------------------------------------------
+
 ;; 显示图片
-;;----------------------------------------------------------------------------------
 ;;https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E8%AE%BE%E7%BD%AEOrg%E4%B8%AD%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E7%9A%84%E5%B0%BA%E5%AF%B8.org
 ;; (setq org-image-actual-width '(400)) 要在(org-toggle-inline-images)命令之前
 ;; 或者在文档开头加上 #+ATTR_ORG: :width 600 ，并设置(setq org-image-actual-width nil)
@@ -330,11 +331,9 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
 
 
-;;-------------------------------------------------------------------------------------------
-;;
+;;==============================
 ;; packages
-;;
-;;-------------------------------------------------------------------------------------------
+;;==============================
 
 ;; pdf
 (maybe-require-package 'pdf-tools)

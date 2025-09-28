@@ -37,6 +37,8 @@
     (define-key vc-prefix-map (kbd "l") 'sanityinc/magit-or-vc-log-file)))
 
 
+;; a config about magit https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-magit.el
+
 (with-eval-after-load 'magit
   (define-key magit-status-mode-map (kbd "C-M-<up>") 'magit-section-up))
 

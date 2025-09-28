@@ -67,7 +67,6 @@
 (require 'init-misc)
 (require 'init-languages)
 (require 'init-keybindings)
-(require 'init-video-trimmer)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)

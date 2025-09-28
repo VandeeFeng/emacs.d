@@ -631,9 +631,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 
 
 
-;;----------------------------------------------
+;;------------------------------
 ;; org-publish
-;; ----------------------------------------------
+;;------------------------------
 
 (defun my/org-html-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to HTML.
@@ -695,17 +695,19 @@ This is a modified version that prevents sh-mode indentation."
   (advice-add 'org-html-src-block :override #'my/org-html-src-block))
 
 ;; 确保 sh-mode 不会自动设置缩进
-(with-eval-after-load 'sh-script
-  (setq sh-basic-offset 0)
-  (setq sh-indentation 0)
-  (advice-add 'sh-set-indent :override #'ignore))
+;; 这个会影响我正常的 bash 文档编辑，而且现在 org blog 代码块的 render 还是问题
+;; 先取消这个设定
+;; (with-eval-after-load 'sh-script
+;;   (setq sh-basic-offset 0)
+;;   (setq sh-indentation 0)
+;;   (advice-add 'sh-set-indent :override #'ignore))
 
 ;; 修改 org-static-blog 的发布过程
 (defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
   "Advice to control indentation during file publishing."
-  (let ((before-save-hook nil)         ; 清空保存钩子
-        (after-save-hook nil)          ; 清空保存后钩子
-        (write-file-functions nil)     ; 清空写文件函数
+  (let ((before-save-hook nil)          ; 清空保存钩子
+        (after-save-hook nil)           ; 清空保存后钩子
+        (write-file-functions nil)      ; 清空写文件函数
         (indent-line-function #'ignore) ; 禁用行缩进
         (org-src-preserve-indentation t)
         (org-edit-src-content-indentation 0)
@@ -727,9 +729,9 @@ This is a modified version that prevents sh-mode indentation."
 ;; (setq org-html-html5-fancy t)
 ;; (setq org-html-doctype "html5")
 
-;; ;;----------------------------------------------
+;;------------------------------
 ;; org-blog
-;; ----------------------------------------------
+;;------------------------------
 ;; https://github.com/bastibe/org-static-blog/blob/master/org-static-blog.el
 ;; org-static-blog config
 

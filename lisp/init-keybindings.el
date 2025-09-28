@@ -59,190 +59,19 @@
       366
     365))
 
-
-
-;; 隐藏 macos 里 Emacs 的 menu bar https://lmno.lol/alvaro/toggle-macos-menu-bar-from-you-know-where
-
-(defun dwim-shell-commands-macos-toggle-menu-bar-autohide ()
-  "Toggle macOS menu bar auto-hide."
-  (interactive)
-  (dwim-shell-command-on-marked-files
-   "Toggle menu bar auto-hide."
-   "current_status=$(osascript -e 'tell application \"System Events\" to get autohide menu bar of dock preferences')
-
-if [ \"$current_status\" = \"true\" ]; then
-    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to false'
-    echo \"Auto-hide disabled.\"
-else
-    osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'
-    echo \"Auto-hide enabled.\"
-fi"
-   :utils "osascript"
-   :silent-success t))
-
-;; 智能注释，太蠢了，赶不上 Emacs 原生的。。
-;; (defun my/comment-or-uncomment-region-codes ()
-;;   "根据当前的主模式选择合适的注释符号来注释/取消注释选定区域"
-;;   (interactive)
-;;   (let* ((mode-comment-pairs '((emacs-lisp-mode . ";;")
-;;                                (lisp-mode . ";;")
-;;                                (scheme-mode . ";;")
-;;                                (python-mode . "#")
-;;                                (ruby-mode . "#")
-;;                                (c-mode . "//")
-;;                                (c++-mode . "//")
-;;                                (java-mode . "//")
-;;                                (js-mode . "//")
-;;                                (js2-mode . "//")
-;;                                (typescript-mode . "//")
-;;                                (sh-mode . "#")
-;;                                (shell-mode . "#")
-;;                                (perl-mode . "#")
-;;                                (php-mode . "//")
-;;                                (css-mode . "/*")
-;;                                (scss-mode . "//")
-;;                                (sass-mode . "//")
-;;                                (html-mode . "<!--")))
-;;          (comment-str (or (cdr (assoc major-mode mode-comment-pairs)) ";;"))
-;;          ;; 获取区域
-;;          (start (if (region-active-p)
-;;                     (region-beginning)
-;;                   (line-beginning-position)))
-;;          (end (if (region-active-p)
-;;                   (region-end)
-;;                 (line-end-position))))
-;;     ;; 确保处理完整的行
-;;     (save-excursion
-;;       (goto-char start)
-;;       (setq start (line-beginning-position))
-;;       (goto-char end)
-;;       (unless (bolp)                    ; 如果不在行首，移到下一行
-;;         (forward-line 1))
-;;       (setq end (point)))
-
-;;     ;; 检查是否所有非空行都已注释
-;;     (save-excursion
-;;       (goto-char start)
-;;       (let ((all-commented t)
-;;             (any-uncommented nil))
-;;         (while (and (< (point) end)
-;;                     (or all-commented any-uncommented))
-;;           (beginning-of-line)
-;;           (unless (looking-at "^[ \t]*$") ; 跳过空行
-;;             (if (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
-;;                 (setq any-uncommented nil)
-;;               (setq all-commented nil
-;;                     any-uncommented t)))
-;;           (forward-line 1))
-
-;;         ;; 根据检查结果决定注释或取消注释
-;;         (goto-char start)
-;;         (if all-commented
-;;             ;; 取消注释
-;;             (while (< (point) end)
-;;               (beginning-of-line)
-;;               (when (re-search-forward
-;;                      (concat "^[ \t]*" (regexp-quote comment-str) "[ \t]?")
-;;                      (line-end-position) t)
-;;                 (replace-match ""))
-;;               (forward-line 1))
-;;           ;; 添加注释
-;;           (while (< (point) end)
-;;             (beginning-of-line)
-;;             (unless (looking-at "^[ \t]*$") ; 跳过空行
-;;               (unless (looking-at (concat "^[ \t]*" (regexp-quote comment-str)))
-;;                 (skip-chars-forward " \t")
-;;                 (insert comment-str " ")))
-;;             (forward-line 1)))))
-
-;;     ;; 重新缩进区域
-;;     (indent-region start end)))
-
-
-;; (defun my-copy-buffer-file-name (event &optional bufName)
-;;   "Copy buffer file name to kill ring.
-;; If no file is associated with buffer just get buffer name.
-;; "
-;;   (interactive "eP")
-;;   (save-selected-window
-;;     (message "bufName: %S" bufName)
-;;     (select-window (posn-window (event-start event)))
-;;     (let ((name (or (unless bufName (buffer-file-name)) (buffer-name))))
-;;       (message "Saved file name \"%s\" in killring." name)
-;;       (kill-new name)
-;;       name)))
-;; (define-key mode-line-buffer-identification-keymap [mode-line mouse-2] 'copy-buffer-file-name)
-;; (define-key mode-line-buffer-identification-keymap [mode-line S-mouse-2] '(lambda (e) (interactive "e") (copy-buffer-file-name e 't)))
-;;
-
-
-;; 自定义搜索
-;; (defun my-build-or-regexp-by-keywords (keywords)
-;;   "构建or语法的正则"
-;;   (let (wordlist tmp regexp)
-;;     (setq wordlist (split-string keywords " "))
-;;     (dolist (word wordlist)
-;;       (setq tmp (format "(%s)" word))
-;;       (if regexp (setq regexp (concat regexp "|")))
-;;       (setq regexp (concat regexp tmp)))
-;;     regexp
-;;     ))
-
-;; (defun my-build-and-regexp-by-keywords (keywords)
-;;   "构建and语法的正则"
-;;   (let (reg wlist fullreg reglist)
-;;     (setq wlist (split-string keywords " "))
-;;     (dolist (w1 wlist)
-;;       (setq reg w1)
-;;       (dolist (w2 wlist)
-;;         (unless (string-equal w1 w2)
-;;           (setq reg (format "%s.*%s" reg w2))))
-;;       (setq reg (format "(%s)" reg))
-;;       (add-to-list 'reglist reg)
-;;       )
-;;     ;; 还要反过来一次
-;;     (dolist (w1 wlist)
-;;       (setq reg w1)
-;;       (dolist (w2 (reverse wlist))
-;;         (unless (string-equal w1 w2)
-;;           (setq reg (format "%s.*%s" reg w2))))
-;;       (setq reg (format "(%s)" reg))
-;;       (add-to-list 'reglist reg)
-;;       )
-
-;;     (dolist (r reglist)
-;;       (if fullreg (setq fullreg (concat fullreg "|")))
-;;       (setq fullreg (concat fullreg r)))
-
-;;     fullreg
-;;     ))
-
-;; (defun my-search-or-by-rg ()
-;;   "以空格分割关键词，以or条件搜索多个关键词的内容
-;;   如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
-;;   "
-;;   (interactive)
-;;   (let* ((keywords (read-string "Or Search(rg): "))
-;;          (regexp (eye--build-or-regexp-by-keywords keywords)))
-;;     (message "search regexp:%s" regexp)
-;;     (color-rg-search-input regexp)
-;;     ))
-
-
-;; (defun my-search-and-by-rg ()
-;;   "以空格分割关键词，以and条件搜索同时包含多个关键词的内容
-;;   如果要搜索tag，可以输入`:tag1 :tag2 :tag3'
-;;   "
-;;   (interactive)
-;;   (let* ((keywords (read-string "And Search(rg): "))
-;;          (regexp (eye--build-and-regexp-by-keywords keywords)))
-;;     (message "search regexp:%s" regexp)
-;;     (color-rg-search-input regexp)
-;;     ))
-
 ;;---------------------------------------------
 ;; Search
 ;; ---------------------------------------------
+
+;; search bilibli in eww
+(defun my/eww-bilibili-search (keyword)
+  "Search Bilibili for KEYWORD using `eww'.The keyword is read from the minibuffer and URL-encoded automatically."
+  (interactive "sBilibili search keyword: ")
+  (let* ((base "https://search.bilibili.com/all?keyword=")
+         (encoded (url-hexify-string keyword))
+         (url (concat base encoded)))
+    (eww url)))
+
 ;; inspired by doom emacs
 (defun my/search-cwd (&optional arg)
   "Conduct a text search in files under the current folder.
@@ -294,7 +123,6 @@ input and search the whole buffer for it."
               (consult-line (buffer-substring-no-properties start end))
             (call-interactively #'consult-line))
         (message "Vertico is not installed or enabled.")))))
-
 
 
 ;; 去除多余空格

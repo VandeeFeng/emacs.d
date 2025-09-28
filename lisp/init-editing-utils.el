@@ -85,6 +85,10 @@
   (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
   (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
   (define-key evil-insert-state-map (kbd "C-a" )'beginning-of-line)
+  (define-key evil-visual-state-map (kbd "C-h") 'backward-char)
+  (define-key evil-insert-state-map (kbd "C-h" )'backward-char)
+  (define-key evil-visual-state-map (kbd "C-l") 'forward-char)
+  (define-key evil-insert-state-map (kbd "C-l" )'forward-char)
   (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
@@ -94,7 +98,6 @@
   (define-key evil-visual-state-map (kbd "C-y") 'clipboard-yank)
   (define-key evil-insert-state-map (kbd "C-y") 'clipboard-yank)
   ;; (global-set-key (kbd "C-y") 'clipboard-yank)
-  (global-set-key (kbd "C-l") 'forward-char)
   (global-set-key (kbd "S-<backspace>") 'delete-char)
   )
 

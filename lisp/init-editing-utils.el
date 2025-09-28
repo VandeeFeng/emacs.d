@@ -329,53 +329,54 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 
 ;; https://github.com/hlissner/evil-multiedit
 ;; https://github.com/gabesoft/evil-mc
-(use-package evil-multiedit
-  :ensure t
-  :defer t
-  :after evil
-  ;; :init
-  ;; (setq evil-multiedit-dwim-motion-keys nil)
-  :config
-  (evil-define-key 'normal 'global
-    (kbd "M-d")   #'evil-multiedit-match-symbol-and-next
-    (kbd "M-D")   #'evil-multiedit-match-symbol-and-prev)
-  (evil-define-key 'visual 'global
-    "R"           #'evil-multiedit-match-all
-    (kbd "M-d")   #'evil-multiedit-match-and-next
-    (kbd "M-D")   #'evil-multiedit-match-and-prev)
-  (evil-define-key '(visual normal) 'global
-    (kbd "C-M-d") #'evil-multiedit-restore)
-  (with-eval-after-load 'evil-mutliedit
-    (evil-define-key 'multiedit 'global
-      (kbd "M-d")   #'evil-multiedit-match-and-next
-      (kbd "M-S-d") #'evil-multiedit-match-and-prev
-      (kbd "M-RET")   #'evil-multiedit-toggle-or-restrict-region)
-    (evil-define-key '(multiedit multiedit-insert) 'global
-      (kbd "C-n")   #'evil-multiedit-next
-      (kbd "C-p")   #'evil-multiedit-prev))
-  )
-
-;; (use-package evil-mc
+;; (use-package evil-multiedit
 ;;   :ensure t
+;;   :defer t
 ;;   :after evil
+;;   ;; :init
+;;   ;; (setq evil-multiedit-dwim-motion-keys nil)
 ;;   :config
-;;   ;; evil-mc
-;;   (evil-define-key '(normal visual) 'global
-;;     "gzm" #'evil-mc-make-all-cursors
-;;     "gzu" #'evil-mc-undo-all-cursors
-;;     "gzz" #'+evil/mc-toggle-cursors
-;;     "gzc" #'+evil/mc-make-cursor-here
-;;     "gzn" #'evil-mc-make-and-goto-next-cursor
-;;     "gzp" #'evil-mc-make-and-goto-prev-cursor
-;;     "gzN" #'evil-mc-make-and-goto-last-cursor
-;;     "gzP" #'evil-mc-make-and-goto-first-cursor)
-;;   (with-eval-after-load 'evil-mc
-;;     (evil-define-key '(normal visual) evil-mc-key-map
-;;       (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
-;;       (kbd "C-N") #'evil-mc-make-and-goto-last-cursor
-;;       (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
-;;       (kbd "C-P") #'evil-mc-make-and-goto-first-cursor))
+;;   (evil-define-key 'normal 'global
+;;     (kbd "M-d")   #'evil-multiedit-match-symbol-and-next
+;;     (kbd "M-D")   #'evil-multiedit-match-symbol-and-prev)
+;;   (evil-define-key 'visual 'global
+;;     "R"           #'evil-multiedit-match-all
+;;     (kbd "M-d")   #'evil-multiedit-match-and-next
+;;     (kbd "M-D")   #'evil-multiedit-match-and-prev)
+;;   (evil-define-key '(visual normal) 'global
+;;     (kbd "C-M-d") #'evil-multiedit-restore)
+;;   (with-eval-after-load 'evil-mutliedit
+;;     (evil-define-key 'multiedit 'global
+;;       (kbd "M-d")   #'evil-multiedit-match-and-next
+;;       (kbd "M-S-d") #'evil-multiedit-match-and-prev
+;;       (kbd "M-RET")   #'evil-multiedit-toggle-or-restrict-region)
+;;     (evil-define-key '(multiedit multiedit-insert) 'global
+;;       (kbd "C-n")   #'evil-multiedit-next
+;;       (kbd "C-p")   #'evil-multiedit-prev))
 ;;   )
+
+;; 作为 multiple cursor 的后端
+(use-package evil-mc
+  :ensure t
+  :after evil
+  :config
+  (global-evil-mc-mode 1)
+  (evil-define-key '(normal visual) 'global
+    "gzm" #'evil-mc-make-all-cursors
+    "gzu" #'evil-mc-undo-all-cursors
+    "gzz" #'+evil/mc-toggle-cursors
+    "gzc" #'+evil/mc-make-cursor-here
+    "gzn" #'evil-mc-make-and-goto-next-cursor
+    "gzp" #'evil-mc-make-and-goto-prev-cursor
+    "gzN" #'evil-mc-make-and-goto-last-cursor
+    "gzP" #'evil-mc-make-and-goto-first-cursor)
+  (with-eval-after-load 'evil-mc
+    (evil-define-key '(normal visual) evil-mc-key-map
+      (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
+      (kbd "C-N") #'evil-mc-make-and-goto-last-cursor
+      (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
+      (kbd "C-P") #'evil-mc-make-and-goto-first-cursor))
+  )
 
 
 (require-package 'multiple-cursors)

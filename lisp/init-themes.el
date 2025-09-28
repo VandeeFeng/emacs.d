@@ -111,7 +111,7 @@
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
- '(highlight ((t (:background "gray35"))))
+ '(highlight ((t (:background "#5A5F66")))) ;; #60656C
 
  ;; 设置注释的样式
  '(font-lock-comment-face ((t (:foreground "#787878"))))
@@ -216,7 +216,7 @@
  '(orderless-match-face-1 ((t (:foreground "#79C0FF" :weight medium))))
  '(orderless-match-face-2 ((t (:foreground "#79C0FF" :weight medium))))
  '(orderless-match-face-3 ((t (:foreground "#79C0FF" :weight medium))))
- '(vertico-current ((t (:extend nil :background "gray40" :foreground "gray100"))))
+ '(vertico-current ((t (:extend nil :background "gray35" :foreground "gray100"))))
  '(marginalia-key ((t (:foreground "#79C0FF"))))
  '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
  '(anzu-mode-line ((t (:foreground "#79C0FF" :weight bold))))

@@ -635,6 +635,11 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;; org-publish
 ;;------------------------------
 
+;; 彻底关闭所有自动生成的 CSS
+(setq org-html-head-include-default-style nil)   ;; 不要默认样式
+(setq org-html-head nil)                         ;; 不要自定义 <style> / <link>
+(setq org-html-head-extra nil)                   ;; 不要额外头部内容
+
 (defun my/org-html-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to HTML.
 CONTENTS holds the contents of the item.  INFO is a plist holding
@@ -696,6 +701,7 @@ This is a modified version that prevents sh-mode indentation."
 
 ;; 确保 sh-mode 不会自动设置缩进
 ;; 这个会影响我正常的 bash 文档编辑，而且现在 org blog 代码块的 render 还是问题
+;; 又有效了？！
 ;; 先取消这个设定
 ;; (with-eval-after-load 'sh-script
 ;;   (setq sh-basic-offset 0)
@@ -749,6 +755,9 @@ This is a modified version that prevents sh-mode indentation."
 ;; (setq org-static-blog-index-length 8) ;; 首页包含了最近几篇博客文章，显示在同一个页面上。首页上的条目数量可以通过设置 org-static-blog-index-length 来自定义。
 ;;        <script src=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vanilla-lazyload/17.3.1/lazyload.min.js\" type=\"application/javascript\" defer></script>
 ;; <script src=\"https://testingcf.jsdelivr.net/gh/vandeefeng/gitbox@main/codes/blogsummary.js\"></script>
+;; href=\"https://testingcf.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/js/all.min.js\"/>
+;; <link rel=\"stylesheet\"
+
 (setq org-static-blog-page-header
       "<meta name=\"author\" content=\"Vandee\">
        <meta name=\"referrer\" content=\"origin-when-cross-origin\">
@@ -756,13 +765,13 @@ This is a modified version that prevents sh-mode indentation."
 
        <link rel=\"stylesheet\" href=\"assets/css/blog-style.css\" type=\"text/css\"/>
        <link rel=\"stylesheet\"
-             href=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css\"/>
+             href=\"https://testingcf.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css\"/>
        <link rel=\"stylesheet\"
              href=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.css\"/>
        <link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\"/>
 
        <script src=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.umd.js\" defer></script>
-       <script src=\"https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/pangu/4.0.7/pangu.min.js\" defer></script>
+       <script src=\"https://testingcf.jsdelivr.net/npm/pangu@7.2.0/dist/browser/pangu.umd.min.js\" defer></script>
        <script defer>
          document.addEventListener(\"DOMContentLoaded\", function () {
            pangu.spacingPage();
@@ -789,7 +798,7 @@ This is a modified version that prevents sh-mode indentation."
       <a href=\"tags.html\">Tags</a>
       <div id=\"search-container\">
         <input type=\"text\" id=\"search-input\" placeholder=\"e.g. Emacs PKM...\">
-        <i class=\"fas fa-search search-icon\"></i>
+        <i class=\"ri-search-line ri-xl\"></i>
       </div>
       </nav>
       </header>"
@@ -808,7 +817,7 @@ This is a modified version that prevents sh-mode indentation."
 
       <a href=\"#top\" aria-label=\"go to top\" title=\"Go to Top (Alt + G)\"
          class=\"top-link\" id=\"top-link\" accesskey=\"g\">
-         <i class=\"fa-solid fa-angle-up fa-2xl\"></i>
+         <i class=\"ri-arrow-up-double-line ri-3x\"></i>
       </a>
 
       <script>

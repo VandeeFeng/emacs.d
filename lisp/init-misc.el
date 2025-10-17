@@ -440,23 +440,23 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   (setq evil-collection-mode-list '(org org-capture calendar))
   (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
 
-  (defvar my-intercept-mode-map (make-sparse-keymap)
-    "High precedence keymap.")
+  ;; (defvar my-intercept-mode-map (make-sparse-keymap)
+  ;;   "High precedence keymap.")
 
-  (define-minor-mode my-intercept-mode
-    "Global minor mode for higher precedence evil keybindings."
-    :global t)
+  ;; (define-minor-mode my-intercept-mode
+  ;;   "Global minor mode for higher precedence evil keybindings."
+  ;;   :global t)
 
-  (my-intercept-mode)
+  ;; (my-intercept-mode)
 
-  (dolist (state '(normal visual insert))
-    (evil-make-intercept-map
-     ;; NOTE: This requires an evil version from 2018-03-20 or later
-     (evil-get-auxiliary-keymap my-intercept-mode-map state t t)
-     state))
+  ;; (dolist (state '(normal visual insert))
+  ;;   (evil-make-intercept-map
+  ;;    ;; NOTE: This requires an evil version from 2018-03-20 or later
+  ;;    (evil-get-auxiliary-keymap my-intercept-mode-map state t t)
+  ;;    state))
 
-  (evil-define-key 'normal my-intercept-mode-map
-    (kbd "SPC n f") 'org-roam-node-find)
+  ;; (evil-define-key 'normal my-intercept-mode-map
+  ;;   (kbd "SPC n f") 'org-roam-node-find)
 
   (evil-collection-init))
 

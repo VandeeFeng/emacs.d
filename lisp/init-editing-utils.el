@@ -35,6 +35,8 @@
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
 ;; Mark
+(global-set-key (kbd "s-m") 'set-mark-command)
+
 (with-eval-after-load 'evil
   (define-prefix-command 'my/mark-map)
   (define-key evil-normal-state-map (kbd "m") 'my/mark-map)

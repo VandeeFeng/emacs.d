@@ -774,7 +774,7 @@ This is a modified version that prevents sh-mode indentation."
        <script src=\"https://testingcf.jsdelivr.net/npm/pangu@7.2.0/dist/browser/pangu.umd.min.js\" defer></script>
        <script defer>
          document.addEventListener(\"DOMContentLoaded\", function () {
-           pangu.spacingPage();
+           pangu.autoSpacingPage();
          });
        </script>
 

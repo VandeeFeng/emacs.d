@@ -55,7 +55,35 @@
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)
   :config
-  (auto-package-update-maybe))
+  (defun my/cleanup-old-package-dirs ()
+    "Delete old versions of package directories from `package-user-dir`."
+    (interactive)
+    (message "Starting cleanup of old package directories...")
+    (let ((packages (make-hash-table :test #'equal)))
+      ;; Group package directories by name.
+      (dolist (dir (directory-files package-user-dir t))
+        (when (and (file-directory-p dir)
+                   ;; Match paths like ".../packagename-1.2.3"
+                   (string-match "/\\([^/]+?\\)-[0-9][.0-9]*\\'" dir))
+          (let ((name (match-string 1 dir)))
+            (push dir (gethash name packages nil)))))
+
+      ;; For each package, find the newest version and delete the others.
+      (maphash
+       (lambda (name dirs)
+         (when (> (length dirs) 1)
+           (message "Checking package: %s" name)
+           (let* ((sorted-dirs (sort dirs #'string>))
+                  (newest-dir (car sorted-dirs))
+                  (dirs-to-delete (cdr sorted-dirs)))
+             (message "  Keeping: %s" (file-name-nondirectory newest-dir))
+             (dolist (dir dirs-to-delete)
+               (message "  Moving to trash: %s" (file-name-nondirectory dir))
+               (move-file-to-trash dir)))))
+       packages))
+    (message "Cleanup of old package directories finished."))
+  (auto-package-update-maybe)
+  (add-hook 'auto-package-update-success-hook 'my/cleanup-old-package-dirs))
 ;; -AutoPackageUpdate
 
 ;; DimPac

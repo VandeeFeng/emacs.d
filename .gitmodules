@@ -25,3 +25,6 @@
 [submodule "site-lisp/Emacs-Hoarder"]
 	path = site-lisp/Emacs-Hoarder
 	url = git@github.com:VandeeFeng/Emacs-Hoarder.git
+[submodule "site-lisp/video-trimmer"]
+	path = site-lisp/video-trimmer
+	url = git@github.com:xenodium/video-trimmer.git

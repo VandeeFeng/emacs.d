@@ -79,11 +79,11 @@
   (setq denote-excluded-keywords-regexp nil)
   (setq denote-rename-confirmations '(rewrite-front-matter modify-file-name))
   (setq denote-org-front-matter
-        "#+TITLE:      %s
-#+DATE:       %s
-#+FILETAGS:   %s
-#+IDENTIFIER: %s
-\n")
+        "#+TITLE: %s
+         #+DATE: %s
+         #+FILETAGS: %s
+         #+IDENTIFIER: %s
+         \n")
 
   (setq denote-keywords-transform (lambda (keyword) keyword))
 
@@ -287,12 +287,12 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (add-to-list 'org-capture-templates
                '("cw" "Web Collections" item
                  (file+headline "~/Vandee/Areas/pkm/org/Websites.org" "实用")
-                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"
+                 "%^{Intro}\n\n%^{Source}\n%?"
                  :prepend t))
   (add-to-list 'org-capture-templates
                '("ct" "Tool Collections" item
                  (file+headline "~/Vandee/Areas/pkm/org/Tools.org" "实用")
-                 "Intro: %^{Intro}\n\nSource: %^{Source}\n%?"
+                 "%^{Intro}\n\n%^{Source}\n%?"
                  :prepend t))
   (add-to-list 'org-capture-templates
                '("cc" "Clip Collections" entry
@@ -740,6 +740,8 @@ This is a modified version that prevents sh-mode indentation."
 ;;------------------------------
 ;; https://github.com/bastibe/org-static-blog/blob/master/org-static-blog.el
 ;; org-static-blog config
+
+(maybe-require-package 'org-static-blog)
 
 (setq org-static-blog-publish-title "Vandee's Blog")
 (setq org-static-blog-publish-url "https://www.vandee.art/blog/")

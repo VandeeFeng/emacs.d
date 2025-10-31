@@ -309,6 +309,13 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 ;; packages
 ;; ==========================================
 
+;; dired
+(with-eval-after-load 'dired
+  ;; 示例：把 "C-c o" 绑定到 dired-find-file（打开文件）
+  (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
+  (define-key dired-mode-map (kbd "S-<right>") #'dired-find-file)
+  )
+
 ;; 快速移动当前行内容，感觉和原生的差不多
 ;; 现在用的是https://github.com/wyuenho/move-dup
 ;;(use-package move-text)

@@ -34,6 +34,8 @@
   :config
   (ready-player-mode +1))
 
+(require 'video-trimmer)
+
 ;; 没作用
 ;; (defun my-modify-syntax-for-chinese ()
 ;;   "Modify syntax table to treat each Chinese character as a word."

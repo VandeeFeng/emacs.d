@@ -131,13 +131,18 @@
 ;; (require 'init-nix)
 (maybe-require-package 'nginx-mode)
 (maybe-require-package 'just-mode)
+
+(when (maybe-require-package 'just-ts-mode)
+  ;; Undo overly-optimistic autoloading, so that things still work in
+  ;; Emacs 29 without treesitter
+  (sanityinc/remove-auto-mode  'just-ts-mode))
 (maybe-require-package 'justl)
 
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-sly)
-(require 'init-clojure)
-(require 'init-clojure-cider)
+;; (require 'init-clojure)
+;; (require 'init-clojure-cider)
 
 (when *spell-check-support-enabled*
   (require 'init-spelling))
@@ -155,7 +160,7 @@
 ;; Extra packages which don't require any configuration
 
 (require-package 'sudo-edit)
-(require-package 'gnuplot)
+(maybe-require-package 'gnuplot)
 (require-package 'htmlize)
 (when *is-a-mac*
   (require-package 'osx-location))

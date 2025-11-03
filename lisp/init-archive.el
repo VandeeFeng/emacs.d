@@ -5,6 +5,157 @@
 ;;; Commentary:
 ;;; Code:
 
+;; (defun my-paste-with-space-after-url ()
+;; "Paste and add a space after a URL if present, and between Chinese and English characters."
+;; (interactive)
+;; (let ((orig-point (point)))
+;; (evil-paste-from-register ?*)  ; Use * register for system clipboard on Mac
+;; (let ((pasted-text (buffer-substring-no-properties orig-point (point))))
+;; (when (string-match "\\(https?://\\)" pasted-text)
+;; (insert " "))
+;; ;; Apply Chinese-English spacing to the pasted text
+;; (save-excursion
+;; (goto-char orig-point)
+;; (while (< (point) (point-max))
+;; (add-space-between-chinese-and-english)
+;; (forward-char))))))
+
+;; (global-set-key (kbd "C-v") 'my-paste-with-space-after-url)
+
+
+;; (defun add-space-after-org-link-pasted ()
+;;   "在粘贴 Org-mode 链接后自动添加一个英文空格。"
+;;   (let ((beg (region-beginning))
+;;         (end (region-end)))
+;;     (when (save-excursion
+;;             (goto-char beg)
+;;             (and (re-search-forward "\\[\\[.*?\\]\\[.*?\\]\\]" end t)
+;;                  (= (point) end))) ; 检查是否粘贴了链接
+;;       (goto-char end)
+;;       (insert " "))))
+
+;; (define-minor-mode org-link-space-mode
+;;   "在 Org-mode 链接后自动添加空格的模式。"
+;;   :init-value nil
+;;   :lighter " OrgLinkSpace"
+;;   (if org-link-space-mode
+;;       (add-hook 'yank-end-hook 'add-space-after-org-link-pasted)
+;;     (remove-hook 'yank-end-hook 'add-space-after-org-link-pasted)))
+
+;; ;; 在 Org-mode 中启用该功能
+;; (add-hook 'org-mode-hook 'org-link-space-mode)
+
+;;---------------------------------------------------------------------
+;;
+;; org 美化
+;;
+;;---------------------------------------------------------------------
+
+;; (defun my/block-highlighting ()
+;; "Setup block region highlighting for Org mode."
+;; ;; Define the face for block backgrounds
+;; ;; Define the face for block backgrounds
+;; (defface org-block-region-background
+;; '((t (:extend t :background "#252525")))
+;; "Face for the entire block region including begin/end markers.")
+
+;; (defvar block-region-overlay-pool nil
+;; "List of overlays for block region highlighting.")
+
+;; (defun clear-block-region-overlays ()
+;; (while block-region-overlay-pool
+;; (delete-overlay (pop block-region-overlay-pool))))
+
+;; (defun highlight-block-regions ()
+;; (interactive)
+;; (save-excursion
+;; (clear-block-region-overlays)
+;; (goto-char (point-min))
+;; (while (re-search-forward "^[ \t]*#\\+begin_\\(src\\|quote\\|example\\)" nil t)
+;; (let* ((begin-line-start (line-beginning-position))
+;; (block-type (match-string 1))
+;; (end-regexp (concat "^[ \t]*#\\+end_" block-type)))
+;; ;; 使用 org-fold-folded-p 检查是否折叠
+;; (unless (org-fold-folded-p begin-line-start)
+;; (when (re-search-forward end-regexp nil t)
+;; (let* ((end-line-end (line-end-position))
+;; (ov (make-overlay begin-line-start (1+ end-line-end))))
+;; (overlay-put ov 'face 'org-block-region-background)
+;; (overlay-put ov 'evaporate t)
+;; (overlay-put ov 'priority -1)
+;; (push ov block-region-overlay-pool))))))))
+;; ;; 创建次要模式
+;; (define-minor-mode block-region-highlight-mode
+;; "Toggle background highlighting for entire block regions."
+;; :lighter " BRH"
+;; (if block-region-highlight-mode
+;; (progn
+;; (highlight-block-regions)
+;; (add-hook 'post-command-hook #'highlight-block-regions nil t)
+;; ;; 添加对折叠状态变化的监听
+;; (add-hook 'org-fold-core-style-changed-functions #'highlight-block-regions nil t))
+;; (clear-block-region-overlays)
+;; (remove-hook 'post-command-hook #'highlight-block-regions t)
+;; (remove-hook 'org-fold-core-style-changed-functions #'highlight-block-regions t)))
+;; ;; 为 org-mode 自动启用
+;; (add-hook 'org-mode-hook #'block-region-highlight-mode))
+
+;; 开启 block-highlighting
+;; (my/block-highlighting)
+;; (block-region-highlight-mode)
+
+
+;;-------------------------------------------------------------------------------
+;;
+;; org-protocol
+;;
+;;-------------------------------------------------------------------------------
+
+;;(server-start)
+;;(require 'org-protocol)
+;; (setq org-protocol-protocol 'org-roam)
+;; 盘古
+;;https://github.com/coldnew/pangu-spacing
+;; (use-package pangu-spacing
+;;   :config
+;;   (add-hook 'org-mode-hook
+;;             (lambda ()
+;;               (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
+
+
+;; https://emacs-china.org/t/org-mode/22313
+;; 中文标记优化，不用零宽空格在 org-mode 中标记中文的办法
+;; (font-lock-add-keywords 'org-mode
+;;                         '(("\\cc\\( \\)[/+*_=~][^a-zA-Z0-9/+*_=~\n]+?[/+*_=~]\\( \\)?\\cc?"
+;;                            (1 (prog1 () (compose-region (match-beginning 1) (match-end 1) ""))))
+;;                           ("\\cc?\\( \\)?[/+*_=~][^a-zA-Z0-9/+*_=~\n]+?[/+*_=~]\\( \\)\\cc"
+;;                            (2 (prog1 () (compose-region (match-beginning 2) (match-end 2) "")))))
+;;                         'append)
+
+;; (with-eval-after-load 'ox
+;;   (defun eli-strip-ws-maybe (text _backend _info)
+;;     (let* ((text (replace-regexp-in-string
+;;                   "\\(\\cc\\) *\n *\\(\\cc\\)"
+;;                   "\\1\\2" text));; remove whitespace from line break
+;;            ;; remove whitespace from `org-emphasis-alist'
+;;            (text (replace-regexp-in-string "\\(\\cc\\) \\(.*?\\) \\(\\cc\\)"
+;;                                            "\\1\\2\\3" text))
+;;            ;; restore whitespace between English words and Chinese words
+;;            (text (replace-regexp-in-string "\\(\\cc\\)\\(\\(?:<[^>]+>\\)?[a-z0-9A-Z-]+\\(?:<[^>]+>\\)?\\)\\(\\cc\\)"
+;;                                            "\\1 \\2 \\3" text)))
+;;       text))
+;;   (add-to-list 'org-export-filter-paragraph-functions #'eli-strip-ws-maybe))
+;;
+
+
+
+;;https://emacs-china.org/t/orgmode/9740/11
+;; 让中文也可以不加空格就使用行内格式
+
+;; (setq org-emphasis-regexp-components '("-[:multibyte:][:space:]('\"{" "-[:multibyte:][:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
+;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+;; (org-element-update-syntax)
+
 
 ;;-------------------------------------------------------------------------------
 ;;

@@ -32,6 +32,7 @@
     :ensure t
     :config
     (key-chord-mode 1)
+    (setq key-chord-two-keys-delay 0.3) ;; 版本更新之后，默认j k 的判断时间变少了
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
 ;; Mark
@@ -109,6 +110,7 @@
   (define-key magit-status-mode-map (kbd "K") #'magit-discard)
   (define-key magit-status-mode-map (kbd "j") #'magit-next-line)
   (define-key magit-status-mode-map (kbd "k") #'magit-previous-line)
+  (define-key magit-status-mode-map (kbd "Z") #'magit-stash-drop)
 
   (dolist (map '(magit-mode-map magit-status-mode-map magit-log-mode-map magit-diff-mode-map magit-revision-mode-map))
     (when (boundp map)

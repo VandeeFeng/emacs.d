@@ -2,22 +2,18 @@
 ;;;
 ;;;
 
-;;---------------------------------------------------------------------
-;;
+;;=========================
 ;; global
-;;
-;;---------------------------------------------------------------------
+;;=========================
 
 ;; org-mode open link
 ;; (add-hook 'org-mode-hook
 ;;           (lambda ()
 ;;             (local-set-key (kbd "RET") 'org-open-at-point)))
 
-;;-------------------------------------------------------------------------------
-;;
+;;=========================
 ;; denote
-;;
-;;-------------------------------------------------------------------------------
+;;=========================
 ;; https://protesilaos.com/emacs/denote#h:58c4746b-b0d8-4896-9d88-a99b1d487231
 ;; https://github.com/protesilaos/denote
 ;; https://www.youtube.com/watch?v=mLzFJcLpDFI
@@ -185,9 +181,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;                     :foreground "white")
 
 
-;;---------------------------------------------
+;;=========================
 ;;org-agenda
-;;--------------------------------------------
+;;=========================
 ;;设置agenda时间线间隔
 (with-eval-after-load 'org
   (setq org-agenda-time-grid '((daily today)
@@ -200,11 +196,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (setq org-log-done 'time) ;; 每次当你将一个项从 TODO (not-done) 状态变成任意的 DONE 状态时，那么，它就会自动在标题的下面插入一行下面的内容：CLOSED: [timestamp]  https://emacsist.github.io/emacsist/orgmode/orgmode%E6%89%8B%E5%86%8C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html#org6796967
   )
 
-;;-------------------------------------------------------------------------------
-;;
+;;=========================
 ;; org
-;;
-;;-------------------------------------------------------------------------------
+;;=========================
 ;;https://www.zmonster.me/2018/02/28/org-mode-capture.html
 ;;https://emacs-china.org/t/05-org-as/12092/6
 ;;一部分已经在config.el里设置，因为要在一开始加载目录,可以添加 (after! package) 又写回来了
@@ -355,9 +349,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;           org-roam-ui-update-on-save t
 ;;           org-roam-ui-open-on-start nil)))
 
-;;--------------------------------------------
+;;=========================
 ;; 使用Company补全org block
-;;--------------------------------------------
+;;=========================
 ;; https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E4%BD%BF%E7%94%A8Company%E8%A1%A5%E5%85%A8org%20block.org
 ;; 需要安装 company-org-block
 (require 'map)
@@ -429,9 +423,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                       (line-beginning-position))
     (cons (match-string-no-properties 1) t)))
 
-;;--------------------------------------------
+;;=========================
 ;; 中英之间自动添加空格
-;;--------------------------------------------
+;;=========================
 ;; https://emacs-china.org/t/emacs/27274
 ;; https://remacs.fun/posts/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%97%B6%E4%BB%A3%E6%88%91%E4%BB%AC%E6%80%8E%E4%B9%88%E7%8E%A9emacs1.-%E4%B8%AD%E8%8B%B1%E6%96%87%E8%BE%93%E5%85%A5%E6%97%B6%E7%9A%84%E7%A9%BA%E6%A0%BC/
 
@@ -477,9 +471,9 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 
 (auto-space-mode t)
 
-;;------------------------------
+;;=========================
 ;; org-publish
-;;------------------------------
+;;=========================
 
 ;; 彻底关闭所有自动生成的 CSS
 (setq org-html-head-include-default-style nil)   ;; 不要默认样式
@@ -546,12 +540,12 @@ This is a modified version that prevents sh-mode indentation."
   (advice-add 'org-html-src-block :override #'my/org-html-src-block))
 
 ;; 确保 sh-mode 不会自动设置缩进
-;; 这个会影响我正常的 bash 文档编辑，而且现在 org blog 代码块的 render 还是问题
-;; 又有效了？！还是需要这个
-;; (with-eval-after-load 'sh-script
-;;   (setq sh-basic-offset 0)
-;;   (setq sh-indentation 0)
-;;   (advice-add 'sh-set-indent :override #'ignore))
+;; 试了很多方法，还是得手动切换，今天突然又不行了
+(with-eval-after-load 'sh-script
+  ;; (message ">>> SUCCESS: org-static-blog has been loaded. Applying advice now. <<<")
+  (setq sh-basic-offset 0)
+  (setq sh-indentation 0)
+  (advice-add 'sh-set-indent :override #'ignore))
 
 ;; 修改 org-static-blog 的发布过程
 (defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
@@ -562,9 +556,6 @@ This is a modified version that prevents sh-mode indentation."
         (indent-line-function #'ignore) ; 禁用行缩进
         (org-src-preserve-indentation t)
         (org-edit-src-content-indentation 0)
-        ;; shell 相关设置
-        (sh-basic-offset 0)
-        (sh-indentation 0)
         ;; org 导出设置
         (org-html-indent nil)
         ;; 其他缩进控制
@@ -580,9 +571,9 @@ This is a modified version that prevents sh-mode indentation."
 ;; (setq org-html-html5-fancy t)
 ;; (setq org-html-doctype "html5")
 
-;;------------------------------
+;;=========================
 ;; org-blog
-;;------------------------------
+;;=========================
 ;; https://github.com/bastibe/org-static-blog/blob/master/org-static-blog.el
 ;; org-static-blog config
 
@@ -641,6 +632,7 @@ This is a modified version that prevents sh-mode indentation."
       <a href=\"%s\">Home</a>
       <a href=\"https://x404.xyz/wiki\">Wiki</a>
       <a href=\"https://x404.xyz/photo\">Photo</a>
+      <a href=\"projects.html\">Projects</a>
       <a href=\"archive.html\">Archive</a>
       <a href=\"tags.html\">Tags</a>
       <div id=\"search-container\">

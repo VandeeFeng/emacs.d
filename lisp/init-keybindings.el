@@ -4,14 +4,27 @@
 
 ;; Customized key bindings
 ;; 还有一部分的自定义函数在 init-editing-utils.el
-;;----------------------------------------------------------------------------
-;;自定义函数
-;;----------------------------------------------------------------------------
 
-;; (global-set-key (kbd "M-w") 'evil-window-delete)
+;;=========================
+;; 自定义函数
+;;=========================
+
+;; 使用 Alt + hjkl 窗口移动
+(global-set-key (kbd "M-h") 'windmove-left)
+(global-set-key (kbd "M-j") 'windmove-down)
+(global-set-key (kbd "M-k") 'windmove-up)
+(global-set-key (kbd "M-l") 'windmove-right)
+(global-set-key (kbd "M-c") 'delete-window)
+(setq windmove-wrap-around t)
+;; 解决和 org-mode 的冲突
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key org-mode-map (kbd "M-h") 'windmove-left)))
+;; end
 
 (global-unset-key (kbd "C-SPC")) ;; 和我习惯的切换输入法快捷键冲突了,这个快捷键系统默认绑定的是 set-mark-command
 
+;; progress bar
 (defun my/org-datetree-progress-bar ()
   "Scan the datetree in the current Org file and insert a custom progress bar."
   (interactive)
@@ -58,10 +71,11 @@
                (= (% year 400) 0)))
       366
     365))
+;; end
 
-;;---------------------------------------------
+;;=========================
 ;; Search
-;; ---------------------------------------------
+;;=========================
 
 ;; search bilibli in eww
 (defun my/eww-bilibili-search (keyword)
@@ -135,11 +149,10 @@ input and search the whole buffer for it."
 ;; ;; 绑定到一个快捷键，例如 C-c s
 ;; (global-set-key (kbd "C-c s") 'my-remove-extra-spaces)
 
-;;-------------------------------------------------------------------------------------------
-;;
+
+;;=========================
 ;; markdown to org
-;;
-;;-------------------------------------------------------------------------------------------
+;;=========================
 
 (defun my-markdown-to-org ()
   (interactive)
@@ -233,9 +246,9 @@ input and search the whole buffer for it."
     (add-hook 'after-save-hook 'my-org-preview-in-browser)
     (message "Org 预览已启动。")))
 
-;;----------------------------------------------------------------------------
+;;=========================
 ;; general
-;;----------------------------------------------------------------------------
+;;=========================
 
 (use-package general
   :ensure t
@@ -475,5 +488,4 @@ input and search the whole buffer for it."
 
 
 (provide 'init-keybindings)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-keybindings.el ends here

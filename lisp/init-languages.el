@@ -6,8 +6,9 @@
 ;; debug
 ;; (setq gud-pdb-command-name "python -m pdb")
 
-;;-------------------------------------------------------------------------
+;;=========================
 ;;golang
+;;=========================
 (setq lsp-gopls-staticcheck t)
 (setq lsp-eldoc-render-all t)
 (setq lsp-gopls-complete-unimported t)
@@ -21,8 +22,9 @@
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 
-;;-------------------------------------------------------------------------
+;;=========================
 ;;Python
+;;=========================
 
 ;; ruff
 ;; via: https://stackoverflow.com/questions/79555604/run-ruff-in-emacs

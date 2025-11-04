@@ -225,10 +225,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 (global-set-key (kbd "C-c v") #'corfu-ws-complete-vector)
 (global-set-key (kbd "C-c r") #'corfu-ws-complete-rag)
 
-
-;;------------------------------
-;; nonote ends
-;;------------------------------
+;;; nonote ends
 
 ;; 在启动时自动运行一次占卜
 (require 'gua.el)
@@ -371,7 +368,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   :ensure t
   :defer t
   )
-(global-set-key (kbd "M-l") 'org-cliplink)
+(global-set-key (kbd "M-u") 'org-cliplink)
 
 
 ;; rime

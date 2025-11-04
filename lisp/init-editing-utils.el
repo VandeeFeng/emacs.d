@@ -2,9 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-;; ==============================================
+;;=========================
 ;; languages setting
-;; ==============================================
+;;=========================
 
 ;; indentation
 (setq-default indent-tabs-mode nil)
@@ -12,12 +12,16 @@
 (setq c-default-style "k&r"
       c-basic-offset 4)
 
+;; (add-hook 'sh-mode-hook
+;;           (lambda ()
+;;             (setq sh-basic-offset 2)))
+
 (setq sh-basic-offset 2
       sh-indentation 2)
 
-;; ==============================================
+;;=========================
 ;; editing functions
-;; ==============================================
+;;=========================
 ;; 其他常用操作在 file:/home/vandee/Vandee/Areas/pkm/org/Code_Notes.org::*编辑
 
 (global-set-key (kbd "s-c") 'kill-ring-save)
@@ -238,9 +242,9 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
          (org-tags-match-list-sublevels nil))
     (call-interactively 'org-tags-view)))
 
-;;---------------------------------------
+;;=========================
 ;; 文件路径和文件名相关
-;;---------------------------------------
+;;=========================
 ;; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#3669681
 (defun my-buffer-path ()
   "copy buffer's full path to kill ring"
@@ -307,9 +311,9 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
         (message "Killed autoloads buffer %s" name)))))
 
 
-;; ==========================================
+;;=========================
 ;; packages
-;; ==========================================
+;;=========================
 
 ;; dired
 (with-eval-after-load 'dired

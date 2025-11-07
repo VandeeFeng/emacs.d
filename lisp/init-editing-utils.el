@@ -638,7 +638,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
 
 
 ;; M-^ is inconvenient, so also bind M-j
-(global-set-key (kbd "M-j") 'join-line)
+;; (global-set-key (kbd "M-j") 'join-line)
 
 
 ;; Random line sorting

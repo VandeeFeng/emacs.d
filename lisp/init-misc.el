@@ -543,21 +543,60 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
    ))
 
-(use-package company-org-block
-  :ensure t
-  :after (company org)
-  :custom
-  (company-org-block-edit-style 'inline) ;; 'auto, 'inline, or 'prompt
-  ;; 妈的，一直之前用的 auto,会弹出一个 minibuffer
-  :config
-  ;; 添加到 company-backends
-  (add-to-list 'company-backends 'company-org-block)
-  ;; 只在 org-mode 中启用
-  :hook (org-mode . (lambda ()
-                      (add-to-list (make-local-variable 'company-backends)
-                                   'company-org-block))))
+;; (use-package company-org-block
+;;   :ensure t
+;;   :after (company org)
+;;   :custom
+;;   (company-org-block-edit-style 'inline) ;; 'auto, 'inline, or 'prompt
+;;   ;; 妈的，一直之前用的 auto,会弹出一个 minibuffer
+;;   :config
+;;   ;; 添加到 company-backends
+;;   (add-to-list 'company-backends 'company-org-block)
+;;   ;; 只在 org-mode 中启用
+;;   :hook (org-mode . (lambda ()
+;;                       (add-to-list (make-local-variable 'company-backends)
+;;                                    'company-org-block))))
 
-;;corfu
+;; ;; company - completion backend for cape
+;; (use-package company
+;;   :ensure t
+;;   :config
+;;   ;; Configure company backends
+;;   (setq company-backends
+;;         '(company-capf           ; Use completion-at-point-functions
+;;           company-dabbrev        ; Complete from current buffers
+;;           company-files          ; File completion
+;;           company-elisp          ; Elisp symbols
+;;           company-abbrev         ; Abbreviations
+;;           ))
+
+;;   ;; Don't enable company-mode globally since we use corfu
+;;   ;; Company will only be used as backend via cape
+;;   )
+
+;; ;; cape - completion at point extensions
+;; (use-package cape
+;;   :ensure t
+;;   :after company
+;;   :init
+;;   ;; Add to completion-at-point-functions hook
+;;   (add-hook 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-hook 'completion-at-point-functions #'cape-file)
+;;   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+;;   :config
+;;   ;; Function to add company backends as capfs
+;;   (defun my-setup-company-backends ()
+;;     "Convert company backends to capfs and add them to completion-at-point-functions."
+;;     (when (bound-and-true-p company-backends)
+;;       (setq-local completion-at-point-functions
+;;                   (append (mapcar #'cape-company-to-capf company-backends)
+;;                           completion-at-point-functions))))
+
+;;   ;; Add company backends for programming modes
+;;   (add-hook 'prog-mode-hook #'my-setup-company-backends)
+;;   )
+
+;; corfu
 (require-package 'corfu)
 
 (use-package corfu
@@ -569,11 +608,11 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  (corfu-preview-current nil)    ;; Disable current candidate preview
   (corfu-preselect 'prompt)      ;; Preselect the prompt
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-scroll-margin 7)        ;; Use scroll margin
-  ;;:bind
+  ;; :bind
   ;; Enable Corfu only for certain modes.
   ;; :hook ((prog-mode . corfu-mode)
   ;;        (shell-mode . corfu-mode)
@@ -584,13 +623,14 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; `global-corfu-modes' to exclude certain modes.
   :init
   (global-corfu-mode)
+  ;; (completion-preview-mode 1) ;; remove drop down
   ;; :custom
   ;; (orderless-define-completion-style orderless-fast
   ;;   (orderless-style-dispatchers '(orderless-fast-dispatch))
   ;;   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
   :config
-  (setq corfu-count 10)
+  (setq corfu-count 6)
   (keymap-set corfu-map "RET" `( menu-item "" nil :filter
                                  ,(lambda (&optional _)
                                     (and (derived-mode-p 'eshell-mode 'comint-mode)
@@ -634,24 +674,27 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
 (use-package orderless
   :demand t
-  :custom
-  (orderless-define-completion-style orderless-fast
-    (orderless-style-dispatchers '(orderless-fast-dispatch))
-    (orderless-matching-styles '(orderless-literal orderless-regexp)))
   :config
-  (setq completion-styles '(orderless partial-completion)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion)))))
-
+  ;; Define the dispatcher function first
   (defun orderless-fast-dispatch (word index total)
     (and (= index 0) (= total 1) (length< word 4)
          (cons 'orderless-literal-prefix word)))
 
-  (setq-local corfu-auto        t
-              corfu-auto-delay  0 ;; TOO SMALL - NOT RECOMMENDED
-              corfu-auto-prefix 1 ;; TOO SMALL - NOT RECOMMENDED
-              completion-styles '(orderless-fast basic))
+  ;; Then define the completion style
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
+  ;; Set global completion styles
+  (setq completion-styles '(orderless partial-completion)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion)))))
+
+  ;; Set local corfu settings with orderless-fast
+  (setq-local corfu-auto        t
+              corfu-auto-delay  0.05
+              corfu-auto-prefix 4 ;; 设定触发补全字符
+              completion-styles '(orderless-fast basic))
   )
 
 

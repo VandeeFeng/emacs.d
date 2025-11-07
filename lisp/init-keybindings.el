@@ -19,7 +19,8 @@
 ;; 解决和 org-mode 的冲突
 (add-hook 'org-mode-hook
           (lambda ()
-            (define-key org-mode-map (kbd "M-h") 'windmove-left)))
+            (define-key org-mode-map (kbd "M-h") 'windmove-left)
+            (define-key org-mode-map (kbd "M-j") 'windmove-down)))
 ;; end
 
 (global-unset-key (kbd "C-SPC")) ;; 和我习惯的切换输入法快捷键冲突了,这个快捷键系统默认绑定的是 set-mark-command

@@ -5,6 +5,143 @@
 ;;; Commentary:
 ;;; Code:
 
+;; (defun my/org-html-src-block (src-block _contents info)
+;;   "Transcode a SRC-BLOCK element from Org to HTML.
+;; CONTENTS holds the contents of the item.  INFO is a plist holding
+;; contextual information."
+;;   (if (org-export-read-attribute :attr_html src-block :textarea)
+;;       (org-html--textarea-block src-block)
+;;     (let* ((lang (or (org-element-property :language src-block) "nil")) ; 使用 "nil" 作为默认语言
+;;            (code (org-html-format-code src-block info))
+;;            (label (let ((lbl (org-element-property :name src-block)))
+;;                     (if lbl (org-html--anchor lbl nil info) ""))))
+;;       (format "<div class=\"org-src-container\">\n%s%s\n</div>"
+;;               (if (not (string= label ""))
+;;                   (format "<label class=\"org-src-name\">%s</label>\n" label)
+;;                 "")
+;;               (format "<pre class=\"src src-%s\">%s</pre>"
+;;                       lang
+;;                       (replace-regexp-in-string "[ \t\n]*$" "" code))))))
+
+;; (defun my/org-html-fontify-code (code lang)
+;;   "Fontify CODE block using LANG mode.
+;; This is a modified version that prevents sh-mode indentation."
+;;   (with-temp-buffer
+;;     (insert code)
+;;     (let ((inhibit-message t))  ; 抑制所有消息
+;;       (delay-mode-hooks        ; 延迟模式钩子
+;;         (let ((major-mode nil) ; 清除主模式
+;;               (sh-basic-offset 0)
+;;               (sh-indentation 0)
+;;               (indent-line-function 'ignore)
+;;               (before-change-functions nil)
+;;               (after-change-functions nil)
+;;               (org-src-preserve-indentation t))
+;;           (cond
+;;            ;; 对于 shell 脚本特殊处理
+;;            ((member lang '("sh" "bash" "shell"))
+;;             (progn
+;;               (fundamental-mode)
+;;               (font-lock-mode 1)))
+;;            ;; 对于没有指定语言的代码块
+;;            ((or (null lang) (string= lang "nil") (string= lang ""))
+;;             (progn
+;;               (fundamental-mode)
+;;               (font-lock-mode 1)))
+;;            ;; 其他语言正常处理
+;;            (t
+;;             (let ((mode-name (intern (concat lang "-mode"))))
+;;               (if (fboundp mode-name)
+;;                   (funcall mode-name)
+;;                 ;; 如果找不到对应的模式，使用 fundamental-mode
+;;                 (fundamental-mode)
+;;                 (font-lock-mode 1))))))))
+;;     (font-lock-ensure)
+;;     (buffer-string)))
+
+;; ;; 确保 sh-mode 不会自动设置缩进
+;; ;; 试了很多方法，还是得手动切换，今天突然又不行了
+;; (with-eval-after-load 'sh-script
+;;   ;; (message ">>> SUCCESS: org-static-blog has been loaded. Applying advice now. <<<")
+;;   (setq sh-basic-offset 0)
+;;   (setq sh-indentation 0)
+;;   (advice-add 'sh-set-indent :override #'ignore))
+
+;; ;;=========================
+;; ;; 使用Company补全org block
+;; ;;=========================
+;; ;; https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E4%BD%BF%E7%94%A8Company%E8%A1%A5%E5%85%A8org%20block.org
+;; ;; 需要安装 company-org-block
+;; (require 'map)
+;; (require 'org)
+;; (require 'seq)
+
+;; (defvar company-org-block-bol-p t "If t, detect completion when at
+;;     begining of line, otherwise detect completion anywhere.")
+
+;; (defvar company-org--regexp "<\\([^ ]*\\)")
+
+;; (defun company-org-block (command &optional arg &rest ignored)
+;;   "Complete org babel languages into source blocks."
+;;   (interactive (list 'interactive))
+;;   (cl-case command
+;;     (interactive (company-begin-backend 'company-org-block))
+;;     (prefix (when (derived-mode-p 'org-mode)
+;;               (company-org-block--grab-symbol-cons)))
+;;     (candidates (company-org-block--candidates arg))
+;;     (post-completion
+;;      (company-org-block--expand arg))))
+
+;; (defun company-org-block--candidates (prefix)
+;;   "Return a list of org babel languages matching PREFIX."
+;;   (seq-filter (lambda (language)
+;;                 (string-prefix-p prefix language))
+;;               ;; Flatten `org-babel-load-languages' and
+;;               ;; `org-structure-template-alist', join, and sort.
+;;               (seq-sort
+;;                #'string-lessp
+;;                (append
+;;                 (mapcar #'prin1-to-string
+;;                         (map-keys org-babel-load-languages))
+;;                 (map-values org-structure-template-alist)))))
+
+;; (defun company-org-block--template-p (template)
+;;   (seq-contains (map-values org-structure-template-alist)
+;;                 template))
+
+;; (defun company-org-block--expand (insertion)
+;;   "Replace INSERTION with actual source block."
+;;   (delete-region (point) (- (point) (1+ ;; Include "<" in length.
+;;                                      (length insertion))))
+;;   (if (company-org-block--template-p insertion)
+;;       (company-org-block--wrap-point insertion
+;;                                      ;; May be multiple words.
+;;                                      ;; Take the first one.
+;;                                      (nth 0 (split-string insertion)))
+;;     (company-org-block--wrap-point (format "src %s" insertion)
+;;                                    "src")))
+
+;; (defun company-org-block--wrap-point (begin end)
+;;   "Wrap point with block using BEGIN and END. For example:
+;;     ,#+begin_BEGIN
+;;      |
+;;     ,#+end_END"
+;;   (insert (format "#+begin_%s\n" begin))
+;;   (insert (make-string org-edit-src-content-indentation ?\s))
+;;   ;; Saving excursion restores point to location inside code block.
+;;   (save-excursion
+;;     (insert (format "\n#+end_%s" end))))
+
+;; (defun company-org-block--grab-symbol-cons ()
+;;   "Return cons with symbol and t whenever prefix of < is found.
+;;     For example: \"<e\" -> (\"e\" . t)"
+;;   (when (looking-back (if company-org-block-bol-p
+;;                           (concat "^" company-org--regexp)
+;;                         company-org--regexp)
+;;                       (line-beginning-position))
+;;     (cons (match-string-no-properties 1) t)))
+
+
 ;; (defun my-paste-with-space-after-url ()
 ;; "Paste and add a space after a URL if present, and between Chinese and English characters."
 ;; (interactive)

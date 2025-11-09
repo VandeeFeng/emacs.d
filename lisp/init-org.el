@@ -403,12 +403,14 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;=========================
 
 ;; 彻底关闭所有自动生成的 CSS
-;; (setq org-html-head-include-default-style nil)   ;; 不要默认样式
-;; (setq org-html-head nil)                         ;; 不要自定义 <style> / <link>
-;; (setq org-html-head-extra nil)                   ;; 不要额外头部内容
+;; 这个好像只影响一般的 org-publish，不影响 org-static-blog-publish
+(setq org-html-head-include-default-style nil)   ;; 不要默认样式
+(setq org-html-head nil)                         ;; 不要自定义 <style> / <link>
+(setq org-html-head-extra nil)                   ;; 不要额外头部内容
 
 
 ;; 修改 org-static-blog 的发布过程 解决代码块的奇怪缩进
+;; 在输出之前 evaluate buffer 一次
 (defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
   "Advice to control indentation during file publishing."
   (let ((before-save-hook nil)          ; 清空保存钩子
@@ -426,7 +428,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
         (tab-width 0))
     (apply orig-fun args)))
 
-(with-eval-after-load 'org-static-blog
+(with-eval-after-load 'org
   ;; (advice-add 'org-html-fontify-code :override #'my/org-html-fontify-code)
   ;; (advice-add 'org-html-src-block :override #'my/org-html-src-block)
   (advice-add 'org-static-blog-publish-file :around #'my/org-static-blog-publish-file-advice))

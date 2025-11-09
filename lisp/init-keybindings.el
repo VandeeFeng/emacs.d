@@ -283,12 +283,14 @@ input and search the whole buffer for it."
 
   (vf/leader-keys
     "c" '(:ignore t :wk "Coding")
+    "c h" '(eldoc-box-help-at-point :wk "open eldoc-help hover at point")
     ;; "c c" '(:ignore t :wk "thing copy")
-    "c s" '(thing-copy-symbol :wk "thing copy symbol")
-    "c S" '(thing-copy-sentence :wk "thing copy sentence")
-    "c w" '(thing-copy-word :wk "thing copy word")
-    "c e" '(thing-copy-to-line-end :wk "thing copy to line end")
-    "c b" '(thing-copy-to-line-beginning :wk "thing copy to line beginning")
+    ;; "c s" '(thing-copy-symbol :wk "thing copy symbol")
+    ;; "c S" '(thing-copy-sentence :wk "thing copy sentence")
+    ;; "c w" '(thing-copy-word :wk "thing copy word")
+    ;; "c e" '(thing-copy-to-line-end :wk "thing copy to line end")
+    ;; "c b" '(thing-copy-to-line-beginning :wk "thing copy to line beginning")
+    ;;
     )
 
   (vf/leader-keys

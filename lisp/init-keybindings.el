@@ -14,7 +14,8 @@
 (global-set-key (kbd "M-j") 'windmove-down)
 (global-set-key (kbd "M-k") 'windmove-up)
 (global-set-key (kbd "M-l") 'windmove-right)
-(global-set-key (kbd "M-c") 'delete-window)
+(global-set-key (kbd "M-x") 'delete-window)
+(global-set-key (kbd "M-c") 'kill-current-buffer)
 (setq windmove-wrap-around t)
 ;; 解决和 org-mode 的冲突
 (add-hook 'org-mode-hook
@@ -351,8 +352,9 @@ input and search the whole buffer for it."
     "b k" '(kill-current-buffer :wk "Kill current buffer")
     "b K" '(kill-all-buffers-except-scratch :wk "Kill all buffers")
     "b D" '(kill-some-buffers :wk "Kill multiple buffers")
-    ;; "b l" '(list-bookmarks :wk "List bookmarks")
-    ;; "b m" '(bookmark-set :wk "Set bookmark")
+    "b l" '(list-bookmarks :wk "List bookmarks")
+    "b m" '(bookmark-set :wk "Set bookmark")
+    "b j" '(bookmark-jump :wk "Bookmark jump")
     "b n" '(next-buffer :wk "Next buffer")
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer")
@@ -466,7 +468,8 @@ input and search the whole buffer for it."
     "t o" '(org-mode :wk "Toggle org mode")
     "t r" '(rainbow-mode :wk "Toggle rainbow mode")
     "t t" '(visual-line-mode :wk "Toggle truncated lines")
-    "t v" '(vterm-toggle :wk "Toggle vterm"))
+    ;; "t v" '(vterm-toggle :wk "Toggle vterm")
+    )
 
   (vf/leader-keys
     "w" '(:ignore t :wk "Windows")

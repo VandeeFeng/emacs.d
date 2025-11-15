@@ -334,6 +334,8 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;; packages
 ;;==============================
 
+(require 'org-hover)
+
 ;; pdf
 (maybe-require-package 'pdf-tools)
 

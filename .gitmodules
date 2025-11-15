@@ -28,3 +28,6 @@
 [submodule "site-lisp/video-trimmer"]
 	path = site-lisp/video-trimmer
 	url = git@github.com:xenodium/video-trimmer.git
+[submodule "site-lisp/org-hover"]
+	path = site-lisp/org-hover
+	url = git@github.com:VandeeFeng/org-hover.git

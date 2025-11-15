@@ -408,30 +408,32 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 (setq org-html-head nil)                         ;; 不要自定义 <style> / <link>
 (setq org-html-head-extra nil)                   ;; 不要额外头部内容
 
-
 ;; 修改 org-static-blog 的发布过程 解决代码块的奇怪缩进
 ;; 在输出之前 evaluate buffer 一次
-(defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
-  "Advice to control indentation during file publishing."
-  (let ((before-save-hook nil)          ; 清空保存钩子
-        (after-save-hook nil)           ; 清空保存后钩子
-        (write-file-functions nil)      ; 清空写文件函数
-        (indent-line-function #'ignore) ; 禁用行缩进
-        (org-src-preserve-indentation t)
-        (org-edit-src-content-indentation 0)
-        (sh-basic-offset 0)
-        (sh-indentaton 0)
-        ;; org 导出设置
-        (org-html-indent nil)
-        ;; 其他缩进控制
-        (indent-tabs-mode nil)
-        (tab-width 0))
-    (apply orig-fun args)))
+;; 终于发现问题了！在 publish 的时候不要在 org 文件页面！
+;; 我怀疑下面的其实也没用。。。
 
-(with-eval-after-load 'org
-  ;; (advice-add 'org-html-fontify-code :override #'my/org-html-fontify-code)
-  ;; (advice-add 'org-html-src-block :override #'my/org-html-src-block)
-  (advice-add 'org-static-blog-publish-file :around #'my/org-static-blog-publish-file-advice))
+;; (defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
+;;   "Advice to control indentation during file publishing."
+;;   (let ((before-save-hook nil)          ; 清空保存钩子
+;;         (after-save-hook nil)           ; 清空保存后钩子
+;;         (write-file-functions nil)      ; 清空写文件函数
+;;         (indent-line-function #'ignore) ; 禁用行缩进
+;;         (org-src-preserve-indentation t)
+;;         (org-edit-src-content-indentation 0)
+;;         (sh-basic-offset 0)
+;;         (sh-indentaton 0)
+;;         ;; org 导出设置
+;;         (org-html-indent nil)
+;;         ;; 其他缩进控制
+;;         (indent-tabs-mode nil)
+;;         (tab-width 0))
+;;     (apply orig-fun args)))
+
+;; (with-eval-after-load 'org-static-blog
+;;   ;; (advice-add 'org-html-fontify-code :override #'my/org-html-fontify-code)
+;;   ;; (advice-add 'org-html-src-block :override #'my/org-html-src-block)
+;;   (advice-add 'org-static-blog-publish-file :around #'my/org-static-blog-publish-file-advice))
 
 
 ;; https://taxodium.ink/org-publish-blog.html ,开启内容折叠

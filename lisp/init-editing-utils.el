@@ -40,7 +40,7 @@
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
 ;; Mark
-(global-set-key (kbd "s-m") 'set-mark-command)
+(global-set-key (kbd "M-m") 'set-mark-command)
 
 (with-eval-after-load 'evil
   (define-prefix-command 'my/mark-map)
@@ -235,12 +235,24 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
   (interactive)
   (insert (format-time-string "<%Y-%m-%d %a %H:%M>")))
 
-(defun my-tags-view ()
-  "Show all headlines for org files matching a TAGS criterion."
-  (interactive)
-  (let* ((org-agenda-files '("~/Vandee/Areas/pkm"))
-         (org-tags-match-list-sublevels nil))
-    (call-interactively 'org-tags-view)))
+(defun my/org-tags-view (tags-match)
+  "Search for headings with TAGS-MATCH in all .org files in the current directory of the buffer.
+TAGS-MATCH is a tags search string, like '+project-work'.
+This version disables tag inheritance to avoid listing all headings if a filetag matches."
+  (interactive "sTags match (e.g., +project-work): ")
+  (unless (derived-mode-p 'org-mode)
+    (user-error "This function must be called from an Org-mode buffer"))
+  (let* ((current-file (buffer-file-name))
+         (current-dir (file-name-directory current-file))
+         ;; (parent-dir (expand-file-name ".." current-dir))
+         ;; (org-files (directory-files-recursively parent-dir "\\.org$"))
+         (org-files (directory-files-recursively current-dir "\\.org$"))
+         )
+    (if (null org-files)
+        (message "No .org files found in parent directory: %s" current-dir)
+      (let ((org-agenda-files org-files)
+            (org-use-tag-inheritance nil))  ; Disable inheritance to ignore filetags
+        (org-tags-view nil tags-match)))))
 
 ;;=========================
 ;; 文件路径和文件名相关
@@ -310,6 +322,13 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
         (kill-buffer buffer)
         (message "Killed autoloads buffer %s" name)))))
 
+(defun my/insert-org-file-link ()
+  "Insert an Org-mode file link with automatic filename as description."
+  (interactive)
+  (let* ((file (read-file-name "Select file: "))
+         (filename (file-name-base file))
+         (link (format "[[file:%s][%s]]" file filename)))
+    (insert link)))
 
 ;;=========================
 ;; packages

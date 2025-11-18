@@ -9,6 +9,24 @@
 ;; 自定义函数
 ;;=========================
 
+(defun my/org-backlink ()
+  "Find all org files in the current directory that link to the current file.
+The search is performed using `rgrep` for the specific pattern
+'filename.org][filename]]'."
+  (interactive)
+  (unless buffer-file-name
+    (error "Current buffer is not visiting a file"))
+
+  (let* ((current-file (file-name-nondirectory buffer-file-name))
+         (current-dir (file-name-directory buffer-file-name))
+         (file-basename (file-name-sans-extension current-file))
+         ;; Search for the literal string "filename.org][filename]]"
+         (search-pattern (concat (regexp-quote current-file)
+                                 "\\]\\["
+                                 (regexp-quote file-basename)
+                                 "\\]\\]")))
+    (rgrep search-pattern "*.org" current-dir)))
+
 ;; 使用 Alt + hjkl 窗口移动
 (global-set-key (kbd "M-h") 'windmove-left)
 (global-set-key (kbd "M-j") 'windmove-down)
@@ -331,7 +349,9 @@ input and search the whole buffer for it."
 
   (vf/leader-keys
     "n" '(:ignore t :wk "notes")
-    "n i" '(denote-link :wk "denote-link-insert")
+    "n l" '(my/org-backlink :wk "rgrep find org backlink")
+    "n i" '(my/insert-org-file-link :wk "insert common org file link")
+    "n I" '(denote-link :wk "denote-link-insert")
     "n a" '(org-agenda :wk "org-agenda")
     "n f" '(denote-open-or-create :wk "denote-open")
     "n d" '(denote :wk "denote-create-new-note")

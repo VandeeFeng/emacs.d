@@ -96,10 +96,11 @@
 
 (set-fontset-font "fontset-myfontset" 'han (font-spec :family "LXGW WenKai Mono"))
 
-(set-fontset-font "fontset-myfontset" 'ascii (font-spec :family "Geistmono Nerd Font"))
+;; Iosevka 字体更窄，可以显示更多代码，作为书面字体和系统字体感觉不太合适，也是因为窄
+(set-fontset-font "fontset-myfontset" 'ascii (font-spec :family "Iosevka")) ;; Iosevka , GeistMono Nerd Font
 
 (custom-set-faces
- ;; globle 部分-------------------------------------------
+ ;; global 部分-------------------------------------------
  '(popup-tip-face ((t (:background "#1D1F21" :foreground "#d1d5db"))))
  '(shadow ((t (:foreground "gray70"))))
  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
@@ -232,93 +233,6 @@
   (setq org-hide-emphasis-markers t)
   (setq org-fontify-quote-and-verse-blocks t) ;;开启之后 quote 的 block 才会有背景色
   )
-
-;; (with-eval-after-load 'faces
-;;   (set-face-attribute 'default nil :background "#181818")
-;;   (set-cursor-color "orange") ; orange,gold1
-;;   ;; 设置默认字体和大小
-;;   (set-face-attribute 'default nil
-;;                       :family "Source Code Pro" ;Source Code Pro ,FiraCode Nerd Font
-;;                       :height 140               ; 基础字体大小(pt)
-;;                       :weight 'light
-;;                       :foreground "#d1d5db")
-;;   https://www.jyshare.com/front-end/6214/#d1d5db
-;;   #F5F5f5 ,#b2b5ba 15% ,#bcc0c5 10% ，#c7cad0 5% 加灰黑《 #d1d5db 原始灰色 》加白 #f6f7f8 80% #f1f2f4 70%，#edeef1 60% ,#e8eaed 50% ,#e3e6e9 40% ,#dfe2e6 30% #dadde2 20% ,#d6d9df 10% ,#d3d7dd 5%
-;;   ;; 设置 mode-line
-;;   (set-face-attribute 'mode-line nil :box nil)
-;;   (set-face-attribute 'mode-line-inactive nil :box nil)
-
-;;   ;; 设置注释的样式
-;;   (set-face-attribute 'font-lock-comment-face nil :foreground "#787878")
-
-;;   ;; 设置字符串的样式
-;;   ;; (set-face-attribute 'font-lock-string-face nil :weight 'normal :foreground "#96D0FF")
-
-;;   ;; 设置常量的样式
-;;   (set-face-attribute 'font-lock-constant-face nil :weight 'normal)
-;;   ;; (set-face-attribute 'font-lock-constant-face nil :weight 'normal :foreground "#79C0FF")
-
-;;   ;; 设置内置函数的样式
-;;   (set-face-attribute 'font-lock-builtin-face nil :weight 'normal :foreground "#79C0FF")
-
-;;   ;; 设置关键字的样式
-;;   (set-face-attribute 'font-lock-keyword-face nil :weight 'normal :foreground "#FF7B72")
-
-;;   ;; 设置函数名的样式
-;;   (set-face-attribute 'font-lock-function-name-face nil :weight 'normal :foreground "#D2A8FF")
-
-;;   ;; 设置变量名的样式
-;;   (set-face-attribute 'font-lock-variable-name-face nil :weight 'normal :foreground "#FFA657")
-
-;;   ;; 设置类型的样式
-;;   (set-face-attribute 'font-lock-type-face nil :weight 'normal :foreground "#FF7B72") ;深红色
-
-;;   ;; 设置文档字符串的样式
-;;   (set-face-attribute 'font-lock-doc-face nil :weight 'normal :foreground "#787878")
-
-;;   ;; 设置当前行号颜色
-;;   (set-face-foreground 'line-number-current-line "gold1")
-
-;;   )
-
-;; (defun my-org-face-settings ()
-;;   (interactive)
-;;   (custom-set-faces
-;;    ;; 设置默认字体和大小
-;;    '(default ((t (:family "Source Code Pro" :height 140 :weight light :foreground "#d1d5db"))))
-;;    ;; 代码块背景和边框
-;;    ;; '(org-block-begin-line
-;;    ;; ((t (:background "#343942" :foreground "#7F8490" :extend t))))
-;;    '(org-level-1 ((t (:height 1.4 :weight normal))))
-;;    '(org-level-2 ((t (:height 1.3 :weight normal))))
-;;    '(org-level-3 ((t (:height 1.2 :weight normal))))
-;;    '(org-level-4 ((t (:height 1.1 :weight normal))))
-;;    '(org-level-5 ((t (:height 1.05 :weight normal))))
-;;    '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
-;;    '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
-;;    '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
-
-;;    ;; 设置文档标题 (#+TITLE:)
-;;    '(org-document-title ((t (:inherit default :weight bold
-;;                                       :height 1.5 ; 文档标题字体大小
-;;                                       :underline nil ; 添加下划线
-;;                                       ))))           ; 标题颜色
-
-;;    ;; 设置特殊关键字 (#+STARTUP: 等)
-;;    '(org-meta-line ((t (:inherit font-lock-comment-face
-;;                                  :height 1.1 ; 关键字字体大小
-;;                                  ;; :slant italic     ; 斜体
-;;                                  )))))
-
-;;   )
-
-;; ;; 在初始化时应用设置
-;; (add-hook 'after-init-hook #'my-org-face-settings)
-;; ;; 为新 frame 开启默认 org 美化设置
-;; (add-hook 'after-make-frame-functions
-;;           (lambda (frame)
-;;             (with-selected-frame frame
-;;               (my-org-face-settings))))
 
 
 ;; 设置非窗口内的褪色效果

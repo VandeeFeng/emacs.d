@@ -657,7 +657,7 @@ This version disables tag inheritance to avoid listing all headings if a filetag
 
 
 ;; M-^ is inconvenient, so also bind M-j
-;; (global-set-key (kbd "M-j") 'join-line)
+(global-set-key (kbd "M-J") 'join-line)
 
 
 ;; Random line sorting

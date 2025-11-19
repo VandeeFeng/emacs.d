@@ -34,6 +34,7 @@ The search is performed using `rgrep` for the specific pattern
 (global-set-key (kbd "M-l") 'windmove-right)
 (global-set-key (kbd "M-x") 'delete-window)
 (global-set-key (kbd "M-c") 'kill-current-buffer)
+(global-set-key (kbd "M-C") 'kill-all-buffers-except-scratch)
 (setq windmove-wrap-around t)
 ;; 解决和 org-mode 的冲突
 (add-hook 'org-mode-hook
@@ -476,7 +477,8 @@ input and search the whole buffer for it."
     "s d" '(my/search-cwd :wk "Search cwd")
     "s D" '(my/search-other-cwd :wk "Search another dictionary")
     "s b" '(my/search-buffer :wk "Search buffer")
-    "s c" '(my/compile-grep-rn :wk "Compile grep")
+    "s g" '(my/compile-grep-rn :wk "Compile grep")
+    "s p" '(sanityinc/consult-ripgrep-at-point :wk "consult-ripgrep-at-point")
     )
 
   (vf/leader-keys

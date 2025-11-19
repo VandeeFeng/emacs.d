@@ -101,6 +101,7 @@
 
 (custom-set-faces
  ;; global 部分-------------------------------------------
+ '(match ((t (:background nil :foreground "#79C0FF"))))
  '(popup-tip-face ((t (:background "#1D1F21" :foreground "#d1d5db"))))
  '(shadow ((t (:foreground "gray70"))))
  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))

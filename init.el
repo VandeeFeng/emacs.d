@@ -65,7 +65,7 @@
 (require 'init-package)
 (require 'init-vibe)
 (require 'init-misc)
-(require 'init-languages)
+(require 'init-coding)
 (require 'init-keybindings)
 
 (require 'init-frame-hooks)

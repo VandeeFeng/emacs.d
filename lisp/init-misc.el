@@ -545,19 +545,19 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
    ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)
    ))
 
-;; (use-package company-org-block
-;;   :ensure t
-;;   :after (company org)
-;;   :custom
-;;   (company-org-block-edit-style 'inline) ;; 'auto, 'inline, or 'prompt
-;;   ;; 妈的，一直之前用的 auto,会弹出一个 minibuffer
-;;   :config
-;;   ;; 添加到 company-backends
-;;   (add-to-list 'company-backends 'company-org-block)
-;;   ;; 只在 org-mode 中启用
-;;   :hook (org-mode . (lambda ()
-;;                       (add-to-list (make-local-variable 'company-backends)
-;;                                    'company-org-block))))
+(use-package company-org-block
+  :ensure t
+  :after (company org)
+  :custom
+  (company-org-block-edit-style 'inline) ;; 'auto, 'inline, or 'prompt
+  ;; 妈的，一直之前用的 auto,会弹出一个 minibuffer
+  :config
+  ;; 添加到 company-backends
+  (add-to-list 'company-backends 'company-org-block)
+  ;; 只在 org-mode 中启用
+  :hook (org-mode . (lambda ()
+                      (add-to-list (make-local-variable 'company-backends)
+                                   'company-org-block))))
 
 ;; ;; company - completion backend for cape
 ;; (use-package company

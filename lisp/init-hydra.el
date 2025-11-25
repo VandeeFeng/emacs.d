@@ -50,12 +50,13 @@
   "
 ^hyper^                     (C-c C-<key> for direct access)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^Misc^               ^Files^               ^Buffers^           ^Windows^
-^^^^^^^^-----------------------------------------------------------------
+^General^            ^Misc^               ^Buffers^           ^Windows^
+^^^^^^^^---------------------------------------------------------------------
 [_SPC_] M-x          [_f_] files           [_b_] buffers       [_w_] windows
 [_._] compile        [_n_] notes           [_d_] dired         [_e_] eval/eshell
 [_TAB_] comment line [_l_] LLM             [_s_] search        [_t_] toggle
 [_v_] vandee         [_h_] help            [_p_] projectile    [_o_] open
+[_c_] code
 "
   ;; M-x alternatives
   ("SPC" execute-extended-command)
@@ -65,10 +66,13 @@
   ;; Files (f)
   ("f" hydra-files/body)
 
+  ;; Code (c)
+  ("c" hydra-code/body)
+
   ;; Notes (n)
   ("n" hydra-notes/body)
 
-  ;; LLM like (l)
+  ;; LLM (l)
   ("l" hydra-llm/body)
 
   ;; Vandee (v)
@@ -102,9 +106,9 @@
   ("w" hydra-windows/body)
 
   ;; Quit
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Files hydra
 (defhydra hydra-files (:color blue :hint nil)
@@ -126,9 +130,9 @@
   ("r" recentf)
   ("u" sudo-edit-find-file)
   ("U" sudo-edit)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Notes hydra
 (defhydra hydra-notes (:color blue :hint nil)
@@ -148,9 +152,9 @@
   ("e" org-export-dispatch)
   ("c" org-capture)
   ("." org-emphasize)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; LLM hydra
 (defhydra hydra-llm (:color blue :hint nil)
@@ -164,9 +168,9 @@
   ("n" gptel)
   ("m" gptel-menu)
   ("a" aidermacs-transient-menu)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Vandee hydra
 (defhydra hydra-vandee (:color blue :hint nil)
@@ -186,9 +190,9 @@
   ("s" my-shell-command)
   ("v" (find-file "~/Vandee/Areas/pkm/org/Vandee.org"))
   ("j" (find-file "~/Vandee/Areas/pkm/org/Journal.org"))
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Vandee Agenda/TODO sub-hydra
 (defhydra hydra-vandee-agenda (:color blue :hint nil)
@@ -200,9 +204,9 @@
 "
   ("t" org-todo)
   ("i" org-insert-todo-heading)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Buffers hydra
 (defhydra hydra-buffers (:color blue :hint nil)
@@ -234,9 +238,9 @@
   ("l" list-bookmarks)
   ("m" bookmark-set)
   ("j" bookmark-jump)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Dired hydra
 (defhydra hydra-dired (:color blue :hint nil)
@@ -258,9 +262,9 @@
   ("p" my/dired-copy-absolute-path)
   ("N" neotree-dir)
   ("r" dired-toggle-read-only)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Eval/Eshell hydra
 (defhydra hydra-eval (:color blue :hint nil)
@@ -280,9 +284,9 @@
   ("R" eww-reload)
   ("s" eshell)
   ("w" eww)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Help hydra
 (defhydra hydra-help (:color blue :hint nil)
@@ -313,9 +317,9 @@
   ("w" where-is)
   ("x" describe-command)
   ("r" hydra-help-reload/body)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Help reload sub-hydra
 (defhydra hydra-help-reload (:color blue :hint nil)
@@ -325,9 +329,9 @@
 [_r_] reload emacs config
 "
   ("r" (lambda () (interactive) (load-file "~/.config/emacs/init.el") (ignore (elpaca-process-queues))))
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Open hydra
 (defhydra hydra-open (:color blue :hint nil)
@@ -338,9 +342,9 @@
 "
   ("f" make-frame)
   ("F" select-frame-by-name)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Search hydra
 (defhydra hydra-search (:color blue :hint nil)
@@ -355,9 +359,9 @@
   ("b" my/search-buffer)
   ("g" my/compile-grep-rn)
   ("p" sanityinc/consult-ripgrep-at-point)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Toggle hydra
 (defhydra hydra-toggle (:color blue :hint nil)
@@ -375,21 +379,21 @@
   ("o" org-mode)
   ("r" rainbow-mode)
   ("t" visual-line-mode)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Windows hydra
 (defhydra hydra-windows (:color blue :hint nil)
   "
 ^Windows^                  (C-c C-w to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^Splits^              ^Motion^            ^Move^
-^^^^^^^^^-------------^^^^^^^^^^------------^^^^^^
-[_c_] close            [_h_] left           [_H_] buffer left
-[_n_] new              [_j_] down           [_J_] buffer down
-[_s_] horizontal split [_k_] up             [_K_] buffer up
-[_v_] vertical split   [_l_] right          [_L_] buffer right
+^Splits^              ^Motion^
+^^^^^^^^^-----------------------------------
+[_c_] close            [_h_] left
+[_n_] new              [_j_] down
+[_s_] horizontal split [_k_] up
+[_v_] vertical split   [_l_] right
 [_d_] delete others    [_w_] next window
 "
   ;; Splits
@@ -404,14 +408,9 @@
   ("k" evil-window-up)
   ("l" evil-window-right)
   ("w" evil-window-next)
-  ;; Move windows
-  ("H" buf-move-left)
-  ("J" buf-move-down)
-  ("K" buf-move-up)
-  ("L" buf-move-right)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Mode-specific hydras
 
@@ -432,21 +431,22 @@
   ("s" org-cycle)
   ("e" org-export-dispatch)
   ("p" org-priority)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Code hydra for programming modes
 (defhydra hydra-code (:color blue :hint nil)
   "
 ^Code^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_c_] compile            [_g_] grep              [_l_] comment line
+[_c_] compile            [_h_]eldox-box          [_g_] grep
 [_e_] eval buffer        [_d_] debug             [_s_] eglot actions
-[_r_] eval region        [_t_] test
-[_f_] format code
+[_r_] eval region        [_t_] test              [_f_] format code
+[_l_] comment line
 "
   ("c" compile)
+  ("h" eldoc-box-help-at-point)
   ("e" eval-buffer)
   ("r" eval-region)
   ("f" (progn (if (fboundp 'format-all-buffer)
@@ -463,13 +463,13 @@
    :exit nil)
   ("l" comment-line)
   ("s" (progn (if (fboundp 'eglot-code-actions)
-                  (eglot-code-actions)
+                  (call-interactively 'eglot-code-actions)
                 (message "eglot not available"))
               (hydra-code/body))
    :exit nil)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 ;; Magit hydra
 (defhydra hydra-magit (:color blue :hint nil)
@@ -478,7 +478,7 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_s_] status             [_d_] diff             [_r_] rebase
 [_c_] commit             [_l_] log              [_m_] merge
-[_p_] push               [_f_] pull             [_b_] branch
+[_P_] push               [_p_] pull             [_b_] branch
 "
   ("s" magit-status)
   ("c" magit-commit)
@@ -489,9 +489,9 @@
   ("l" magit-log)
   ("r" magit-rebase)
   ("m" magit-merge)
-  ("q" nil "quit" :color red)
-  ("C-g" nil "quit" :color red)
-  ("<escape>" nil "quit" :color red))
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
 
 (provide 'init-hydra)
 ;;; init-hydra.el ends here

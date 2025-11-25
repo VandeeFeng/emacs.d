@@ -97,16 +97,20 @@
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
   ;; visual, insert
-  (dolist (binding '(("-" . end-of-line)
-                     ("C-h" . backward-char)
+  (dolist (binding '(("C-h" . backward-char)
                      ("C-l" . forward-char)
                      ("C-j" . next-line)
                      ("C-k" . previous-line)))
     (dolist (state '(visual insert))
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
-  (global-set-key (kbd "S-<backspace>") 'delete-char)
-  )
+  ;; normal visual
+  (dolist (binding '(("_" . end-of-line)
+                     ))
+    (dolist (state '(normal visual))
+      (evil-global-set-key state (kbd (car binding)) (cdr binding))))
+
+  (global-set-key (kbd "S-<backspace>") 'delete-char))
 
 ;; magit
 (with-eval-after-load 'magit

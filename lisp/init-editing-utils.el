@@ -105,7 +105,7 @@
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
   ;; normal visual
-  (dolist (binding '(("_" . end-of-line)
+  (dolist (binding '(("-" . end-of-line)
                      ))
     (dolist (state '(normal visual))
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))

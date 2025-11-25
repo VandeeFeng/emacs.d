@@ -27,7 +27,7 @@
 
 (setq
  display-line-numbers-type 'relative ;开启相对行号，需要关闭 line-number-mode
- ispell-program-name "/opt/homebrew/bin/ispell" ;ispell
+ ;; ispell-program-name "/opt/homebrew/bin/ispell" ;ispell
  confirm-kill-emacs nil ;;取消退出确认
  undo-limit 80000000
  auto-save-default t

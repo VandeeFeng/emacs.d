@@ -48,14 +48,14 @@
 
 (defhydra hydra-leader (:color blue :hint nil)
   "
-^hyper^                     (C-c C-<key> for direct access)
+^hydra^                     (C-c C-<key> for direct access)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^General^            ^Misc^               ^Buffers^           ^Windows^
 ^^^^^^^^---------------------------------------------------------------------
 [_SPC_] M-x          [_f_] files           [_b_] buffers       [_w_] windows
 [_._] compile        [_n_] notes           [_d_] dired         [_e_] eval/eshell
 [_TAB_] comment line [_l_] LLM             [_s_] search        [_t_] toggle
-[_v_] vandee         [_h_] help            [_p_] projectile    [_o_] open
+[_v_] vandee         [_h_] help            [_p_] projects      [_o_] open
 [_c_] code
 "
   ;; M-x alternatives
@@ -93,8 +93,8 @@
   ;; Open (o)
   ("o" hydra-open/body)
 
-  ;; Projectile (p)
-  ("p" projectile-command-map :exit t)
+  ;; Projects (p)
+  ("p" hydra-projects/body)
 
   ;; Search (s)
   ("s" hydra-search/body)
@@ -137,11 +137,11 @@
 ;; Notes hydra
 (defhydra hydra-notes (:color blue :hint nil)
   "
-^Notes^
+^Notes^                   (C-c C-n to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_l_] find org backlinks [_a_] org agenda         [_e_] org export
-[_i_] insert org link    [_f_] denote open        [_c_] org capture
-[_I_] denote link        [_d_] denote create      [_._] org emphasize
+[_l_] find org backlinks   [_a_] org agenda         [_e_] org export
+[_i_] insert org link      [_f_] denote open        [_c_] org capture
+[_I_] denote link          [_d_] denote create      [_._] org emphasize
 "
   ("l" my/org-backlink)
   ("i" my/insert-org-file-link)
@@ -159,7 +159,7 @@
 ;; LLM hydra
 (defhydra hydra-llm (:color blue :hint nil)
   "
-^LLM^
+^LLM^                     (C-c C-l to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_s_] gptel send           [_m_] gptel menu
 [_n_] gptel new buffer     [_a_] aidermacs transient
@@ -175,11 +175,11 @@
 ;; Vandee hydra
 (defhydra hydra-vandee (:color blue :hint nil)
   "
-^Vandee^
+^Vandee^                  (C-c C-v to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_e_] execute src block  [_t_] vterm             [_v_] go to Vandee.org
-[_g_] magit              [_a_] agenda/TODO       [_j_] go to Journals.org
-[_T_] insert timestamp   [_h_] fold headings     [_s_] shell command
+[_e_] execute src block    [_t_] vterm             [_v_] go to Vandee.org
+[_g_] magit                [_a_] agenda/TODO       [_j_] go to Journals.org
+[_T_] insert timestamp     [_h_] fold headings     [_s_] shell command
 "
   ("e" my-execute-src-block)
   ("g" magit)
@@ -245,7 +245,7 @@
 ;; Dired hydra
 (defhydra hydra-dired (:color blue :hint nil)
   "
-^Dired^
+^Dired^                   (C-c C-d to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_d_] open dired          [_c_] create empty file   [_n_] copy filename
 [_f_] dired find file     [_C_] create directory    [_p_] copy abs path
@@ -269,7 +269,7 @@
 ;; Eval/Eshell hydra
 (defhydra hydra-eval (:color blue :hint nil)
   "
-^Eval/Eshell^
+^Eval/Eshell^             (C-c C-e to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_b_] eval buffer         [_l_] eval last sexp    [_s_] eshell
 [_d_] eval defun          [_r_] eval region       [_w_] eww
@@ -291,21 +291,20 @@
 ;; Help hydra
 (defhydra hydra-help (:color blue :hint nil)
   "
-^Help^
+^Help^                    (C-c C-h to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_a_] apropos            [_f_] describe function  [_i_] info
-[_b_] describe bindings  [_F_] describe face      [_I_] describe input
-[_c_] describe char      [_g_] describe GNU       [_k_] describe key
-[_l_] view lossage       [_L_] describe language  [_m_] describe mode
-[_t_] load theme         [_v_] describe variable  [_w_] where is
-[_x_] describe command   [_r_] reload hydra
+[_f_] describe function       [_v_] describe variable     [_c_] describe command
+[_b_] describe bindings       [_k_] describe key          [_F_] describe face
+[_I_] describe input method   [_L_] describe language env [_m_] describe mode
+[_x_] describe command        [_a_] apropos               [_i_] info
+[_l_] view lossage            [_w_] where is              [_r_] reload emacs
+[_t_] load theme
 "
-  ("a" counsel-apropos)
+  ("a" apropos)
   ("b" describe-bindings)
   ("c" describe-char)
   ("f" describe-function)
   ("F" describe-face)
-  ("g" describe-gnu-project)
   ("i" info)
   ("I" describe-input-method)
   ("k" describe-key)
@@ -336,7 +335,7 @@
 ;; Open hydra
 (defhydra hydra-open (:color blue :hint nil)
   "
-^Open^
+^Open^                   (C-c C-o to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_f_] make frame         [_F_] select frame by name
 "
@@ -349,7 +348,7 @@
 ;; Search hydra
 (defhydra hydra-search (:color blue :hint nil)
   "
-^Search^
+^Search^                  (C-c C-s to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_d_] search cwd         [_b_] search buffer      [_p_] consult ripgrep
 [_D_] search other dir   [_g_] compile grep
@@ -366,7 +365,7 @@
 ;; Toggle hydra
 (defhydra hydra-toggle (:color blue :hint nil)
   "
-^Toggle^
+^Toggle^                  (C-c C-t to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_e_] eshell toggle      [_l_] line numbers      [_r_] rainbow mode
 [_f_] flycheck mode      [_n_] neotree toggle    [_t_] visual line mode
@@ -379,6 +378,45 @@
   ("o" org-mode)
   ("r" rainbow-mode)
   ("t" visual-line-mode)
+  ("q" nil "quit")
+  ("C-g" nil "quit")
+  ("<escape>" nil "quit"))
+
+;; Projects hydra
+(defhydra hydra-projects (:color blue :hint nil)
+  "
+^Projects^                 (C-c C-p to open)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^Navigation^           ^Search^            ^Actions^
+^^^^^^^^^^--------------------------------------------
+[_f_] find file         [_s_] search         [_c_] compile
+[_s_] switch project    [_r_] replace        [_t_] test
+[_d_] find dir          [_g_] grep           [_R_] run
+[_o_] open project      [_p_] projectile ag  [_v_] version control
+[_a_] add project       [_i_] ibuffer        [_k_] kill buffers
+"
+  ;; Navigation
+  ("f" projectile-find-file)
+  ("s" projectile-switch-project)
+  ("d" projectile-find-dir)
+  ("o" projectile-switch-open-project)
+  ("a" projectile-add-known-project)
+
+  ;; Search
+  ("s" projectile-ripgrep)
+  ("r" projectile-replace)
+  ("g" projectile-grep)
+  ("p" projectile-ag)
+  ("i" projectile-ibuffer)
+
+  ;; Actions
+  ("c" projectile-compile-project)
+  ("t" projectile-test-project)
+  ("R" projectile-run-project)
+  ("v" projectile-vc)
+  ("k" projectile-kill-buffers)
+
+  ;; Quit
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
@@ -456,8 +494,8 @@
    :exit nil)
   ("g" rgrep)
   ("d" gud-gdb)
-  ("t" (progn (if (fboundp 'project-test-project)
-                  (project-test-project)
+  ("t" (progn (if (fboundp 'projectile-test-project)
+                  (call-interactively 'projectile-test-project)
                 (message "project-test not available"))
               (hydra-code/body))
    :exit nil)

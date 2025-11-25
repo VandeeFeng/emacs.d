@@ -27,5 +27,10 @@
     (require 'dired-x)
     (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
 
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
+  (define-key dired-mode-map (kbd "S-<right>") #'dired-find-file)
+  )
+
 (provide 'init-dired)
 ;;; init-dired.el ends here

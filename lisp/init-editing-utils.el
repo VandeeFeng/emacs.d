@@ -42,7 +42,7 @@
     (setq key-chord-two-keys-delay 0.3) ;; 版本更新之后，默认j k 的判断时间变少了
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)))
 
-;; Mark
+;; Mark & edit
 (global-set-key (kbd "M-m") 'set-mark-command)
 
 (with-eval-after-load 'evil
@@ -58,13 +58,15 @@
   ;;     (set-transient-map my/mark-map)))
   ;; (define-key evil-normal-state-map (kbd "m") 'my/smart-mark-sexp)
 
-  (dolist (binding '(("p" . my/remember-init)
-                     ("j" . my/remember-jump)
-                     ("m" . mark-sexp)
-                     ("M" . evil-set-marker)
-                     ("g" . evil-goto-mark)
+  (dolist (binding '(("m" . mark-sexp)
+                     ("p" . set-pin-mark)
+                     ("j" . jump-pin-mark)
                      ("d" . mark-defun)
                      ("k" . paredit-kill)
+                     (";" . comment-dwim)
+                     ("<up>" . move-dup-move-lines-up)
+                     ("<down>" . move-dup-move-lines-down)
+                     ("u" . upcase-dwim) ;; equal to g U in vim
                      ("s" . thing-copy-symbol)
                      ("S" . thing-cut-symbol)
                      ("w" . thing-copy-word)
@@ -74,8 +76,6 @@
                      ("0" . thing-copy-to-line-beginning)
                      (")" . thing-cut-to-line-beginning)))
     (define-key my/mark-map (kbd (car binding)) (cdr binding)))
-  ;; (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
-  ;; (define-key my/mark-map (kbd "C-S") 'thing-cut-sentence)
   )
 
 ;; (define-prefix-command 'my/mark-map)
@@ -92,6 +92,8 @@
   ;; normal, visual, insert
   (dolist (binding '(("C-a" . beginning-of-line)
                      ("C-e" . end-of-line)
+                     ("C-n" . forward-sexp)
+                     ("C-p" . backward-sexp)
                      ("C-y" . clipboard-yank)))
     (dolist (state '(normal visual insert))
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
@@ -131,20 +133,6 @@
     )
   )
 
-;; jump and return
-(defun my/remember-init ()
-  "Remember current position and setup."
-  (interactive)
-  (point-to-register 8)
-  (message "Have remember one position"))
-
-(defun my/remember-jump ()
-  "Jump to latest position and setup."
-  (interactive)
-  (let ((tmp (point-marker)))
-    (jump-to-register 8)
-    (set-register 8 tmp))
-  (message "Have back to remember position"))
 
 ;; org 标题链接
 (defun my/org-get-current-headline-link ()
@@ -329,13 +317,6 @@ This version disables tag inheritance to avoid listing all headings if a filetag
 ;; packages
 ;;=========================
 
-;; dired
-(with-eval-after-load 'dired
-  ;; 示例：把 "C-c o" 绑定到 dired-find-file（打开文件）
-  (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
-  (define-key dired-mode-map (kbd "S-<right>") #'dired-find-file)
-  )
-
 ;; 快速移动当前行内容，感觉和原生的差不多
 ;; 现在用的是https://github.com/wyuenho/move-dup
 ;;(use-package move-text)
@@ -348,30 +329,6 @@ This version disables tag inheritance to avoid listing all headings if a filetag
 
 ;; ==============================================
 ;; mutiple cursor
-;; 作为 multiple cursor 的后端
-(use-package evil-mc
-  :ensure t
-  :after evil
-  :config
-  (global-evil-mc-mode 1)
-  (evil-define-key '(normal visual) 'global
-    "gzm" #'evil-mc-make-all-cursors
-    "gzu" #'evil-mc-undo-all-cursors
-    "gzz" #'+evil/mc-toggle-cursors
-    "gzc" #'+evil/mc-make-cursor-here
-    "gzn" #'evil-mc-make-and-goto-next-cursor
-    "gzp" #'evil-mc-make-and-goto-prev-cursor
-    "gzN" #'evil-mc-make-and-goto-last-cursor
-    "gzP" #'evil-mc-make-and-goto-first-cursor)
-  (with-eval-after-load 'evil-mc
-    (evil-define-key '(normal visual) evil-mc-key-map
-      (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
-      (kbd "C-N") #'evil-mc-make-and-goto-last-cursor
-      (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
-      (kbd "C-P") #'evil-mc-make-and-goto-first-cursor))
-  )
-
-
 (require-package 'multiple-cursors)
 ;; multiple-cursors
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)

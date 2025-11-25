@@ -952,4 +952,29 @@ fi"
 ;;     "w L" '(buf-move-right :wk "Buffer move right"))
 ;;   )
 
+;; ;; 作为 multiple cursor 的后端
+;; (use-package evil-mc
+;;   :ensure t
+;;   :after evil
+;;   :config
+;;   (global-evil-mc-mode 1)
+;;   (evil-define-key '(normal visual) 'global
+;;     "gzm" #'evil-mc-make-all-cursors
+;;     "gzu" #'evil-mc-undo-all-cursors
+;;     "gzz" #'+evil/mc-toggle-cursors
+;;     "gzc" #'+evil/mc-make-cursor-here
+;;     "gzn" #'evil-mc-make-and-goto-next-cursor
+;;     "gzp" #'evil-mc-make-and-goto-prev-cursor
+;;     "gzN" #'evil-mc-make-and-goto-last-cursor
+;;     "gzP" #'evil-mc-make-and-goto-first-cursor)
+;;   (with-eval-after-load 'evil-mc
+;;     (evil-define-key '(normal visual) evil-mc-key-map
+;;       (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
+;;       (kbd "C-N") #'evil-mc-make-and-goto-last-cursor
+;;       (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
+;;       (kbd "C-P") #'evil-mc-make-and-goto-first-cursor)
+;;     )
+;;   )
+
+
 ;;; init-archive.el ends here

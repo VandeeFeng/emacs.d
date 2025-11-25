@@ -4,9 +4,16 @@
 
 (require-package 'hydra)
 
-(when (featurep 'evil)
-  (define-key evil-normal-state-map (kbd "SPC") 'hydra-leader/body)
-  (define-key evil-motion-state-map (kbd "SPC") 'hydra-leader/body))
+;; Setup general.el for global leader key that works across all major modes
+(maybe-require-package 'general)
+(general-evil-setup t)
+
+;; Define global leader key using general.el's override keymap
+(general-define-key
+ :states '(normal motion visual)
+ :keymaps 'override
+ :prefix "SPC"
+ "" '(hydra-leader/body :wk "hydra leader"))
 
 ;; Global C-c C-<key> bindings for hydra access
 (global-set-key (kbd "C-c C-w") 'hydra-windows/body)
@@ -44,18 +51,17 @@
 (add-hook 'org-mode-hook 'hydra-mode-setup)
 (add-hook 'magit-status-mode-hook 'hydra-mode-setup)
 (add-hook 'prog-mode-hook 'hydra-mode-setup)
-(add-hook 'find-file-hook 'hydra-mode-setup)
 
 (defhydra hydra-leader (:color blue :hint nil)
   "
 ^hydra^                     (C-c C-<key> for direct access)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^General^            ^Misc^               ^Buffers^           ^Windows^
+^General^             ^Misc^           ^Buffers^           ^Windows^
 ^^^^^^^^---------------------------------------------------------------------
-[_SPC_] M-x          [_f_] files           [_b_] buffers       [_w_] windows
-[_._] compile        [_n_] notes           [_d_] dired         [_e_] eval/eshell
-[_TAB_] comment line [_l_] LLM             [_s_] search        [_t_] toggle
-[_v_] vandee         [_h_] help            [_p_] projects      [_o_] open
+[_SPC_] M-x           [_f_] files      [_b_] buffers       [_w_] windows
+[_._] compile         [_n_] notes      [_d_] dired         [_e_] eval/eshell
+[_TAB_] comment line  [_l_] LLM        [_s_] search        [_t_] toggle
+[_v_] vandee          [_h_] help       [_p_] projects      [_o_] open
 [_c_] code
 "
   ;; M-x alternatives
@@ -388,12 +394,12 @@
 ^Projects^                 (C-c C-p to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^Navigation^           ^Search^            ^Actions^
-^^^^^^^^^^--------------------------------------------
-[_f_] find file         [_s_] search         [_c_] compile
-[_s_] switch project    [_r_] replace        [_t_] test
-[_d_] find dir          [_g_] grep           [_R_] run
-[_o_] open project      [_p_] projectile ag  [_v_] version control
-[_a_] add project       [_i_] ibuffer        [_k_] kill buffers
+^^^^^^^^^^--------------------------------------------------------
+[_f_] find file         [_r_] riggrep        [_c_] compile
+[_s_] switch project    [_g_] grep           [_t_] test
+[_d_] find dir          [_p_] projectile ag  [_v_] version control
+[_o_] open project      [_i_] ibuffer        [_k_] kill buffers
+[_a_] add project
 "
   ;; Navigation
   ("f" projectile-find-file)
@@ -403,8 +409,7 @@
   ("a" projectile-add-known-project)
 
   ;; Search
-  ("s" projectile-ripgrep)
-  ("r" projectile-replace)
+  ("r" projectile-ripgrep)
   ("g" projectile-grep)
   ("p" projectile-ag)
   ("i" projectile-ibuffer)
@@ -412,7 +417,6 @@
   ;; Actions
   ("c" projectile-compile-project)
   ("t" projectile-test-project)
-  ("R" projectile-run-project)
   ("v" projectile-vc)
   ("k" projectile-kill-buffers)
 
@@ -478,9 +482,9 @@
   "
 ^Code^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_c_] compile            [_h_]eldox-box          [_g_] grep
-[_e_] eval buffer        [_d_] debug             [_s_] eglot actions
-[_r_] eval region        [_t_] test              [_f_] format code
+[_c_] compile            [_h_] eldox-box       [_g_] grep
+[_e_] eval buffer        [_d_] debug           [_s_] eglot actions
+[_r_] eval region        [_t_] test            [_f_] format code
 [_l_] comment line
 "
   ("c" compile)

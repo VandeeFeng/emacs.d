@@ -6,6 +6,8 @@
 ;; eglot 一次只能在一个 mode 里链接一个 lsp。。。
 ;; (with-eval-after-load 'eglot
 ;;   (add-to-list 'eglot-server-programs
+;;                '(text-mode . ("harper-ls" "--stdio")))
+;;   (add-to-list 'eglot-server-programs
 ;;                '(rust-mode . ("harper-ls" "--stdio")))
 ;;   (add-to-list 'eglot-server-programs
 ;;                '(python-mode . ("harper-ls" "--stdio")))

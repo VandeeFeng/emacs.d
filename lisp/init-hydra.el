@@ -1,0 +1,497 @@
+;;; init-hydra.el --- Hydra keybindings configuration -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
+(require-package 'hydra)
+
+(when (featurep 'evil)
+  (define-key evil-normal-state-map (kbd "SPC") 'hydra-leader/body)
+  (define-key evil-motion-state-map (kbd "SPC") 'hydra-leader/body))
+
+;; Global C-c C-<key> bindings for hydra access
+(global-set-key (kbd "C-c C-w") 'hydra-windows/body)
+(global-set-key (kbd "C-c C-f") 'hydra-files/body)
+(global-set-key (kbd "C-c C-b") 'hydra-buffers/body)
+(global-set-key (kbd "C-c C-n") 'hydra-notes/body)
+(global-set-key (kbd "C-c C-l") 'hydra-llm/body)
+(global-set-key (kbd "C-c C-v") 'hydra-vandee/body)
+(global-set-key (kbd "C-c C-d") 'hydra-dired/body)
+(global-set-key (kbd "C-c C-e") 'hydra-eval/body)
+(global-set-key (kbd "C-c C-h") 'hydra-help/body)
+(global-set-key (kbd "C-c C-s") 'hydra-search/body)
+(global-set-key (kbd "C-c C-t") 'hydra-toggle/body)
+(global-set-key (kbd "C-c C-o") 'hydra-open/body)
+
+;; Mode-specific hydra bindings
+(define-key evil-normal-state-map (kbd "C-.") nil)
+(defun hydra-mode-setup ()
+  "Setup hydra bindings for specific modes."
+  (cond
+   ((eq major-mode 'dired-mode)
+    (local-set-key (kbd "C-.") 'hydra-dired/body))
+
+   ((eq major-mode 'org-mode)
+    (local-set-key (kbd "C-.") 'hydra-org/body))
+
+   ((eq major-mode 'magit-status-mode)
+    (local-set-key (kbd "C-.") 'hydra-magit/body))
+
+   ((derived-mode-p 'prog-mode)
+    (local-set-key (kbd "C-.") 'hydra-code/body))))
+
+;; Add mode-specific setup to hooks
+(add-hook 'dired-mode-hook 'hydra-mode-setup)
+(add-hook 'org-mode-hook 'hydra-mode-setup)
+(add-hook 'magit-status-mode-hook 'hydra-mode-setup)
+(add-hook 'prog-mode-hook 'hydra-mode-setup)
+(add-hook 'find-file-hook 'hydra-mode-setup)
+
+(defhydra hydra-leader (:color blue :hint nil)
+  "
+^hyper^                     (C-c C-<key> for direct access)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^Misc^               ^Files^               ^Buffers^           ^Windows^
+^^^^^^^^-----------------------------------------------------------------
+[_SPC_] M-x          [_f_] files           [_b_] buffers       [_w_] windows
+[_._] compile        [_n_] notes           [_d_] dired         [_e_] eval/eshell
+[_TAB_] comment line [_l_] LLM             [_s_] search        [_t_] toggle
+[_v_] vandee         [_h_] help            [_p_] projectile    [_o_] open
+"
+  ;; M-x alternatives
+  ("SPC" execute-extended-command)
+  ("." compile)
+  ("TAB" comment-line)
+
+  ;; Files (f)
+  ("f" hydra-files/body)
+
+  ;; Notes (n)
+  ("n" hydra-notes/body)
+
+  ;; LLM like (l)
+  ("l" hydra-llm/body)
+
+  ;; Vandee (v)
+  ("v" hydra-vandee/body)
+
+  ;; Buffers (b)
+  ("b" hydra-buffers/body)
+
+  ;; Dired (d)
+  ("d" hydra-dired/body)
+
+  ;; Eval/Eshell (e)
+  ("e" hydra-eval/body)
+
+  ;; Help (h)
+  ("h" hydra-help/body)
+
+  ;; Open (o)
+  ("o" hydra-open/body)
+
+  ;; Projectile (p)
+  ("p" projectile-command-map :exit t)
+
+  ;; Search (s)
+  ("s" hydra-search/body)
+
+  ;; Toggle (t)
+  ("t" hydra-toggle/body)
+
+  ;; Windows (w)
+  ("w" hydra-windows/body)
+
+  ;; Quit
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Files hydra
+(defhydra hydra-files (:color blue :hint nil)
+  "
+^Files^                    (C-c C-f to open)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_n_] copy buffer name    [_d_] find-grep-dired  [_r_] recent files
+[_p_] copy full path      [_g_] grep current     [_u_] sudo find file
+[_P_] copy parent path    [_j_] jump to file     [_U_] sudo edit file
+[_l_] get org headline
+"
+  ("n" my/put-buffer-name-on-clipboard)
+  ("p" my/put-file-name-on-clipboard)
+  ("P" my-buffer-path)
+  ("d" find-grep-dired)
+  ("g" counsel-grep-or-swiper)
+  ("j" counsel-file-jump)
+  ("l" my/org-get-current-headline-link)
+  ("r" recentf)
+  ("u" sudo-edit-find-file)
+  ("U" sudo-edit)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Notes hydra
+(defhydra hydra-notes (:color blue :hint nil)
+  "
+^Notes^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_l_] find org backlinks [_a_] org agenda         [_e_] org export
+[_i_] insert org link    [_f_] denote open        [_c_] org capture
+[_I_] denote link        [_d_] denote create      [_._] org emphasize
+"
+  ("l" my/org-backlink)
+  ("i" my/insert-org-file-link)
+  ("I" denote-link)
+  ("a" org-agenda)
+  ("f" denote-open-or-create)
+  ("d" denote)
+  ("e" org-export-dispatch)
+  ("c" org-capture)
+  ("." org-emphasize)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; LLM hydra
+(defhydra hydra-llm (:color blue :hint nil)
+  "
+^LLM^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_s_] gptel send           [_m_] gptel menu
+[_n_] gptel new buffer     [_a_] aidermacs transient
+"
+  ("s" gptel-send)
+  ("n" gptel)
+  ("m" gptel-menu)
+  ("a" aidermacs-transient-menu)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Vandee hydra
+(defhydra hydra-vandee (:color blue :hint nil)
+  "
+^Vandee^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_e_] execute src block  [_t_] vterm             [_v_] go to Vandee.org
+[_g_] magit              [_a_] agenda/TODO       [_j_] go to Journals.org
+[_T_] insert timestamp   [_h_] fold headings     [_s_] shell command
+"
+  ("e" my-execute-src-block)
+  ("g" magit)
+  ("t" vt)
+  ("a" hydra-vandee-agenda/body)
+  ("T" my-insert-timestamp)
+  ("h" my-org-show-current-heading-tidily)
+  ("s" my-shell-command)
+  ("v" (find-file "~/Vandee/Areas/pkm/org/Vandee.org"))
+  ("j" (find-file "~/Vandee/Areas/pkm/org/Journal.org"))
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Vandee Agenda/TODO sub-hydra
+(defhydra hydra-vandee-agenda (:color blue :hint nil)
+  "
+^Agenda & TODO^
+^^^^^^^^^^^^^^
+[_t_] edit TODO state
+[_i_] insert TODO heading
+"
+  ("t" org-todo)
+  ("i" org-insert-todo-heading)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Buffers hydra
+(defhydra hydra-buffers (:color blue :hint nil)
+  "
+^Buffers^                 (C-c C-b to open)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_i_] ibuffer           [_n_] next buffer       [_s_] save buffer
+[_v_] view buffer       [_p_] previous buffer   [_S_] save some buffers
+[_b_] switch to buffer  [_r_] revert buffer     [_d_] delete bookmark
+[_c_] clone indirect    [_R_] rename buffer     [_D_] delete all bookmarks
+[_C_] clone other win   [_k_] kill buffer       [_l_] list bookmarks
+[_K_] kill all scratch  [_m_] set bookmark      [_j_] bookmark jump
+"
+  ("i" ibuffer)
+  ("v" view-buffer)
+  ("b" switch-to-buffer)
+  ("c" clone-indirect-buffer)
+  ("C" clone-indirect-buffer-other-window)
+  ("k" kill-current-buffer)
+  ("K" kill-all-buffers-except-scratch)
+  ("n" next-buffer)
+  ("p" previous-buffer)
+  ("r" revert-buffer)
+  ("R" rename-buffer)
+  ("s" basic-save-buffer)
+  ("S" save-some-buffers)
+  ("d" bookmark-delete)
+  ("D" bookmark-delete-all)
+  ("l" list-bookmarks)
+  ("m" bookmark-set)
+  ("j" bookmark-jump)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Dired hydra
+(defhydra hydra-dired (:color blue :hint nil)
+  "
+^Dired^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_d_] open dired          [_c_] create empty file   [_n_] copy filename
+[_f_] dired find file     [_C_] create directory    [_p_] copy abs path
+[_u_] dired up directory  [_j_] dired jump current  [_N_] neotree dir
+[_r_] toggle read only
+"
+  ("d" dired)
+  ("f" dired-x-find-file)
+  ("u" dired-up-directory)
+  ("c" dired-create-empty-file)
+  ("C" dired-create-directory)
+  ("j" dired-jump)
+  ("n" dired-copy-filename-as-kill)
+  ("p" my/dired-copy-absolute-path)
+  ("N" neotree-dir)
+  ("r" dired-toggle-read-only)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Eval/Eshell hydra
+(defhydra hydra-eval (:color blue :hint nil)
+  "
+^Eval/Eshell^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_b_] eval buffer         [_l_] eval last sexp    [_s_] eshell
+[_d_] eval defun          [_r_] eval region       [_w_] eww
+[_e_] eval expression     [_R_] eww reload        [_h_] eshell history
+"
+  ("b" eval-buffer)
+  ("d" eval-defun)
+  ("e" eval-expression)
+  ("h" counsel-esh-history)
+  ("l" eval-last-sexp)
+  ("r" eval-region)
+  ("R" eww-reload)
+  ("s" eshell)
+  ("w" eww)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Help hydra
+(defhydra hydra-help (:color blue :hint nil)
+  "
+^Help^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_a_] apropos            [_f_] describe function  [_i_] info
+[_b_] describe bindings  [_F_] describe face      [_I_] describe input
+[_c_] describe char      [_g_] describe GNU       [_k_] describe key
+[_l_] view lossage       [_L_] describe language  [_m_] describe mode
+[_t_] load theme         [_v_] describe variable  [_w_] where is
+[_x_] describe command   [_r_] reload hydra
+"
+  ("a" counsel-apropos)
+  ("b" describe-bindings)
+  ("c" describe-char)
+  ("f" describe-function)
+  ("F" describe-face)
+  ("g" describe-gnu-project)
+  ("i" info)
+  ("I" describe-input-method)
+  ("k" describe-key)
+  ("l" view-lossage)
+  ("L" describe-language-environment)
+  ("m" describe-mode)
+  ("t" load-theme)
+  ("v" describe-variable)
+  ("w" where-is)
+  ("x" describe-command)
+  ("r" hydra-help-reload/body)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Help reload sub-hydra
+(defhydra hydra-help-reload (:color blue :hint nil)
+  "
+^Reload Config^
+^^^^^^^^^^^^^^
+[_r_] reload emacs config
+"
+  ("r" (lambda () (interactive) (load-file "~/.config/emacs/init.el") (ignore (elpaca-process-queues))))
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Open hydra
+(defhydra hydra-open (:color blue :hint nil)
+  "
+^Open^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_f_] make frame         [_F_] select frame by name
+"
+  ("f" make-frame)
+  ("F" select-frame-by-name)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Search hydra
+(defhydra hydra-search (:color blue :hint nil)
+  "
+^Search^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_d_] search cwd         [_b_] search buffer      [_p_] consult ripgrep
+[_D_] search other dir   [_g_] compile grep
+"
+  ("d" my/search-cwd)
+  ("D" my/search-other-cwd)
+  ("b" my/search-buffer)
+  ("g" my/compile-grep-rn)
+  ("p" sanityinc/consult-ripgrep-at-point)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Toggle hydra
+(defhydra hydra-toggle (:color blue :hint nil)
+  "
+^Toggle^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_e_] eshell toggle      [_l_] line numbers      [_r_] rainbow mode
+[_f_] flycheck mode      [_n_] neotree toggle    [_t_] visual line mode
+[_o_] org mode
+"
+  ("e" eshell-toggle)
+  ("f" flycheck-mode)
+  ("l" display-line-numbers-mode)
+  ("n" neotree-toggle)
+  ("o" org-mode)
+  ("r" rainbow-mode)
+  ("t" visual-line-mode)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Windows hydra
+(defhydra hydra-windows (:color blue :hint nil)
+  "
+^Windows^                  (C-c C-w to open)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^Splits^              ^Motion^            ^Move^
+^^^^^^^^^-------------^^^^^^^^^^------------^^^^^^
+[_c_] close            [_h_] left           [_H_] buffer left
+[_n_] new              [_j_] down           [_J_] buffer down
+[_s_] horizontal split [_k_] up             [_K_] buffer up
+[_v_] vertical split   [_l_] right          [_L_] buffer right
+[_d_] delete others    [_w_] next window
+"
+  ;; Splits
+  ("c" evil-window-delete)
+  ("n" evil-window-new)
+  ("s" evil-window-split)
+  ("v" evil-window-vsplit)
+  ("d" delete-other-windows)
+  ;; Motion
+  ("h" evil-window-left)
+  ("j" evil-window-down)
+  ("k" evil-window-up)
+  ("l" evil-window-right)
+  ("w" evil-window-next)
+  ;; Move windows
+  ("H" buf-move-left)
+  ("J" buf-move-down)
+  ("K" buf-move-up)
+  ("L" buf-move-right)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Mode-specific hydras
+
+;; Org mode hydra
+(defhydra hydra-org (:color blue :hint nil)
+  "
+^Org Mode^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_t_] toggle todo       [_a_] agenda            [_s_] subtree
+[_T_] timestamp         [_l_] insert link       [_p_] priority
+[_c_] capture           [_e_] export
+"
+  ("t" org-todo)
+  ("T" org-time-stamp)
+  ("c" org-capture)
+  ("a" org-agenda)
+  ("l" org-insert-link)
+  ("s" org-cycle)
+  ("e" org-export-dispatch)
+  ("p" org-priority)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Code hydra for programming modes
+(defhydra hydra-code (:color blue :hint nil)
+  "
+^Code^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_c_] compile            [_g_] grep              [_l_] comment line
+[_e_] eval buffer        [_d_] debug             [_s_] eglot actions
+[_r_] eval region        [_t_] test
+[_f_] format code
+"
+  ("c" compile)
+  ("e" eval-buffer)
+  ("r" eval-region)
+  ("f" (progn (if (fboundp 'format-all-buffer)
+                  (format-all-buffer)
+                (message "format-all not available"))
+              (hydra-code/body))
+   :exit nil)
+  ("g" rgrep)
+  ("d" gud-gdb)
+  ("t" (progn (if (fboundp 'project-test-project)
+                  (project-test-project)
+                (message "project-test not available"))
+              (hydra-code/body))
+   :exit nil)
+  ("l" comment-line)
+  ("s" (progn (if (fboundp 'eglot-code-actions)
+                  (eglot-code-actions)
+                (message "eglot not available"))
+              (hydra-code/body))
+   :exit nil)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+;; Magit hydra
+(defhydra hydra-magit (:color blue :hint nil)
+  "
+^Magit^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[_s_] status             [_d_] diff             [_r_] rebase
+[_c_] commit             [_l_] log              [_m_] merge
+[_p_] push               [_f_] pull             [_b_] branch
+"
+  ("s" magit-status)
+  ("c" magit-commit)
+  ("P" magit-push)
+  ("p" magit-pull)
+  ("b" magit-branch)
+  ("d" magit-diff)
+  ("l" magit-log)
+  ("r" magit-rebase)
+  ("m" magit-merge)
+  ("q" nil "quit" :color red)
+  ("C-g" nil "quit" :color red)
+  ("<escape>" nil "quit" :color red))
+
+(provide 'init-hydra)
+;;; init-hydra.el ends here

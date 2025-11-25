@@ -24,11 +24,14 @@
 ;;=========================
 ;; 其他常用操作在 file:/home/vandee/Vandee/Areas/pkm/org/Code_Notes.org::*编辑
 
-(global-set-key (kbd "s-c") 'kill-ring-save)
-(global-set-key (kbd "s-v") 'yank)
+;; jump
+;; (global-set-key (kbd "C-i") 'evil-jump-backward) ;;覆盖系统设置,tab 也有这个功能,终端映射：Ctrl+i 与 Tab 的 ASCII 相同（0x09），某些终端或映射会把它当作 Tab 处理，可能导致 Ctrl+i 不工作或行为不同。但是会影响 orgmode 里 tab 的自动对齐，先暂停使用
+
 
 ;; 启用系统复制粘贴
 (setq select-enable-clipboard t)
+(global-set-key (kbd "s-c") 'kill-ring-save)
+(global-set-key (kbd "s-v") 'yank)
 
 ;; jk 退出 insert
 (with-eval-after-load 'evil
@@ -55,20 +58,24 @@
   ;;     (set-transient-map my/mark-map)))
   ;; (define-key evil-normal-state-map (kbd "m") 'my/smart-mark-sexp)
 
-  (define-key my/mark-map (kbd "p") 'my/remember-init)
-  (define-key my/mark-map (kbd "j") 'my/remember-jump)
-  (define-key my/mark-map (kbd "m") 'mark-sexp)
-  (define-key my/mark-map (kbd "d") 'mark-defun)
-  (define-key my/mark-map (kbd "s") 'thing-copy-symbol)
-  (define-key my/mark-map (kbd "S") 'thing-cut-symbol)
+  (dolist (binding '(("p" . my/remember-init)
+                     ("j" . my/remember-jump)
+                     ("m" . mark-sexp)
+                     ("M" . evil-set-marker)
+                     ("g" . evil-goto-mark)
+                     ("d" . mark-defun)
+                     ("k" . paredit-kill)
+                     ("s" . thing-copy-symbol)
+                     ("S" . thing-cut-symbol)
+                     ("w" . thing-copy-word)
+                     ("W" . thing-cut-word)
+                     ("-" . thing-copy-to-line-end)
+                     ("_" . thing-cut-to-line-end)
+                     ("0" . thing-copy-to-line-beginning)
+                     (")" . thing-cut-to-line-beginning)))
+    (define-key my/mark-map (kbd (car binding)) (cdr binding)))
   ;; (define-key my/mark-map (kbd "S") 'thing-copy-sentence)
   ;; (define-key my/mark-map (kbd "C-S") 'thing-cut-sentence)
-  (define-key my/mark-map (kbd "w") 'thing-copy-word)
-  (define-key my/mark-map (kbd "W") 'thing-cut-word)
-  (define-key my/mark-map (kbd "-") 'thing-copy-to-line-end)
-  (define-key my/mark-map (kbd "_") 'thing-cut-to-line-end)
-  (define-key my/mark-map (kbd "0") 'thing-copy-to-line-beginning)
-  (define-key my/mark-map (kbd ")") 'thing-cut-to-line-beginning)
   )
 
 ;; (define-prefix-command 'my/mark-map)
@@ -82,39 +89,33 @@
 
 ;; Move
 (with-eval-after-load 'evil
-  (defun move-to-end-of-line ()
-    "Move the cursor to the end of the current line."
-    (interactive)
-    (end-of-line))
+  ;; normal, visual, insert
+  (dolist (binding '(("C-a" . beginning-of-line)
+                     ("C-e" . end-of-line)
+                     ("C-y" . clipboard-yank)))
+    (dolist (state '(normal visual insert))
+      (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
-  (define-key evil-normal-state-map (kbd "-") #'move-to-end-of-line)
-  (define-key evil-visual-state-map (kbd "-") #'move-to-end-of-line)
-  (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
-  (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
-  (define-key evil-insert-state-map (kbd "C-a" )'beginning-of-line)
-  (define-key evil-visual-state-map (kbd "C-h") 'backward-char)
-  (define-key evil-insert-state-map (kbd "C-h" )'backward-char)
-  (define-key evil-visual-state-map (kbd "C-l") 'forward-char)
-  (define-key evil-insert-state-map (kbd "C-l" )'forward-char)
-  (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-e" )'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-j") 'next-line)
-  (define-key evil-insert-state-map (kbd "C-k") 'previous-line)
-  (define-key evil-normal-state-map (kbd "C-y") 'clipboard-yank)
-  (define-key evil-visual-state-map (kbd "C-y") 'clipboard-yank)
-  (define-key evil-insert-state-map (kbd "C-y") 'clipboard-yank)
-  ;; (global-set-key (kbd "C-y") 'clipboard-yank)
+  ;; visual, insert
+  (dolist (binding '(("-" . end-of-line)
+                     ("C-h" . backward-char)
+                     ("C-l" . forward-char)
+                     ("C-j" . next-line)
+                     ("C-k" . previous-line)))
+    (dolist (state '(visual insert))
+      (evil-global-set-key state (kbd (car binding)) (cdr binding))))
+
   (global-set-key (kbd "S-<backspace>") 'delete-char)
   )
 
 ;; magit
 (with-eval-after-load 'magit
-  (define-key magit-status-mode-map (kbd "J") #'magit-status-jump)
-  (define-key magit-status-mode-map (kbd "K") #'magit-discard)
-  (define-key magit-status-mode-map (kbd "j") #'magit-next-line)
-  (define-key magit-status-mode-map (kbd "k") #'magit-previous-line)
-  (define-key magit-status-mode-map (kbd "Z") #'magit-stash-drop)
+  (dolist (binding '(("J" . magit-status-jump)
+                     ("K" . magit-discard)
+                     ("j" . magit-next-line)
+                     ("k" . magit-previous-line)
+                     ("Z" . magit-stash-drop)))
+    (define-key magit-status-mode-map (kbd (car binding)) (cdr binding)))
 
   (dolist (map '(magit-mode-map magit-status-mode-map magit-log-mode-map magit-diff-mode-map magit-revision-mode-map))
     (when (boundp map)
@@ -142,16 +143,6 @@
   (message "Have back to remember position"))
 
 ;; org 标题链接
-;; (defun my/org-get-current-headline-link ()
-;;   "Get the org-mode link for the current headline, removing tags and preceding spaces."
-;;   (interactive)
-;;   (let* ((headline (org-get-heading))
-;;          (headline-without-tags (replace-regexp-in-string " +:[a-zA-Z0-9_:]*$" "" headline)))
-;;     (when headline-without-tags
-;;       (let ((link (concat "[[file:" (buffer-file-name) "::*" headline-without-tags "][" headline-without-tags "]]")))
-;;         (kill-new link)
-;;         (message "Org-mode link for current headline (without tags) copied to clipboard.")))))
-
 (defun my/org-get-current-headline-link ()
   "Get the org-mode link for the current headline, removing TODO keywords, tags, and preceding spaces."
   (interactive)
@@ -353,42 +344,6 @@ This version disables tag inheritance to avoid listing all headings if a filetag
 
 ;; ==============================================
 ;; mutiple cursor
-
-;; https://github.com/emacs-evil/evil-surround
-;; (use-package evil-surround
-;;   :ensure t
-;;   :after evil
-;;   :config
-;;   (global-evil-surround-mode 1))
-
-;; https://github.com/hlissner/evil-multiedit
-;; https://github.com/gabesoft/evil-mc
-;; (use-package evil-multiedit
-;;   :ensure t
-;;   :defer t
-;;   :after evil
-;;   ;; :init
-;;   ;; (setq evil-multiedit-dwim-motion-keys nil)
-;;   :config
-;;   (evil-define-key 'normal 'global
-;;     (kbd "M-d")   #'evil-multiedit-match-symbol-and-next
-;;     (kbd "M-D")   #'evil-multiedit-match-symbol-and-prev)
-;;   (evil-define-key 'visual 'global
-;;     "R"           #'evil-multiedit-match-all
-;;     (kbd "M-d")   #'evil-multiedit-match-and-next
-;;     (kbd "M-D")   #'evil-multiedit-match-and-prev)
-;;   (evil-define-key '(visual normal) 'global
-;;     (kbd "C-M-d") #'evil-multiedit-restore)
-;;   (with-eval-after-load 'evil-mutliedit
-;;     (evil-define-key 'multiedit 'global
-;;       (kbd "M-d")   #'evil-multiedit-match-and-next
-;;       (kbd "M-S-d") #'evil-multiedit-match-and-prev
-;;       (kbd "M-RET")   #'evil-multiedit-toggle-or-restrict-region)
-;;     (evil-define-key '(multiedit multiedit-insert) 'global
-;;       (kbd "C-n")   #'evil-multiedit-next
-;;       (kbd "C-p")   #'evil-multiedit-prev))
-;;   )
-
 ;; 作为 multiple cursor 的后端
 (use-package evil-mc
   :ensure t
@@ -422,12 +377,6 @@ This version disables tag inheritance to avoid listing all headings if a filetag
 
 ;; mutiple edit ends here
 ;; ========================================
-
-;; Harper
-;; https://writewithharper.com/docs/integrations/emacs
-;; (with-eval-after-load 'eglot
-;;   (add-to-list 'eglot-server-programs
-;;                '(text-mode . ("harper-ls" "--stdio"))))
 
 ;; outline-indent
 ;; https://github.com/jamescherti/outline-indent.el
@@ -514,6 +463,9 @@ This version disables tag inheritance to avoid listing all headings if a filetag
   (newline-and-indent))
 
 (global-set-key (kbd "S-<return>") 'sanityinc/newline-at-end-of-line)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key org-mode-map (kbd "S-<return>") 'sanityinc/newline-at-end-of-line)))
 
 
 

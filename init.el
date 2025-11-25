@@ -67,6 +67,7 @@
 (require 'init-misc)
 (require 'init-coding)
 (require 'init-keybindings)
+(require 'init-hydra)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)

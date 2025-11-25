@@ -6,55 +6,102 @@
 ;; globl settings
 ;;==============================
 
-;; use sanityinc/headeries-elisp instead
-;; ;; auto insert header of .el files
-;; (require 'autoinsert)
-;; (auto-insert-mode 1)
-;; (setq auto-insert-query nil)
-;; (define-auto-insert
-;;   "\\.el\\'"
-;;   '("Emacs Lisp file header\n"
-;;     ";;; " (file-name-nondirectory buffer-file-name) " --- " _ "-*- lexical-binding: t -*-" "\n"
-;;     ";; Author: Vandee\n"
-;;     ";; Created: " (format-time-string "%Y-%m-%d") "\n"
-;;     ";; Keywords: \n"
-;;     ";;; Commentary:\n"
-;;     ";;; Code:\n\n\n"
-;;     ";;; " (file-name-nondirectory buffer-file-name) " ends here\n"))
+;; 设置 rg 为默认的 grep
+(setq grep-program "rg")
+;; 设置默认 compile 指令
+(setq compile-command "")
 
-;; empv.el
-;; https://github.com/isamert/empv.el
-;; (require 'empv)
+;; 关闭 warning
+;; (setq warning-minimum-level :emergency)
 
-;; ready-player
-;; https://github.com/xenodium/ready-player
-;; https://xenodium.com/ready-player-mode/
-(use-package ready-player
-  :ensure t
-  :config
-  (ready-player-mode +1))
+;; 禁止eww生成cookie
+;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
+(setq url-cookie-trusted-urls '()        ;不设置白名单
+      url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
 
-(require 'video-trimmer)
+(setq-default
+ window-combination-resize t
+ x-stretch-cursor t
+ yas-triggers-in-field t
+ )
 
-;; 没作用
-;; (defun my-modify-syntax-for-chinese ()
-;;   "Modify syntax table to treat each Chinese character as a word."
-;;   (modify-syntax-entry ?\\ "w" (standard-syntax-table)) ; 避免反斜杠干扰
-;;   (dolist (char (number-sequence #x4e00 #x9fff)) ; 汉字的 Unicode 范围
-;;     (modify-syntax-entry char "w" (standard-syntax-table))))
+(setq
+ display-line-numbers-type 'relative ;开启相对行号，需要关闭 line-number-mode
+ ispell-program-name "/opt/homebrew/bin/ispell" ;ispell
+ confirm-kill-emacs nil ;;取消退出确认
+ undo-limit 80000000
+ auto-save-default t
+ word-wrap-by-category t
+ all-the-icons-scale-factor 1.0
+ )
+(global-subword-mode t) ;; 启用 global-subword-mode 后，Emacs 会在全局范围内使用 subword-mode，这意味着在所有的缓冲区中，你都可以进行子词的导航和编辑。这在处理代码或文本时非常有用，特别是当你需要对单个字符或字符组合进行精确编辑时。
 
-;; (add-hook 'evil-local-mode-hook 'my-modify-syntax-for-chinese)
+;;auto-wrap
+(custom-set-variables
+ '(global-visual-line-mode t)
+ '(global-auto-revert-mode t))
+
+;; SmoothScroll
+;; (require 'ultra-scroll)
+;; (ultra-scroll-mode 1)
+
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode t))
+(setq scroll-preserve-screen-position 'always)
+;; Vertical Scroll
+(setq scroll-step 1)
+(setq scroll-margin 1)
+(setq scroll-conservatively 10000) ;101 , 10000
+(setq scroll-up-aggressively 0.01)
+(setq scroll-down-aggressively 0.01)
+(setq auto-window-vscroll nil)
+(setq fast-but-imprecise-scrolling nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-progressive-speed nil)
+;; Horizontal Scroll
+(setq hscroll-step 1)
+(setq hscroll-margin 1)
+;; -SmoothScroll
+
+
+;; 显示图片
+;;https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E8%AE%BE%E7%BD%AEOrg%E4%B8%AD%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E7%9A%84%E5%B0%BA%E5%AF%B8.org
+;; (setq org-image-actual-width '(400)) 要在(org-toggle-inline-images)命令之前
+;; 或者在文档开头加上 #+ATTR_ORG: :width 600 ，并设置(setq org-image-actual-width nil)
+
+(setq org-startup-with-inline-images t)
+
+(add-hook 'org-mode-hook (lambda ()
+                           (setq org-image-actual-width '(400))
+                           (org-toggle-inline-images)
+                           (when org-startup-with-inline-images
+                             (org-display-inline-images t))))
+
+
+;; 窗口大小设定
+;; 霞鹜文楷等宽窗口大小
+;; (if (not (eq window-system nil))
+;;     (progn
+;;       ;; top, left ... must be integer
+;;       (add-to-list 'default-frame-alist
+;;                    (cons 'top  (/ (x-display-pixel-height) 15))) ;; 调整数字设置距离上下左右的距离
+;;       (add-to-list 'default-frame-alist
+;;                    (cons 'left (/ (x-display-pixel-width) 6)))
+;;       (add-to-list 'default-frame-alist
+;;                    (cons 'height (/ (* 4 (x-display-pixel-height))
+;;                                     (* 6 (frame-char-height)))))
+;;       (add-to-list 'default-frame-alist
+;;                    (cons 'width (/ (* 4 (x-display-pixel-width))
+;;                                    (* 6 (frame-char-width)))))))
+
 
 ;;------------------------------
 ;; nonote
 ;;------------------------------
-(require 'hoarder)
-
 ;; uvicorn app.main:app --reload
 ;; (maybe-require-package 'websocket)
 (require 'json)
 (require 'corfu)
-
 
 (defun run-uvicorn-server-uv ()
   "Run uv python -m uvicorn app.main:app --reload in a new async shell using absolute path."
@@ -243,101 +290,30 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;;                    (insert result)))))))
 
 
-;; 关闭 warning
-;; (setq warning-minimum-level :emergency)
-
-;; 禁止eww生成cookie
-;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
-(setq url-cookie-trusted-urls '()        ;不设置白名单
-      url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
-
-(setq-default
- window-combination-resize t
- x-stretch-cursor t
- yas-triggers-in-field t
- )
-
-(setq
- display-line-numbers-type 'relative ;开启相对行号，需要关闭 line-number-mode
- ispell-program-name "/opt/homebrew/bin/ispell" ;ispell
- confirm-kill-emacs nil ;;取消退出确认
- undo-limit 80000000
- auto-save-default t
- word-wrap-by-category t
- all-the-icons-scale-factor 1.0
- )
-(global-subword-mode t) ;; 启用 global-subword-mode 后，Emacs 会在全局范围内使用 subword-mode，这意味着在所有的缓冲区中，你都可以进行子词的导航和编辑。这在处理代码或文本时非常有用，特别是当你需要对单个字符或字符组合进行精确编辑时。
-
-;;auto-wrap
-(custom-set-variables
- '(global-visual-line-mode t)
- '(global-auto-revert-mode t))
-
-;; SmoothScroll
-;; (require 'ultra-scroll)
-;; (ultra-scroll-mode 1)
-
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode t))
-(setq scroll-preserve-screen-position 'always)
-;; Vertical Scroll
-(setq scroll-step 1)
-(setq scroll-margin 1)
-(setq scroll-conservatively 10000) ;101 , 10000
-(setq scroll-up-aggressively 0.01)
-(setq scroll-down-aggressively 0.01)
-(setq auto-window-vscroll nil)
-(setq fast-but-imprecise-scrolling nil)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-(setq mouse-wheel-progressive-speed nil)
-;; Horizontal Scroll
-(setq hscroll-step 1)
-(setq hscroll-margin 1)
-;; -SmoothScroll
-
-;; 设置默认 compile 指令
-(setq compile-command "")
-
-;; 显示图片
-;;https://github.com/lujun9972/emacs-document/blob/master/org-mode/%E8%AE%BE%E7%BD%AEOrg%E4%B8%AD%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E7%9A%84%E5%B0%BA%E5%AF%B8.org
-;; (setq org-image-actual-width '(400)) 要在(org-toggle-inline-images)命令之前
-;; 或者在文档开头加上 #+ATTR_ORG: :width 600 ，并设置(setq org-image-actual-width nil)
-
-(setq org-startup-with-inline-images t)
-
-(add-hook 'org-mode-hook (lambda ()
-                           (setq org-image-actual-width '(400))
-                           (org-toggle-inline-images)
-                           (when org-startup-with-inline-images
-                             (org-display-inline-images t))))
-
-;;-------------------------------------------------------------------------------------------
-;; 窗口大小设定
-;; 霞鹜文楷等宽窗口大小
-;; (if (not (eq window-system nil))
-;;     (progn
-;;       ;; top, left ... must be integer
-;;       (add-to-list 'default-frame-alist
-;;                    (cons 'top  (/ (x-display-pixel-height) 15))) ;; 调整数字设置距离上下左右的距离
-;;       (add-to-list 'default-frame-alist
-;;                    (cons 'left (/ (x-display-pixel-width) 6)))
-;;       (add-to-list 'default-frame-alist
-;;                    (cons 'height (/ (* 4 (x-display-pixel-height))
-;;                                     (* 6 (frame-char-height)))))
-;;       (add-to-list 'default-frame-alist
-;;                    (cons 'width (/ (* 4 (x-display-pixel-width))
-;;                                    (* 6 (frame-char-width)))))))
-
-
 
 ;;==============================
 ;; packages
 ;;==============================
+(require 'hoarder)
 
 (require 'org-hover)
 
 ;; pdf
 (maybe-require-package 'pdf-tools)
+
+;; empv.el
+;; https://github.com/isamert/empv.el
+;; (require 'empv)
+
+;; ready-player
+;; https://github.com/xenodium/ready-player
+;; https://xenodium.com/ready-player-mode/
+(use-package ready-player
+  :ensure t
+  :config
+  (ready-player-mode +1))
+
+(require 'video-trimmer)
 
 ;; 获取网页标题
 
@@ -506,8 +482,6 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
         which-key-idle-delay 0.4
         which-key-idle-secondary-delay 0.01
         which-key-separator " → " ))
-
-
 
 ;;neotree
 (use-package neotree

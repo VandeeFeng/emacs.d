@@ -52,8 +52,8 @@
 
 ;; Jump to pin bookmark (with completing-read fuzzy search)
 ;;;###autoload
-(defun jump-pin-mark ()
-  "Fuzzy search and jump to saved pin bookmarks."
+(defun goto-pin-mark ()
+  "Fuzzy search and goto saved pin bookmarks."
   (interactive)
   (load-pin-marks)
   (if (null pin-marks-alist)
@@ -74,7 +74,7 @@
                                                 "(file not found)")))
                                 (format "%-30s %s" name preview)))
                             pin-marks-alist))
-           (selected (completing-read "Jump to pin mark: " choices nil t))
+           (selected (completing-read "Goto pin mark: " choices nil t))
            (alias (intern (replace-regexp-in-string " .*" "" selected)))
            (pair (assoc alias pin-marks-alist)))
       (when pair
@@ -87,7 +87,7 @@
                 (find-file file-path)
                 (goto-line line-num)
                 (move-to-column column-num)
-                (message "Jumped to pin mark: %s" (symbol-name alias)))
+                (message "Goto pin mark: %s" (symbol-name alias)))
             (message "File %s no longer exists." file-path)
             ;; Remove dead bookmark
             (setq pin-marks-alist (assq-delete-all alias pin-marks-alist))

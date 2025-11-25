@@ -60,14 +60,12 @@
 ^^^^^^^^---------------------------------------------------------------------
 [_SPC_] M-x           [_f_] files      [_b_] buffers       [_w_] windows
 [_._] compile         [_n_] notes      [_d_] dired         [_e_] eval/eshell
-[_TAB_] comment line  [_l_] LLM        [_s_] search        [_t_] toggle
-[_v_] vandee          [_h_] help       [_p_] projects      [_o_] open
-[_c_] code
+[_v_] vandee          [_l_] LLM        [_s_] search        [_t_] toggle
+[_c_] code            [_h_] help       [_p_] projects      [_o_] open
 "
   ;; M-x alternatives
   ("SPC" execute-extended-command)
   ("." compile)
-  ("TAB" comment-line)
 
   ;; Files (f)
   ("f" hydra-files/body)
@@ -321,19 +319,9 @@
   ("v" describe-variable)
   ("w" where-is)
   ("x" describe-command)
-  ("r" hydra-help-reload/body)
-  ("q" nil "quit")
-  ("C-g" nil "quit")
-  ("<escape>" nil "quit"))
-
-;; Help reload sub-hydra
-(defhydra hydra-help-reload (:color blue :hint nil)
-  "
-^Reload Config^
-^^^^^^^^^^^^^^
-[_r_] reload emacs config
-"
-  ("r" (lambda () (interactive) (load-file "~/.config/emacs/init.el") (ignore (elpaca-process-queues))))
+  ("r" (lambda () (interactive)
+         (load-file "~/.emacs.d/init.el")
+         (message "Emacs configuration reloaded")))
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

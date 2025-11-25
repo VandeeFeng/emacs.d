@@ -35,7 +35,9 @@ The search is performed using `rgrep` for the specific pattern
 (global-set-key (kbd "M-j") 'windmove-down)
 (global-set-key (kbd "M-k") 'windmove-up)
 (global-set-key (kbd "M-l") 'windmove-right)
-(global-set-key (kbd "M-x") 'delete-window)
+(with-eval-after-load 'paredit
+  (define-key paredit-mode-map (kbd "M-d") nil))
+(global-set-key (kbd "M-d") 'delete-window)
 (global-set-key (kbd "M-c") 'kill-current-buffer)
 (global-set-key (kbd "M-C") 'kill-all-buffers-except-scratch)
 (setq windmove-wrap-around t)

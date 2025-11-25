@@ -414,7 +414,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   ;; that evil-collection should works with.  The following line is here
   ;; for documentation purposes in case you need it.
   ;; (setq evil-collection-mode-list '(calendar dashboard dired ediff info magit ibuffer))
-  (setq evil-collection-mode-list '(org org-capture calendar))
+  (setq evil-collection-mode-list '(org org-capture calendar dired))
   (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
 
   ;; (defvar my-intercept-mode-map (make-sparse-keymap)
@@ -584,7 +584,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
   (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
   (corfu-preselect 'prompt)      ;; Preselect the prompt
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-scroll-margin 7)        ;; Use scroll margin

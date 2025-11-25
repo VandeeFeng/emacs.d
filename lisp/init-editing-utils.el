@@ -23,10 +23,8 @@
 ;; editing functions
 ;;=========================
 ;; 其他常用操作在 file:/home/vandee/Vandee/Areas/pkm/org/Code_Notes.org::*编辑
-
-;; jump
-;; (global-set-key (kbd "C-i") 'evil-jump-backward) ;;覆盖系统设置,tab 也有这个功能,终端映射：Ctrl+i 与 Tab 的 ASCII 相同（0x09），某些终端或映射会把它当作 Tab 处理，可能导致 Ctrl+i 不工作或行为不同。但是会影响 orgmode 里 tab 的自动对齐，先暂停使用
-
+;; 还没有想清楚怎么优化 vim 键位和 Emacs 的结合。不太想频繁的在 insert 模式和其他模式之间切换
+;; 但是 vim 里导航的逻辑很好，最省事的逻辑还是多切换。组合键导航的劣势很大
 
 ;; 启用系统复制粘贴
 (setq select-enable-clipboard t)
@@ -58,15 +56,16 @@
   ;;     (set-transient-map my/mark-map)))
   ;; (define-key evil-normal-state-map (kbd "m") 'my/smart-mark-sexp)
 
+  ;; this keybindings only use not in insert mode
   (dolist (binding '(("m" . mark-sexp)
-                     ("p" . set-pin-mark)
-                     ("j" . jump-pin-mark)
+                     ("p" . set-pin-mark) ; 这是自己实现的 init-mark.el
+                     ("g" . goto-pin-mark) ; 简化版的 bookmark
                      ("d" . mark-defun)
-                     ("k" . paredit-kill)
+                     (":" . comment-indent)
                      (";" . comment-dwim)
-                     ("<up>" . move-dup-move-lines-up)
-                     ("<down>" . move-dup-move-lines-down)
-                     ("u" . upcase-dwim) ;; equal to g U in vim
+                     ("k" . move-dup-move-lines-up)
+                     ("j" . move-dup-move-lines-down)
+                     ("u" . upcase-dwim) ; equal to g U in vim
                      ("s" . thing-copy-symbol)
                      ("S" . thing-cut-symbol)
                      ("w" . thing-copy-word)
@@ -87,24 +86,31 @@
 ;; (define-key my/mark-map (kbd "w") 'thing-copy-word)
 ;; (define-key my/mark-map (kbd "M-w") 'thing-cut-word)
 
-;; Move
 (with-eval-after-load 'evil
   ;; normal, visual, insert
-  (dolist (binding '(("C-a" . beginning-of-line)
-                     ("C-e" . end-of-line)
-                     ("C-n" . forward-sexp)
-                     ("C-p" . backward-sexp)
-                     ("C-y" . clipboard-yank)))
+  (dolist (binding '(("C-d" . backward-kill-sexp)
+                     ("C-f" . kill-sexp)
+                     ("C-k" . kill-visual-line)
+                     ("C-y" . clipboard-yank)
+                     ;; ("C-a" . beginning-of-line)
+                     ;; ("C-e" . end-of-line)
+                     ;; ("C-n" . forward-sexp)
+                     ;; ("C-p" . backward-sexp)
+                     ;; ("C-w" . thing-copy-word)
+                     ;; ("C-W" . thing-cut-word)
+                     ;; ("C-s" . thing-copy-sexp)
+                     ;; ("C-S" . thing-cut-sexp)
+                     ))
     (dolist (state '(normal visual insert))
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
-  ;; visual, insert
-  (dolist (binding '(("C-h" . backward-char)
-                     ("C-l" . forward-char)
-                     ("C-j" . next-line)
-                     ("C-k" . previous-line)))
-    (dolist (state '(visual insert))
-      (evil-global-set-key state (kbd (car binding)) (cdr binding))))
+  ;; ;; visual, insert
+  ;; (dolist (binding '(("C-h" . backward-char)
+  ;;                    ("C-l" . forward-char)
+  ;;                    ("C-j" . next-line)
+  ;;                    ("C-k" . previous-line)))
+  ;;   (dolist (state '(visual insert))
+  ;;     (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
   ;; normal visual
   (dolist (binding '(("-" . end-of-line)
@@ -112,6 +118,8 @@
     (dolist (state '(normal visual))
       (evil-global-set-key state (kbd (car binding)) (cdr binding))))
 
+  (define-key evil-motion-state-map (kbd "C-v") nil)
+  (global-unset-key (kbd "C-v"))
   (global-set-key (kbd "S-<backspace>") 'delete-char))
 
 ;; magit

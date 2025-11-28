@@ -165,13 +165,15 @@
   "
 ^LLM^                     (C-c C-l to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_s_] gptel send           [_m_] gptel menu
+[_s_] gptel send           [_c_] simple claude
 [_n_] gptel new buffer     [_a_] aidermacs transient
+[_m_] gptel menu
 "
   ("s" gptel-send)
   ("n" gptel)
   ("m" gptel-menu)
   ("a" aidermacs-transient-menu)
+  ("c" my/claude-shell-command)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

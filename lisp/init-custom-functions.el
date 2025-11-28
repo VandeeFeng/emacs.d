@@ -142,10 +142,8 @@ If prefix ARG is set, prompt for a directory to search from."
 
 (defun my/search-buffer ()
   "Conduct a text search on the current buffer.
-
 If a selection is active and multi-line, perform a search restricted to that
 region.
-
 If a selection is active and not multi-line, use the selection as the initial
 input and search the whole buffer for it."
   (interactive)
@@ -295,6 +293,55 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
          (setq command (replace-regexp-in-string "%" (mapconcat 'identity (dired-get-marked-files) " ") command nil t))))
   (shell-command command output-buffer error-buffer))
 
+;; simple claude code shell command
+(defun my/claude-shell-command (prompt)
+  "Execute claude command asynchronously and display the output."
+  (interactive "sClaude prompt: ")
+  (let* ((output-buffer-name "*Claude Output*")
+         (output-buffer (get-buffer-create output-buffer-name))
+         (shell-program (or (getenv "SHELL") shell-file-name))
+         ;; Use shell-quote-argument
+         (command-str (format "claude -p %s" (shell-quote-argument prompt))))
+    (with-current-buffer output-buffer
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (setq-local header-line-format (format "Claude Output for prompt: %s" prompt)))
+    ;; (display-buffer output-buffer) ; Show the buffer immediately
+    (message "Claude command running asynchronously...")
+    ;; Start the async process
+    (let ((process (start-process "claude-process"
+                                  output-buffer-name
+                                  shell-program
+                                  "-lc"
+                                  command-str)))
+      ;; Set a function to be called when the process finishes
+      (set-process-sentinel process #'my/claude-process-sentinel))))
+
+(defun my/claude-process-sentinel (process _event)
+  "Sentinel for the claude async process. Handles success and error cases."
+  (when (memq (process-status process) '(exit signal))
+    (let* ((buffer (process-buffer process))
+           (exit-code (process-exit-status process)))
+      (cond
+       ;; Case 1: Process failed (non-zero exit code)
+       ((/= exit-code 0)
+        (kill-buffer buffer)
+        (if (= exit-code 127)
+            (message "Error: 'claude' command not found. Please ensure it's in your shell's PATH.")
+          (message "Error: Claude command failed with exit code %d." exit-code)))
+
+       ;; Case 2: Process succeeded but produced no output
+       ((zerop (with-current-buffer buffer (buffer-size)))
+        (kill-buffer buffer)
+        (message "Claude command finished with no output."))
+
+       ;; Case 3: Success
+       (t
+        (with-current-buffer buffer
+          (setq buffer-read-only t)
+          (goto-char (point-min)))
+        (display-buffer buffer)
+        (message "Claude command finished."))))))
 
 
 ;; 显示当前 heading 内容并折叠其他

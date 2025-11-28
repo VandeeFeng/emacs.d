@@ -25,6 +25,7 @@
 ;; 其他常用操作在 file:/home/vandee/Vandee/Areas/pkm/org/Code_Notes.org::*编辑
 ;; 还没有想清楚怎么优化 vim 键位和 Emacs 的结合。不太想频繁的在 insert 模式和其他模式之间切换
 ;; 但是 vim 里导航的逻辑很好，最省事的逻辑还是多切换。组合键导航的劣势很大
+;; stay simple !
 
 ;; 启用系统复制粘贴
 (setq select-enable-clipboard t)
@@ -46,7 +47,9 @@
 (with-eval-after-load 'evil
   (define-prefix-command 'my/mark-map)
   (define-key evil-normal-state-map (kbd "m") 'my/mark-map)
-
+  (define-key evil-motion-state-map (kbd ";") nil)
+  (evil-define-key '(normal visual) 'global
+    "gc" #'comment-dwim)
   ;; ;; 下面这段可以实现连续按 m 执行 mark-sexp，但是就不会显示按键绑定提示了
   ;; (defun my/smart-mark-sexp ()
   ;;   "If mark is active, call `mark-sexp`, otherwise enter `my/mark-map`."
@@ -61,8 +64,8 @@
                      ("p" . set-pin-mark) ; 这是自己实现的 init-mark.el
                      ("g" . goto-pin-mark) ; 简化版的 bookmark
                      ("d" . mark-defun)
-                     (":" . comment-indent)
-                     (";" . comment-dwim)
+                     (";" . comment-indent)
+                     ;; (";" . comment-dwim) ; use gc instead
                      ("k" . move-dup-move-lines-up)
                      ("j" . move-dup-move-lines-down)
                      ("u" . upcase-dwim) ; equal to g U in vim

@@ -101,7 +101,7 @@
 
 (custom-set-faces
  ;; global 部分-------------------------------------------
- '(match ((t (:background nil :foreground "#79C0FF"))))
+ '(match ((t (:background unspecified :foreground "#79C0FF"))))
  '(popup-tip-face ((t (:background "#1D1F21" :foreground "#d1d5db"))))
  '(shadow ((t (:foreground "gray70"))))
  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
@@ -113,7 +113,7 @@
  '(cursor ((t (:background "orange"))))
 
  '(link ((t (:foreground "#96a6c8" :underline t))))
- '(highlight ((t (:background "#5A5F66")))) ;; #60656C
+ '(highlight ((t (:background "#5A5F66" :foreground unspecified)))) ;; #60656C
 
  ;; 设置注释的样式
  '(font-lock-comment-face ((t (:foreground "#787878"))))
@@ -174,7 +174,7 @@
                                ))))
 
  ;; 设置时间戳颜色
- '(org-date ((t (:foreground "#61AFEF" :background nil :weight normal))))
+ '(org-date ((t (:foreground "#61AFEF" :background unspecified :weight normal))))
 
  ;; 设置 org-tags 的颜色
  '(org-tag ((t (:foreground "#8B949E" :weight normal :height 0.9 :inherit nil :slant normal))))
@@ -196,23 +196,23 @@
  ;; org 部分 ends----------------------------------------------------
 
  ;; 插件部分 --------------------------------------------------------
- '(diff-hl-change ((t (:background nil :foreground "#ffc125"))))
- '(diff-hl-delete ((t (:background nil :foreground "#ff3030"))))
- '(diff-hl-insert ((t (:background nil :foreground "green1"))))
- '(diredfl-date-time ((t nil)))
- '(diredfl-deletion ((t nil)))
+ '(diff-hl-change ((t (:background unspecified :foreground "#ffc125"))))
+ '(diff-hl-delete ((t (:background unspecified :foreground "#ff3030"))))
+ '(diff-hl-insert ((t (:background unspecified :foreground "green1"))))
+ '(diredfl-date-time ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-deletion ((t (:foreground unspecified :background unspecified))))
  '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
- '(diredfl-dir-priv ((t nil)))
- '(diredfl-exec-priv ((t nil)))
- '(diredfl-file-name ((t nil)))
- '(diredfl-file-suffix ((t nil)))
- '(diredfl-no-priv ((t nil)))
- '(diredfl-number ((t nil)))
- '(diredfl-other-priv ((t nil)))
- '(diredfl-rare-priv ((t nil)))
- '(diredfl-read-priv ((t nil)))
- '(diredfl-write-priv ((t nil)))
+ '(diredfl-dir-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-exec-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-file-name ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-file-suffix ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-no-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-number ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-other-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-rare-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-read-priv ((t (:foreground unspecified :background unspecified))))
+ '(diredfl-write-priv ((t (:foreground unspecified :background unspecified))))
  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
  '(orderless-match-face-1 ((t (:foreground "#79C0FF" :weight medium))))

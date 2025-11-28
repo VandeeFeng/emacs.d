@@ -275,7 +275,7 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 ;;; nonote ends
 
 ;; 在启动时自动运行一次占卜
-(require 'gua.el)
+(require 'gua)
 (setq gua-llm-enabled t)
 ;; (add-hook 'emacs-startup-hook
 ;;           (lambda ()

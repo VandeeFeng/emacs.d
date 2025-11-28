@@ -8,9 +8,9 @@
 
 ;; diff-hl 配色美化
 (custom-set-faces
- '(diff-hl-insert ((t (:background nil :foreground "green1"))))
- '(diff-hl-delete ((t (:background nil :foreground "#ff3030"))))
- '(diff-hl-change ((t (:background nil :foreground "#ffc125")))))
+ '(diff-hl-insert ((t (:background unspecified :foreground "green1"))))
+ '(diff-hl-delete ((t (:background unspecified :foreground "#ff3030"))))
+ '(diff-hl-change ((t (:background unspecified :foreground "#ffc125")))))
 
 (when (maybe-require-package 'diff-hl)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)

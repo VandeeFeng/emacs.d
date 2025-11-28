@@ -1,9 +1,6 @@
 [submodule "site-lisp/org-remoteimg"]
 	path = site-lisp/org-remoteimg
 	url = git@github.com:gaoDean/org-remoteimg.git
-[submodule "site-lisp/gruber-darker-theme"]
-	path = site-lisp/gruber-darker-theme
-	url = git@github.com:rexim/gruber-darker-theme.git
 [submodule "site-lisp/codeium.el"]
 	path = site-lisp/codeium.el
 	url = https://github.com/Exafunction/codeium.el
@@ -31,3 +28,6 @@
 [submodule "site-lisp/org-hover"]
 	path = site-lisp/org-hover
 	url = git@github.com:VandeeFeng/org-hover.git
+[submodule "site-lisp/gruber-darker-theme"]
+	path = site-lisp/gruber-darker-theme
+	url = git@github.com:VandeeFeng/gruber-darker-theme.git

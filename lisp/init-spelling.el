@@ -4,6 +4,8 @@
 
 (require 'ispell)
 
+(setq ispell-program-name "/usr/bin/hunspell")
+
 (when (executable-find ispell-program-name)
   ;; Add spell-checking in comments for all programming language modes
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)

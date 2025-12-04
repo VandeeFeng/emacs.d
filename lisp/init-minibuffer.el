@@ -2,6 +2,25 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+  :custom
+  ;; 基础配置
+  (vertico-count 15)                    ; 显示候选项数量
+  (vertico-resize t)                    ; 自动调整大小
+  (vertico-cycle t)                     ; 循环滚动
+  ;;(vterm-copy-mode t)
+  :config
+  (vertico-buffer-mode)
+  (setq vertico-buffer-display-action
+        '(display-buffer-in-side-window
+          (side . bottom)
+          (window-height . 0.25)
+          (window-parameters . ((no-other-window . t)
+                                (mode-line-format . none)))))
+  )
 
 (when (maybe-require-package 'vertico)
   (add-hook 'after-init-hook 'vertico-mode)

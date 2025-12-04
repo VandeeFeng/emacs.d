@@ -51,7 +51,7 @@
          (api-key (and auth-info (plist-get auth-info :secret)))) ; 使用 :secret 获取 API key
     (if api-key
         (setq
-         gptel-model "Gemini"
+         ;; gptel-model 'gemini-2.5-flash
          gptel-backend (gptel-make-gemini "Gemini"
                          :stream t
                          :key api-key

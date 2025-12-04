@@ -73,7 +73,7 @@
                      ;; (";" . comment-dwim) ; use gc instead
                      ("k" . move-dup-move-lines-up)
                      ("j" . move-dup-move-lines-down)
-                     ("u" . upcase-dwim) ; equal to g U in vim
+                     ("u" . upcase-dwim) ; equal to g U in vim, also ~ to capitalize
                      ("s" . thing-copy-symbol)
                      ("S" . thing-cut-symbol)
                      ("w" . thing-copy-word)

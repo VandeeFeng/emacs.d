@@ -5,7 +5,7 @@
 (require 'ispell)
 
 (setq ispell-program-name "/usr/bin/hunspell")
-(setq ispell-alternate-dictionary "/usr/share/hunspell/en_US.dic")
+(setq ispell-dictionary "en_US")
 
 (when (executable-find ispell-program-name)
   ;; Add spell-checking in comments for all programming language modes

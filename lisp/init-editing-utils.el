@@ -125,8 +125,9 @@
 
   ;; normal visual
   (dolist (binding '(("-" . end-of-line)
-                     ("<" . beginning-of-defun)
-                     (">" . end-of-defun)
+                     ;; use vim default ]] instead
+                     ;; ("<" . beginning-of-defun)
+                     ;; (">" . end-of-defun)
                      ("," . backward-sexp)
                      ("." . forward-sexp)
                      ))

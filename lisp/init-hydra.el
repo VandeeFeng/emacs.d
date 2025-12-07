@@ -24,7 +24,7 @@
 (global-set-key (kbd "C-c C-v") 'hydra-vandee/body)
 (global-set-key (kbd "C-c C-d") 'hydra-dired/body)
 (global-set-key (kbd "C-c C-e") 'hydra-eval/body)
-(global-set-key (kbd "C-c C-h") 'hydra-help/body)
+;; (global-set-key (kbd "C-c C-h") 'hydra-help/body)
 (global-set-key (kbd "C-c C-s") 'hydra-search/body)
 (global-set-key (kbd "C-c C-t") 'hydra-toggle/body)
 (global-set-key (kbd "C-c C-o") 'hydra-open/body)
@@ -169,7 +169,7 @@
 [_n_] gptel new buffer     [_a_] aidermacs transient
 [_m_] gptel menu
 "
-  ("s" gptel-send)
+  ("s" gptel-send) ;; C-c RET is more convenient
   ("n" gptel)
   ("m" gptel-menu)
   ("a" aidermacs-transient-menu)

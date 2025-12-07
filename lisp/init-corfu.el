@@ -49,11 +49,12 @@
               (setq-local corfu-auto nil)
               (corfu-mode)))
 
-  (setq global-corfu-minibuffer
-        (lambda ()
-          (not (or (bound-and-true-p mct--active)
-                   (bound-and-true-p vertico--input)
-                   (eq (current-local-map) read-passwd-map)))))
+  ;; (setq global-corfu-minibuffer
+  ;;       (lambda ()
+  ;;         (not (or (bound-and-true-p mct--active)
+  ;;                  (bound-and-true-p vertico--input)
+  ;;                  (eq (current-local-map) read-passwd-map)))))
+
   ;; Disable ispell completion in text modes (Emacs 30+ adds it by default)
   ;; It will raise a error in corfu
   (add-hook 'text-mode-hook

@@ -75,6 +75,11 @@
     :stream t                           ;Stream responses
     :models '("deepseek-r1:14b"))       ;List of models
 
+  ;; preset
+  ;; https://github.com/karthink/gptel/?tab=readme-ov-file#option-presets
+  (gptel-make-preset 'explain
+    :system "Explain what this code does to a novice programmer.")
+
   ;; https://github.com/karthink/gptel/issues/514
   (gptel-make-tool
    :function (lambda (url)
@@ -216,6 +221,51 @@
 
   )
 
+;; gtpel + org-protocol
+(require 'org-protocol)
+(require 'gptel)
+
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
+;; Handler for gptel queries from browser
+(defun my/gptel-org-protocol-handler (info)
+  "Handle gptel query from org-protocol.
+INFO is the data passed by org-protocol."
+  (let ((text (plist-get info :text)))
+    (when (and text (not (string-empty-p text)))
+      (let ((query (decode-coding-string (url-unhex-string text) 'utf-8)))
+        (message "Received gptel query: %s" query)
+        ;; Create or switch to gptel buffer
+        (let ((buffer (get-buffer-create "*gptel-browser*")))
+          (with-current-buffer buffer
+            (unless (eq major-mode 'gptel-default-mode)
+              (funcall gptel-default-mode))
+            (gptel-mode 1)
+            (goto-char (point-max))
+            (insert "\n\n--- From Browser ---\n")
+            (insert query)
+            (insert "\n")
+            (goto-char (point-max))
+            ;; Send the query to gptel
+            (gptel-send)
+            (display-buffer buffer)))))))
+
+;; Register the protocol handler
+(setq org-protocol-protocol-alist
+      (append org-protocol-protocol-alist
+              '(("gptel-browser"
+                 :protocol "gptel"
+                 :function my/gptel-org-protocol-handler))))
+
+;; JavaScript bookmarklet for browser (copy this as bookmark URL):
+;; Basic version:
+;; javascript:(function(){const selectedText=window.getSelection().toString().trim();if(!selectedText){alert('Please select some text first');return;}const pageTitle=document.title;const pageUrl=window.location.href;const fullText=`From: ${pageTitle}\nURL: ${pageUrl}\n\nSelected text:\n${selectedText}`;const encodedText=encodeURIComponent(fullText);const protocolUrl=`org-protocol://gptel?text=${encodedText}`;window.location.href=protocolUrl;})();
+
+;; Enhanced version with prompt for question:
+;; javascript:(function(){const selectedText=window.getSelection().toString().trim();if(!selectedText){alert('Please select some text first');return;}const pageTitle=document.title;const pageUrl=window.location.href;const userQuestion=prompt('Optional: Add a question or context:');let fullText=`From: ${pageTitle}\nURL: ${pageUrl}\n\n`;if(userQuestion){fullText+=`Question: ${userQuestion}\n\n`;}fullText+=`Selected text:\n${selectedText}`;const encodedText=encodeURIComponent(fullText);const protocolUrl=`org-protocol://gptel?text=${encodedText}`;window.location.href=protocolUrl;})();
+
 ;; ----------------------------------------------------------
 ;; 自动补全
 ;; ----------------------------------------------------------
@@ -257,9 +307,9 @@
   ;; an arbitrary non-null environment variable as placeholder
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:7b")
 
-  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 64))
 
 (with-eval-after-load 'minuet
   (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))

@@ -30,6 +30,16 @@
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
   (define-key dired-mode-map (kbd "S-<right>") #'dired-find-file)
+
+  (defun my/dired-enter-edit-mode ()
+    "Toggle dired read-only mode and switch to Evil insert state."
+    (interactive)
+    (dired-toggle-read-only)
+    (when (fboundp 'evil-insert-state)
+      (evil-insert-state)))
+
+  (define-key dired-mode-map (kbd "i") #'my/dired-enter-edit-mode)
+  (define-key dired-mode-map (kbd "a") #'my/dired-enter-edit-mode)
   )
 
 (provide 'init-dired)

@@ -256,7 +256,7 @@
 [_d_] open dired          [_c_] create empty file   [_n_] copy filename
 [_f_] dired find file     [_C_] create directory    [_p_] copy abs path
 [_u_] dired up directory  [_j_] dired jump current  [_N_] neotree dir
-[_r_] toggle read only
+[_r_] toggle read only    [_R_] dired move/rename
 "
   ("d" dired)
   ("f" dired-x-find-file)
@@ -268,6 +268,7 @@
   ("p" my/dired-copy-absolute-path)
   ("N" neotree-dir)
   ("r" dired-toggle-read-only)
+  ("R" dired-do-rename)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

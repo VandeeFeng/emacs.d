@@ -221,7 +221,6 @@ input and search the whole buffer for it."
       (replace-match "\\1 *\\2* \\3"))))
 
 
-
 ;; 关闭所有 buffers
 (defun kill-all-buffers-except-scratch ()
   "Close all buffers except *scratch* and *Messages*, and show the number of closed buffers."

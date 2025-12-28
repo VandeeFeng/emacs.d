@@ -204,6 +204,9 @@
 (require-package 'unfill)
 
 (when (fboundp 'electric-pair-mode)
+  (when (boundp 'electric-pair-pairs)
+    (setq electric-pair-pairs
+          (append electric-pair-pairs '((?\{ . ?\}) (?\' . ?\')))))
   (add-hook 'after-init-hook 'electric-pair-mode))
 (add-hook 'after-init-hook 'electric-indent-mode)
 

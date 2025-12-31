@@ -6,6 +6,11 @@
 ;; global settings
 ;;==============================
 
+;; Auto switch to compilation buffer after compile finishes
+(add-hook 'compilation-finish-functions
+          (lambda (buffer _status)
+            (select-window (get-buffer-window buffer))))
+
 ;; 设置 rg 为默认的 grep
 (setq grep-program "rg")
 ;; 设置默认 compile 指令

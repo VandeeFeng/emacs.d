@@ -47,12 +47,16 @@
     (enable-paredit-mode)))
 
 (add-hook 'sanityinc/lispy-modes-hook 'enable-paredit-mode)
-(add-hook 'my/rust-modes-hook 'enable-paredit-mode)
+
+(dolist (hook (list
+               'python-mode-hook
+               'rust-mode-hook
+               'rustic-mode-hook))
+  (add-hook hook 'enable-paredit-mode))
 
 (when (maybe-require-package 'puni)
   ;;(add-hook 'prog-mode-hook 'puni-mode)
   (add-hook 'sanityinc/lispy-modes-hook (lambda () (puni-mode -1)))
-  (add-hook 'my/rust-modes-hook (lambda () (puni-mode -1)))
   (with-eval-after-load 'puni
     (define-key puni-mode-map (kbd "M-(") 'puni-wrap-round)
     (define-key puni-mode-map (kbd "C-(") 'puni-slurp-backward)

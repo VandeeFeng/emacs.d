@@ -379,25 +379,37 @@
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
+
 ;; Projects hydra
+(defun my/projectile-switch-project-dired ()
+  "Switch project and open with dired instead of finding a file."
+  (interactive)
+  (let ((projectile-switch-project-action #'projectile-dired))
+    (projectile-switch-project)))
+
+(defun my/projectile-switch-open-project-dired ()
+  "Switch to open project and open with dired."
+  (interactive)
+  (let ((projectile-switch-project-action #'projectile-dired))
+    (projectile-switch-open-project)))
+
 (defhydra hydra-projects (:color blue :hint nil)
   "
 ^Projects^                 (C-c C-p to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^Navigation^           ^Search^            ^Actions^
+^Navigation^           ^Search^              ^Actions^
 ^^^^^^^^^^--------------------------------------------------------
-[_f_] find file         [_r_] riggrep        [_c_] compile
-[_s_] switch project    [_g_] grep           [_t_] test
-[_d_] find dir          [_p_] projectile ag  [_v_] version control
-[_o_] open project      [_i_] ibuffer        [_k_] kill buffers
+[_s_] switch project    [_r_] riggrep         [_c_] cleanup
+[_o_] open project      [_g_] grep            [_t_] test
+[_f_] find file         [_p_] projectile ag   [_v_] version control
+[_d_] find dir          [_i_] ibuffer         [_k_] kill buffers
 [_a_] add project
 "
   ;; Navigation
+  ("s" my/projectile-switch-project-dired)
+  ("o" my/projectile-switch-open-project-dired)
   ("f" projectile-find-file)
-  ("s" projectile-switch-project)
   ("d" projectile-find-dir)
-  ("o" projectile-switch-open-project)
-  ("a" projectile-add-known-project)
 
   ;; Search
   ("r" projectile-ripgrep)
@@ -406,7 +418,9 @@
   ("i" projectile-ibuffer)
 
   ;; Actions
-  ("c" projectile-compile-project)
+  ("a" projectile-add-known-project)
+  ("c" projectile-cleanup-known-projects)
+  ("C" projectile-compile-project)
   ("t" projectile-test-project)
   ("v" projectile-vc)
   ("k" projectile-kill-buffers)

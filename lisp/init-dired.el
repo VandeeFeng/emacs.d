@@ -20,7 +20,11 @@
 (with-eval-after-load 'dired
   (setq dired-recursive-deletes 'top)
   (define-key dired-mode-map [mouse-2] 'dired-find-file)
-  (define-key dired-mode-map (kbd "C-c C-q") 'wdired-change-to-wdired-mode))
+  (define-key dired-mode-map (kbd "C-c C-q") 'wdired-change-to-wdired-mode)
+
+  ;; Set wdired-mode initial state to normal
+  (when (fboundp 'evil-set-initial-state)
+    (evil-set-initial-state 'wdired-mode 'normal)))
 
 (when (maybe-require-package 'diff-hl)
   (with-eval-after-load 'dired
@@ -38,8 +42,35 @@
     (when (fboundp 'evil-insert-state)
       (evil-insert-state)))
 
+  (defun my/dired-enter-visual-edit-mode ()
+    "Toggle dired read-only mode and switch to Evil visual state."
+    (interactive)
+    (dired-toggle-read-only)
+    (when (fboundp 'evil-visual-state)
+      (evil-visual-state)))
+
+  (defun my/dired-exit-edit-mode ()
+    "Exit dired read-only mode and switch to Evil normal state."
+    (interactive)
+    (when (derived-mode-p 'wdired-mode)
+      (wdired-finish-edit)
+      (when (fboundp 'evil-normal-state)
+        (evil-normal-state))))
+
   (define-key dired-mode-map (kbd "i") #'my/dired-enter-edit-mode)
   (define-key dired-mode-map (kbd "a") #'my/dired-enter-edit-mode)
+  (define-key dired-mode-map (kbd "v") #'my/dired-enter-visual-edit-mode)
+
+  ;; Exit edit mode with Esc or q
+  (add-hook 'wdired-mode-hook
+            (lambda ()
+              (when (fboundp 'evil-define-key)
+                (evil-define-key 'normal wdired-mode-map
+                  (kbd "<escape>") #'my/dired-exit-edit-mode
+                  (kbd "q") #'my/dired-exit-edit-mode))
+              (unless (fboundp 'evil-define-key)
+                (local-set-key (kbd "<escape>") #'my/dired-exit-edit-mode)
+                (local-set-key (kbd "q") #'my/dired-exit-edit-mode))))
   )
 
 (provide 'init-dired)

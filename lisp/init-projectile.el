@@ -16,6 +16,17 @@
 
   (maybe-require-package 'ibuffer-projectile))
 
+(defun my/projectile-switch-project-dired ()
+  "Switch project and open with dired instead of finding a file."
+  (interactive)
+  (let ((projectile-switch-project-action #'projectile-dired))
+    (projectile-switch-project)))
+
+(defun my/projectile-switch-open-project-dired ()
+  "Switch to open project and open with dired."
+  (interactive)
+  (let ((projectile-switch-project-action #'projectile-dired))
+    (projectile-switch-open-project)))
 
 (provide 'init-projectile)
 ;;; init-projectile.el ends here

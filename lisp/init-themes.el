@@ -27,20 +27,51 @@
 ;; :repo "rougier/nano-theme"))
 
 
+;;==============================
+;; theme
+;;==============================
+(require 'gruber-darker-theme)
+(load-theme 'gruber-darker t)
+
+;; (use-package almost-mono-themes
+;;   :ensure t
+;;   :config
+;;   ;; (load-theme 'almost-mono-black t)
+;;   (load-theme 'almost-mono-gray t)
+;;   ;; (load-theme 'almost-mono-cream t)
+;;   ;; (load-theme 'almost-mono-white t)
+;;   )
+
 ;;(load-theme 'ir-black t)
 ;;(set-face-background 'default "#252525")
 ;;(set-face-background 'mode-line 'unspecified)  ;; 禁用 mode-line 背景颜色
 ;;(set-face-background 'vertical-border "#282828")
 
 
-;; https://github.com/rougier/nano-modeline/blob/master/nano-modeline.el
-;;(require 'nano-modeline)
-;;(add-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
-;;(add-hook 'text-mode-hook            #'nano-modeline-text-mode)
-;;(add-hook 'org-mode-hook             #'nano-modeline-org-mode)
-;;(setq nano-modeline-position #'nano-modeline-footer)
+;;==============================
+;; icon
+;;==============================
+;; https://github.com/domtronn/all-the-icons.el
 
+;; nerd-icons-completion
+;; https://github.com/rainstormstudio/nerd-icons-completion
+(require-package 'nerd-icons-corfu)
+(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+
+;; kind-icon
+;; https://github.com/jdtsmith/kind-icon
+;; (use-package kind-icon
+;;   :ensure t
+;;   :config
+;;   (add-hook 'my-completion-ui-mode-hook
+;;             (lambda ()
+;;               (setq completion-in-region-function
+;;                     (kind-icon-enhance-completion
+;;                      completion-in-region-function)))))
+
+;;==============================
 ;; modeline
+;;==============================
 (use-package minions
   :ensure t
   :config (minions-mode 1))
@@ -54,36 +85,29 @@
   (moody-replace-vc-mode)
   )
 
-;; theme
-(require 'gruber-darker-theme)
-(load-theme 'gruber-darker t)
-;; (use-package almost-mono-themes
-;;   :ensure t
-;;   :config
-;;   ;; (load-theme 'almost-mono-black t)
-;;   (load-theme 'almost-mono-gray t)
-;;   ;; (load-theme 'almost-mono-cream t)
-;;   ;; (load-theme 'almost-mono-white t)
-;;   )
-
-;;--------------------------------------------
 ;; modeline 里的彩虹猫！
-;;--------------------------------------------
 ;; mac 不知道为什么会造成滚动卡顿 linux 里没问题
 (use-package nyan-mode
   :ensure t
   :defer 1
   :config
-  (setq nyan-bar-length 16);设定彩虹猫的长度
+  (setq nyan-bar-length 16)             ;设定彩虹猫的长度
   (setq nyan-minimum-window-width 12)
   ;;(setq nyan-animate-nyancat t) ; 开启动画 nil 关闭
   (nyan-mode 1))
 
-;;---------------------------------------------------------------------
-;;
+;; https://github.com/rougier/nano-modeline/blob/master/nano-modeline.el
+;;(require 'nano-modeline)
+;;(add-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
+;;(add-hook 'text-mode-hook            #'nano-modeline-text-mode)
+;;(add-hook 'org-mode-hook             #'nano-modeline-org-mode)
+;;(setq nano-modeline-position #'nano-modeline-footer)
+
+
+;;==============================
 ;; sustom-set-face
-;;
-;;---------------------------------------------------------------------
+;;==============================
+
 ;; M-x describe-face 可以查看颜色
 ;; https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-ui.el
 

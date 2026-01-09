@@ -11,6 +11,61 @@
 ;;           (lambda ()
 ;;             (local-set-key (kbd "RET") 'org-open-at-point)))
 
+
+;; 代码块格式设置
+;; (setq org-src-tab-acts-natively t)               ;; 在代码块中使用原生的tab行为
+;; (setq org-adapt-indentation nil)                 ;; 禁止自动缩进
+;; (setq org-src-ask-before-returning-to-edit-buffer nil)  ;; 编辑代码块时不询问
+;; (setq org-html-htmlize-output-type 'nil) ;禁用 Emacs 的语法高亮渲染
+;; 代码块缩进设置
+(setq org-src-preserve-indentation t)            ;; 保持原始缩进
+(setq org-edit-src-content-indentation 0)        ;; 设置代码块的基础缩进为0
+(setq org-export-babel-evaluate nil)
+
+;; org-remoteimg
+(require 'org-remoteimg)
+
+(setq url-cache-directory "~/.emacs.d/cache/url"
+      org-display-remote-inline-images 'skip) ;; Default to disabling the plugin
+
+;; Toggle function for enabling or disabling org-remoteimg
+(defun toggle-org-remoteimg ()
+  "Toggle the `org-remoteimg` package based on its current state."
+  (interactive)
+  (if (eq org-display-remote-inline-images 'skip)
+      (progn
+        (require 'org-remoteimg) ;; Ensure the plugin is loaded
+        (setq org-display-remote-inline-images 'cache) ;; Enable with caching
+        (message "org-remoteimg enabled."))
+    (setq org-display-remote-inline-images 'skip) ;; Disable plugin
+    (message "org-remoteimg disabled.")))
+
+;; org-babel
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (seq-filter
+    (lambda (pair)
+      (locate-library (concat "ob-" (symbol-name (car pair)))))
+    '((emacs-lisp . t)
+      (C .t)
+      (julia . t)
+      (python . t)
+      (js . t)
+      (shell . t)
+      (rust . t)
+      (jupyter . t)))))
+
+
+;; ob-X
+(use-package ob-rust
+  :ensure t)
+
+;; 折叠标题层级
+;; https://emacs-china.org/t/org-startup-show2levels/16499
+;; 可单独配置 #+STARTUP: show2levels
+;;(setq org-startup-folded 'show2levels)
+
 ;;=========================
 ;; denote
 ;;=========================
@@ -115,72 +170,6 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 
 ;;; denote ends
 
-;; org-remoteimg
-(require 'org-remoteimg)
-
-(setq url-cache-directory "~/.emacs.d/cache/url"
-      org-display-remote-inline-images 'skip) ;; Default to disabling the plugin
-
-;; Toggle function for enabling or disabling org-remoteimg
-(defun toggle-org-remoteimg ()
-  "Toggle the `org-remoteimg` package based on its current state."
-  (interactive)
-  (if (eq org-display-remote-inline-images 'skip)
-      (progn
-        (require 'org-remoteimg) ;; Ensure the plugin is loaded
-        (setq org-display-remote-inline-images 'cache) ;; Enable with caching
-        (message "org-remoteimg enabled."))
-    (setq org-display-remote-inline-images 'skip) ;; Disable plugin
-    (message "org-remoteimg disabled.")))
-
-;; org-babel
-(with-eval-after-load 'org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   (seq-filter
-    (lambda (pair)
-      (locate-library (concat "ob-" (symbol-name (car pair)))))
-    '((emacs-lisp . t)
-      (C .t)
-      (julia . t)
-      (python . t)
-      (js . t)
-      (shell . t)
-      (rust . t)
-      (jupyter . t)))))
-;; ob-X
-(use-package ob-rust
-  :ensure t)
-
-;; 代码块格式设置
-;; (setq org-src-tab-acts-natively t)               ;; 在代码块中使用原生的tab行为
-;; (setq org-adapt-indentation nil)                 ;; 禁止自动缩进
-;; (setq org-src-ask-before-returning-to-edit-buffer nil)  ;; 编辑代码块时不询问
-;; (setq org-html-htmlize-output-type 'nil) ;禁用 Emacs 的语法高亮渲染
-;; 代码块缩进设置
-(setq org-src-preserve-indentation t)            ;; 保持原始缩进
-(setq org-edit-src-content-indentation 0)        ;; 设置代码块的基础缩进为0
-(setq org-export-babel-evaluate nil)
-
-;; 折叠标题层级
-;; https://emacs-china.org/t/org-startup-show2levels/16499
-;; 可单独配置 #+STARTUP: show2levels
-;;(setq org-startup-folded 'show2levels)
-
-;; https://github.com/yibie/org-include-inline
-;; (require 'org-include-inline)
-;; ;; Auto-enable in all Org buffers
-;; (setq org-include-inline-auto-enable-in-org-mode t)
-
-;; ;; Customize maximum lines to display
-;; (setq org-include-inline-max-lines-to-display 100)
-
-;; Customize the display face
-;; (set-face-attribute 'org-include-inline-face nil
-;;                     :background "black"
-;;                     :foreground "white")
-
-
 ;;=========================
 ;;org-agenda
 ;;=========================
@@ -199,11 +188,12 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;=========================
 ;; org
 ;;=========================
-;;https://www.zmonster.me/2018/02/28/org-mode-capture.html
-;;https://emacs-china.org/t/05-org-as/12092/6
-;;一部分已经在config.el里设置，因为要在一开始加载目录,可以添加 (after! package) 又写回来了
-;; ;;这样会把目录下包括子文件夹的文件都添加进去https://emacs-china.org/t/org-txt-agenda/13506/5
-;; ;;(setq org-agenda-files (directory-files-recursively "~/Vandee/pkm/" "\\.org$"))
+
+;; https://www.zmonster.me/2018/02/28/org-mode-capture.html
+;; https://emacs-china.org/t/05-org-as/12092/6
+;; 一部分已经在config.el里设置，因为要在一开始加载目录,可以添加 (after! package) 又写回来了
+;; 这样会把目录下包括子文件夹的文件都添加进去https://emacs-china.org/t/org-txt-agenda/13506/5
+;; (setq org-agenda-files (directory-files-recursively "~/Vandee/pkm/" "\\.org$"))
 
 (use-package org
   :defer 0.1
@@ -278,16 +268,17 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                  :prepend t))
   ;; colections
   (add-to-list 'org-capture-templates '("c" "Collections"))
-  (add-to-list 'org-capture-templates
-               '("cw" "Web Collections" item
-                 (file+headline "~/Vandee/Areas/pkm/org/Websites.org" "实用")
-                 "%^{Intro}\n\n%^{Source}\n%?"
-                 :prepend t))
-  (add-to-list 'org-capture-templates
-               '("ct" "Tool Collections" item
-                 (file+headline "~/Vandee/Areas/pkm/org/Tools.org" "实用")
-                 "%^{Intro}\n\n%^{Source}\n%?"
-                 :prepend t))
+  ;; 网页和工具现在都手动添加
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("cw" "Web Collections" item
+  ;;                (file+headline "~/Vandee/Areas/pkm/org/Websites.org" "实用")
+  ;;                "%^{Intro}\n\n%^{Source}\n%?"
+  ;;                :prepend t))
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("ct" "Tool Collections" item
+  ;;                (file+headline "~/Vandee/Areas/pkm/org/Tools.org" "实用")
+  ;;                "%^{Intro}\n\n%^{Source}\n%?"
+  ;;                :prepend t))
   (add-to-list 'org-capture-templates
                '("cc" "Clip Collections" entry
                  (file+headline "~/Vandee/Areas/pkm/org/Clips.org" "Clips")
@@ -298,9 +289,6 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                  (file+headline "~/Vandee/Areas/pkm/org/Codes.org" "Codes")
                  "* %U - %^{Intro} %^G\n\nSource: %^{source}\n\n%?"
                  :prepend t))
-
-
-
 
   (setq org-tag-alist '((:startgroup . nil)
                         ("Coding" . c)
@@ -316,13 +304,6 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                         ("Thoughts" . ?t) ("Quote" . ?q)))
 
   )
-;; (add-to-list 'org-capture-templates
-;;              '("m" "Memo" entry
-;;                (file+headline "~/Vandee/pkm/org/memo.org" "Memo")
-;;                "* %^{heading} %^g\n%T\nSource: %^{source}\n%?"))
-
-
-
 
 
 ;;https://emacs-china.org/t/org-mode-gtd-faq/196/16
@@ -331,23 +312,14 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 
 ;; 需要这个功能的 Org 笔记在 header 里加入下面一行即可（在笔记的前18行都可以）。 #+last_modified: [ ]
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq-local time-stamp-active t
-                        time-stamp-line-limit 18
-                        time-stamp-start "^#\\+last_modified: [ \t]*"
-                        time-stamp-end "$"
-                        time-stamp-format "\[%Y-%m-%d %a %H:%M:%S\]")
-            (add-hook 'before-save-hook 'time-stamp nil 'local)))
-;; 这个知识网络的可视化会显示在浏览器中，通过 websocket 与 Emacs 通信。
-;; (with-eval-after-load 'org-roam
-;;   (use-package websocket)
-;;   (use-package org-roam-ui
-;;     :config
-;;     (setq org-roam-ui-sync-theme t
-;;           org-roam-ui-follow t
-;;           org-roam-ui-update-on-save t
-;;           org-roam-ui-open-on-start nil)))
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (setq-local time-stamp-active t
+;;                         time-stamp-line-limit 18
+;;                         time-stamp-start "^#\\+last_modified: [ \t]*"
+;;                         time-stamp-end "$"
+;;                         time-stamp-format "\[%Y-%m-%d %a %H:%M:%S\]")
+;;             (add-hook 'before-save-hook 'time-stamp nil 'local)))
 
 ;;=========================
 ;; 使用Company补全org block
@@ -547,7 +519,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 (setq org-export-with-section-numbers nil)
 (setq org-static-blog-use-preview t)
 (setq org-static-blog-enable-og-tags t)
-;; (setq org-static-blog-rss-max-entries 30) ;; 设置 rss 获取文章的最大数量
+(setq org-static-blog-rss-max-entries 30) ;; 设置 rss 获取文章的最大数量
 ;; (setq org-static-blog-index-length 8) ;; 首页包含了最近几篇博客文章，显示在同一个页面上。首页上的条目数量可以通过设置 org-static-blog-index-length 来自定义。
 ;;        <script src=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vanilla-lazyload/17.3.1/lazyload.min.js\" type=\"application/javascript\" defer></script>
 ;; <script src=\"https://testingcf.jsdelivr.net/gh/vandeefeng/gitbox@main/codes/blogsummary.js\"></script>

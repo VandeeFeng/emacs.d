@@ -19,6 +19,8 @@
 (setq sh-basic-offset 2
       sh-indentation 2)
 
+(setq css-indent-offset 2)
+
 ;;=========================
 ;; editing functions
 ;;=========================
@@ -357,11 +359,10 @@
 (with-eval-after-load 'help
   (define-key help-map "A" 'describe-face))
 
-(global-set-key (kbd "C-.") 'set-mark-command)
-(global-set-key (kbd "C-x C-.") 'pop-global-mark)
+;; (global-set-key (kbd "C-x C-.") 'pop-global-mark)
 
-(when (maybe-require-package 'avy)
-  (global-set-key (kbd "C-;") 'avy-goto-char-timer))
+;; (when (maybe-require-package 'avy)
+;;   (global-set-key (kbd "C-;") 'avy-goto-char-timer))
 
 
 ;; Train myself to use M-f and M-b instead
@@ -396,8 +397,8 @@
 (global-set-key [M-S-up] 'move-dup-move-lines-up)
 (global-set-key [M-S-down] 'move-dup-move-lines-down)
 
-(global-set-key (kbd "C-c d") 'move-dup-duplicate-down)
-(global-set-key (kbd "C-c u") 'move-dup-duplicate-up)
+;; (global-set-key (kbd "C-c d") 'move-dup-duplicate-down)
+;; (global-set-key (kbd "C-c u") 'move-dup-duplicate-up)
 
 
 ;;; Fix backward-up-list to understand quotes, see http://bit.ly/h7mdIL

@@ -17,23 +17,33 @@
 (define-key ctl-x-map "\C-j" 'dired-jump)
 (define-key ctl-x-4-map "\C-j" 'dired-jump-other-window)
 
-(with-eval-after-load 'dired
-  (setq dired-recursive-deletes 'top)
-  (define-key dired-mode-map [mouse-2] 'dired-find-file)
-  (define-key dired-mode-map (kbd "C-c C-q") 'wdired-change-to-wdired-mode)
-
-  ;; Set wdired-mode initial state to normal
-  (when (fboundp 'evil-set-initial-state)
-    (evil-set-initial-state 'wdired-mode 'normal)))
-
 (when (maybe-require-package 'diff-hl)
   (with-eval-after-load 'dired
     (require 'dired-x)
     (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
 
 (with-eval-after-load 'dired
+  (setq dired-recursive-deletes 'top)
+
+  ;; Close dired buffer after opening a file
+  (defun my/dired-find-file-and-kill ()
+    "Open file in dired and kill the dired buffer."
+    (interactive)
+    (let ((current-buffer (current-buffer))
+          (dired-dir (dired-current-directory)))
+      (dired-find-file)
+      (when (not (eq current-buffer (current-buffer)))
+        (message "Closed dired buffer: %s" dired-dir)
+        (kill-buffer current-buffer))))
+
+  (define-key dired-mode-map (kbd "RET") 'my/dired-find-file-and-kill)
+  (define-key dired-mode-map (kbd "S-<right>") 'my/dired-find-file-and-kill)
   (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
-  (define-key dired-mode-map (kbd "S-<right>") #'dired-find-file)
+  (define-key dired-mode-map (kbd "C-c C-q") 'wdired-change-to-wdired-mode)
+
+  ;; Set wdired-mode initial state to normal
+  (when (fboundp 'evil-set-initial-state)
+    (evil-set-initial-state 'wdired-mode 'normal))
 
   (defun my/dired-enter-edit-mode ()
     "Toggle dired read-only mode and switch to Evil insert state."

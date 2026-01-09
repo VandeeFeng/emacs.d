@@ -38,46 +38,21 @@
 ;; 消除主题对终端的颜色影响
 (add-hook 'vterm-mode-hook
           (lambda ()
-            ;; One Dark 主题配色
-            (set-face-attribute 'vterm-color-black nil
-                                :foreground "#282c34" :background "#282c34")
+            ;; same as my ghostty
             (set-face-attribute 'vterm-color-red nil
-                                :foreground "#e06c75" :background "#e06c75")
+                                :foreground "#CD5C5C" :background "#CD5C5C")
             (set-face-attribute 'vterm-color-green nil
-                                :foreground "#98c379" :background "#98c379")
+                                :foreground "#86AF80" :background "#86AF80")
             (set-face-attribute 'vterm-color-yellow nil
-                                :foreground "#e5c07b" :background "#e5c07b")
+                                :foreground "#E8AE5B" :background "#E8AE5B")
             (set-face-attribute 'vterm-color-blue nil
-                                :foreground "#61afef" :background "#61afef")
+                                :foreground "#6495ED" :background "#6495ED")
             (set-face-attribute 'vterm-color-magenta nil
-                                :foreground "#c678dd" :background "#c678dd")
+                                :foreground "#DEB887" :background "#DEB887")
             (set-face-attribute 'vterm-color-cyan nil
-                                :foreground "#56b6c2" :background "#56b6c2")
+                                :foreground "#B0C4DE" :background "#B0C4DE")
             (set-face-attribute 'vterm-color-white nil
-                                :foreground "#abb2bf" :background "#abb2bf")))
-
-(when (maybe-require-package 'eat)
-  (defun sanityinc/on-eat-exit (process)
-    (when (zerop (process-exit-status process))
-      (kill-buffer)
-      (unless (eq (selected-window) (next-window))
-        (delete-window))))
-  (add-hook 'eat-exit-hook 'sanityinc/on-eat-exit)
-
-  (with-eval-after-load 'eat
-    (custom-set-variables
-     `(eat-semi-char-non-bound-keys
-       (quote ,(cons [?\e ?w] (cl-remove [?\e ?w] eat-semi-char-non-bound-keys :test 'equal))))))
-
-  (defcustom sanityinc/eat-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "t") 'eat-other-window)
-      map)
-    "Prefix map for commands that create and manipulate eat buffers.")
-  (fset 'sanityinc/eat-map sanityinc/eat-map)
-
-  (global-set-key (kbd "C-c t") 'sanityinc/eat-map))
-
+                                :foreground "#BBAA99" :background "#BBAA99")))
 
 
 (provide 'init-terminals)

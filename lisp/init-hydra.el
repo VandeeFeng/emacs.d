@@ -253,22 +253,22 @@
   "
 ^Dired^                   (C-c C-d to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_d_] open dired          [_c_] create empty file   [_n_] copy filename
-[_f_] dired find file     [_C_] create directory    [_p_] copy abs path
+[_d_] open dired          [_+_] create empty file   [_n_] copy filename
+[_f_] dired find file     [_C_] dired do copy       [_p_] copy abs path
 [_u_] dired up directory  [_j_] dired jump current  [_N_] neotree dir
-[_w_] into wdired-mode    [_r_] dired move/rename
+[_w_] into wdired-mode    [_R_] dired move/rename
 "
   ("d" dired)
   ("f" dired-x-find-file)
   ("u" dired-up-directory)
-  ("c" dired-create-empty-file)
-  ("C" dired-create-directory)
+  ("+" dired-create-empty-file)
+  ("C" dired-do-copy)
   ("j" dired-jump)
   ("n" dired-copy-filename-as-kill)
   ("p" my/dired-copy-absolute-path)
   ("N" neotree-dir)
   ("w" wdired-change-to-wdired-mode)
-  ("r" dired-do-rename)
+  ("R" dired-do-rename)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
@@ -513,17 +513,24 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_s_] status             [_d_] diff             [_r_] rebase
 [_c_] commit             [_l_] log              [_m_] merge
-[_P_] push               [_p_] pull             [_b_] branch
+[_P_] push               [_F_] pull             [_b_] branch
+[_A_] stash pop          [_z_] stash            [_Z_] stash drop
+[_e_] commit extend      [_a_] commit amend
 "
   ("s" magit-status)
   ("c" magit-commit)
   ("P" magit-push)
-  ("p" magit-pull)
+  ("F" magit-pull)
+  ("A" magit-stash-pop)
+  ("z" magit-stash)
+  ("Z" magit-stash-drop)
   ("b" magit-branch)
   ("d" magit-diff)
   ("l" magit-log)
   ("r" magit-rebase)
   ("m" magit-merge)
+  ("a" magit-commit-amend)
+  ("e" magit-commit-extend)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

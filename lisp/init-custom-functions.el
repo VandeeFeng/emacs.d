@@ -300,7 +300,7 @@ In the shell command, the file(s) will be substituted wherever a '%' is."
          (output-buffer (get-buffer-create output-buffer-name))
          (shell-program (or (getenv "SHELL") shell-file-name))
          ;; Use shell-quote-argument
-         (command-str (format "claude -p %s" (shell-quote-argument prompt))))
+         (command-str (format "opencode run %s" (shell-quote-argument prompt))))
     (with-current-buffer output-buffer
       (setq buffer-read-only nil)
       (erase-buffer)

@@ -27,12 +27,13 @@
 
   ;; Close dired buffer after opening a file
   (defun my/dired-find-file-and-kill ()
-    "Open file in dired and kill the dired buffer."
+    "Open file in dired and kill the dired buffer when entering a directory."
     (interactive)
     (let ((current-buffer (current-buffer))
           (dired-dir (dired-current-directory)))
       (dired-find-file)
-      (when (not (eq current-buffer (current-buffer)))
+      (when (and (not (eq current-buffer (current-buffer)))
+                 (derived-mode-p 'dired-mode))
         (message "Closed dired buffer: %s" dired-dir)
         (kill-buffer current-buffer))))
 
@@ -40,6 +41,7 @@
   (define-key dired-mode-map (kbd "S-<right>") 'my/dired-find-file-and-kill)
   (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)
   (define-key dired-mode-map (kbd "C-c C-q") 'wdired-change-to-wdired-mode)
+  (define-key dired-mode-map (kbd "+") 'dired-create-empty-file)
 
   ;; Set wdired-mode initial state to normal
   (when (fboundp 'evil-set-initial-state)

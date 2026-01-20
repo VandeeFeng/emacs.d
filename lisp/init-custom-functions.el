@@ -13,20 +13,19 @@
 
 (defun my/org-backlink ()
   "Find all org files in the current directory that link to the current file.
-The search is performed using `rgrep` for the specific pattern
-'filename.org][filename]]'."
+Searches for org links containing the current filename."
   (interactive)
   (unless buffer-file-name
     (error "Current buffer is not visiting a file"))
 
   (let* ((current-file (file-name-nondirectory buffer-file-name))
          (current-dir (file-name-directory buffer-file-name))
-         (file-basename (file-name-sans-extension current-file))
-         ;; Search for the literal string "filename.org][filename]]"
-         (search-pattern (concat (regexp-quote current-file)
-                                 "\\]\\["
-                                 (regexp-quote file-basename)
-                                 "\\]\\]")))
+         (file-quoted (regexp-quote current-file))
+         ;; Match links containing the filename in various formats:
+         ;; - file:path/to/filename.org
+         ;; - file:path/to/filename.org::*headline
+         ;; - path/to/filename.org][description
+         (search-pattern (concat "\\[\\[.*" file-quoted)))
     (rgrep search-pattern "*.org" current-dir)))
 
 ;; 窗口移动,buffer 切换

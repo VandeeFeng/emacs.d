@@ -44,14 +44,14 @@
      consult-ripgrep
      consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark)
+     consult-source-recent-file consult-source-project-recent-file consult-source-bookmark)
 
     (defun sanityinc/consult-ripgrep-at-point (&optional dir initial)
       (interactive (list current-prefix-arg
                          (if (use-region-p)
                              (buffer-substring-no-properties
                               (region-beginning) (region-end))
-                           (if-let ((s (symbol-at-point)))
+                           (if-let* ((s (symbol-at-point)))
                                (symbol-name s)))))
       (consult-ripgrep dir initial))
     (sanityinc/no-consult-preview sanityinc/consult-ripgrep-at-point)

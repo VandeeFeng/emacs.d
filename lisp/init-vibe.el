@@ -6,11 +6,18 @@
 ;; set .authinfo file path
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
-;; agent-shell
+;; ;; agent-shell
 ;; (use-package agent-shell
+;;   :after evil
 ;;   :config
 ;;   (setq agent-shell-opencode-authentication
 ;;         (agent-shell-opencode-make-authentication :none t))
+;;   (setq agent-shell-transcript-file-path-function
+;;         (lambda ()
+;;           (let* ((dir (expand-file-name "~/.agent-shell/transcripts/"))
+;;                  (filename (format-time-string "%F-%H-%M-%S.md")))
+;;             (expand-file-name filename dir))))
+
 ;;   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
 ;;   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
 ;;   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
@@ -318,11 +325,37 @@ INFO is the data passed by org-protocol."
   ;; power. Once you have a reliable estimate of your local computing power,
   ;; you should adjust the context window to a larger value.
   (setq minuet-context-window 512)
-  (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
+
+  ;; ollama
+  ;; (plist-put minuet-openai-fim-compatible-options :end-point  "http://localhost:11434/v1/completions")
+  ;; ;; an arbitrary non-null environment variable as placeholder
+  ;; (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+  ;; (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+  ;; (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:7b")
+
+  ;; llama.cpp
+  ;; llama-server -m ~/Models/sweepai_sweep-next-edit-1.5B_sweep-next-edit-1.5b.q8_0.v2.gguf
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8080/v1/completions")
   ;; an arbitrary non-null environment variable as placeholder
-  (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+  (plist-put minuet-openai-fim-compatible-options :name "Llama.cpp")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:7b")
+  ;; The model is set by the llama-cpp server and cannot be altered
+  ;; post-launch.
+  (plist-put minuet-openai-fim-compatible-options :model "PLACEHOLDER")
+
+  ;; Llama.cpp does not support the `suffix` option in FIM completion.
+  ;; Therefore, we must disable it and manually populate the special
+  ;; tokens required for FIM completion.
+  (minuet-set-nested-plist minuet-openai-fim-compatible-options nil :template :suffix)
+  (minuet-set-optional-options
+   minuet-openai-fim-compatible-options
+   :prompt
+   (defun minuet-llama-cpp-fim-qwen-prompt-function (ctx)
+     (format "<|fim_prefix|>%s\n%s<|fim_suffix|>%s<|fim_middle|>"
+             (plist-get ctx :language-and-tab)
+             (plist-get ctx :before-cursor)
+             (plist-get ctx :after-cursor)))
+   :template)
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 64))
 
@@ -334,6 +367,9 @@ INFO is the data passed by org-protocol."
       (plist-put minuet-gemini-options :model "gemini-2.5-flash")))
   )
 
+(with-eval-after-load 'symbol-overlay
+  (define-key symbol-overlay-mode-map (kbd "M-i") nil)
+  )
 
 (provide 'init-vibe)
 ;;; init-vibe.el ends here

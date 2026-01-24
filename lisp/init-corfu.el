@@ -44,10 +44,10 @@
                                  ,(lambda (&optional _)
                                     (and (derived-mode-p 'eshell-mode 'comint-mode)
                                          #'corfu-send))))
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (setq-local corfu-auto nil)
-              (corfu-mode)))
+  ;; (add-hook 'eshell-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local corfu-auto nil)
+  ;;             (corfu-mode)))
 
   ;; (setq global-corfu-minibuffer
   ;;       (lambda ()

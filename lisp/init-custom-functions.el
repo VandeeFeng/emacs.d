@@ -224,13 +224,13 @@ input and search the whole buffer for it."
 (defun kill-all-buffers-except-scratch ()
   "Close all buffers except *scratch* and *Messages*, and show the number of closed buffers."
   (interactive)
-  (let ((count 0))  ; 初始化计数器
+  (let ((count 0))
     (dolist (buffer (buffer-list))
       (unless (member (buffer-name buffer) '("*scratch*" "*Messages*"))
         (kill-buffer buffer)
-        (setq count (1+ count))))  ; 每关闭一个buffer就增加计数
-    (message "All %d buffers closed except *scratch* and *Messages*." count)))
-
+        (setq count (1+ count))))
+    (unless (and (boundp 'eglot-managed-buffers) eglot-managed-buffers)
+      (message "All %d buffers closed except *scratch* and *Messages*." count))))
 
 
 ;; org-mode realtime editor

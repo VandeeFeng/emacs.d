@@ -27,5 +27,14 @@
     (with-eval-after-load 'rust-mode
       (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))))
 
+;; ;; Configure eglot to coexist with flymake backends
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-stay-out-of 'flymake))
+;; (defun manually-activate-eglot-flymake ()
+;;   "Manually activate eglot's flymake backend alongside other backends."
+;;   (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
+;;   (flymake-mode 1))
+;; (add-hook 'eglot-managed-mode-hook #'manually-activate-eglot-flymake nil t)
+
 (provide 'init-rust)
 ;;; init-rust.el ends here

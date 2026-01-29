@@ -24,6 +24,8 @@
 
 (with-eval-after-load 'dired
   (setq dired-recursive-deletes 'top)
+  ;; automatically close deleted dired buffers
+  (setq dired-clean-confirm-killing-deleted-buffers nil)
 
   ;; Close dired buffer after opening a file
   (defun my/dired-find-file-and-kill ()

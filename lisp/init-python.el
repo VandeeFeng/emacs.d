@@ -9,8 +9,16 @@
 ;; via: https://stackoverflow.com/questions/79555604/run-ruff-in-emacs
 (add-hook 'python-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
+  (add-to-list 'eglot-stay-out-of 'flymake)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("ruff" "server"))))
+
+(defun manually-activate-eglot-flymake ()
+  "Manually activate eglot's flymake backend alongside other backends."
+  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
+  (flymake-mode 1))
+
+(add-hook 'eglot-managed-mode-hook #'manually-activate-eglot-flymake nil t)
 
 ;; Format python buffers using eglot before saving.major-mode hook, which then adds a buffer-local hook.
 (defun python-eglot-format-on-save ()

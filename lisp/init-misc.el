@@ -6,6 +6,10 @@
 ;; global settings
 ;;==============================
 
+;; disable SPC for scroll-up-command in message buffer
+(with-eval-after-load 'simple
+  (define-key messages-buffer-mode-map (kbd "SPC") 'hydra-leader/body))
+
 ;; Auto switch to compilation buffer after compile finishes
 (add-hook 'compilation-finish-functions
           (lambda (buffer _status)

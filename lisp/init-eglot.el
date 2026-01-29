@@ -9,6 +9,9 @@
 
 (maybe-require-package 'eldoc-box)
 (with-eval-after-load 'eglot
+  ;; automatically shutdown eglot when buffers are killed
+  (setq eglot-autoshutdown t)
+
   (define-key eglot-mode-map (kbd "C-c h") 'eldoc-box-help-at-point))
 ;; (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
 

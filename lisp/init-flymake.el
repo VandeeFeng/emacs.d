@@ -13,7 +13,7 @@
      (append (default-value 'flycheck-disabled-checkers)
              '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package sh-shellcheck))))
 
-  (add-hook 'flymake-mode-hook 'flymake-flycheck-auto)
+  ;; (add-hook 'flymake-mode-hook 'flymake-flycheck-auto)
   (add-hook 'prog-mode-hook 'flymake-mode)
   (add-hook 'text-mode-hook 'flymake-mode)
   (remove-hook 'text-mode-hook 'flyspell-mode)
@@ -21,6 +21,10 @@
   )
 
 (with-eval-after-load 'flymake
+  ;; Trust local elisp files to avoid "Disabling elisp-flymake-byte-compile (untrusted content)" messages
+  (dolist (file (directory-files (expand-file-name "lisp" user-emacs-directory) t "\\.el$"))
+    (push file trusted-content))
+
   ;; Provide some flycheck-like bindings in flymake mode to ease transition
   (define-key flymake-mode-map (kbd "C-c ! l") 'flymake-show-buffer-diagnostics)
   (define-key flymake-mode-map (kbd "C-c ! n") 'flymake-goto-next-error)

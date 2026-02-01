@@ -128,7 +128,7 @@
   ("p" my/put-file-name-on-clipboard)
   ("P" my-buffer-path)
   ("d" find-grep-dired)
-  ("g" counsel-grep-or-swiper)
+  ("g" consult-ripgrep)
   ("j" consult-org-heading)
   ("l" my/org-get-current-headline-link)
   ("r" recentf)
@@ -143,9 +143,14 @@
   "
 ^Notes^                   (C-c C-n to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_l_] find org backlinks   [_a_] org agenda         [_e_] org export
-[_i_] insert org link      [_f_] denote open        [_c_] org capture
-[_I_] denote link          [_d_] denote create      [_._] org emphasize
+^org^                       ^denote^
+^^^^^^^^^^--------------------------------------------------------
+[_a_] org agenda            [_I_] denote link
+[_c_] org capture           [_d_] denote create
+[_l_] find org backlinks    [_f_] denote open
+[_i_] insert org link       [_g_] denote grep
+[_e_] org export
+[_._] org emphasize
 "
   ("l" my/org-backlink)
   ("i" my/insert-org-file-link)
@@ -153,6 +158,7 @@
   ("a" org-agenda)
   ("f" denote-open-or-create)
   ("d" denote)
+  ("g" denote-grep)
   ("e" org-export-dispatch)
   ("c" org-capture)
   ("." org-emphasize)
@@ -187,17 +193,16 @@
   "
 ^Vandee^                  (C-c C-v to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_e_] execute src block    [_t_] vterm             [_v_] go to Vandee.org
-[_g_] magit                [_a_] agenda/TODO       [_j_] go to Journals.org
-[_T_] insert timestamp     [_h_] fold headings     [_s_] shell command
+[_t_] vterm           [_h_] fold headings        [_v_] go to Vandee.org
+[_g_] magit           [_T_] insert timestamp     [_j_] go to Journals.org
+[_a_] agenda/TODO     [_o_] org
 "
-  ("e" my-execute-src-block)
   ("g" magit)
   ("t" vt)
   ("a" hydra-vandee-agenda/body)
+  ("o" hydra-org/body)
   ("T" my-insert-timestamp)
   ("h" my-org-show-current-heading-tidily)
-  ("s" my-shell-command)
   ("v" (find-file "~/Vandee/Areas/pkm/org/Vandee.org"))
   ("j" (find-file "~/Vandee/Areas/pkm/org/Journal.org"))
   ("q" nil "quit")
@@ -475,37 +480,48 @@
   ("<escape>" nil "quit"))
 
 ;; Code hydra for programming modes
+(defun my/format-buffer-with-reformatter ()
+  "Format buffer using appropriate reformatter based on major mode."
+  (interactive)
+  (let ((formatter
+         (cond
+          ((derived-mode-p 'python-mode 'python-ts-mode) 'ruff-format-buffer)
+          ((derived-mode-p 'rust-mode 'rust-ts-mode) 'rustfmt-buffer)
+          ((derived-mode-p 'terraform-mode) 'terraform-format-buffer)
+          ((derived-mode-p 'purescript-mode) 'purty-buffer)
+          ((derived-mode-p 'tuareg-mode 'ocaml-ts-mode) 'ocp-indent-buffer)
+          ((derived-mode-p 'lua-mode) 'lua-format-buffer)
+          ((derived-mode-p 'haskell-mode) 'ormolu-buffer)
+          (t nil))))
+    (if (and formatter (fboundp formatter))
+        (progn
+          (call-interactively formatter)
+          (message "Formatted with %s" formatter))
+      (message "No reformatter found for %s" major-mode))))
+
 (defhydra hydra-code (:color blue :hint nil)
   "
 ^Code^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_c_] compile            [_h_] eldox-box       [_g_] grep
-[_e_] eval buffer        [_d_] debug           [_s_] eglot actions
-[_r_] eval region        [_t_] test            [_f_] format code
-[_l_] comment line
+[_c_] compile          [_h_] eldox-box-help    [_e_] execute src block
+[_s_] shell command    [_a_] eglot actions     [_f_] format code
+[_d_] debug            [_t_] test
 "
+  ("s" my-shell-command)
   ("c" compile)
   ("h" eldoc-box-help-at-point)
-  ("e" eval-buffer)
-  ("r" eval-region)
-  ("f" (progn (if (fboundp 'format-all-buffer)
-                  (format-all-buffer)
-                (message "format-all not available"))
-              (hydra-code/body))
-   :exit nil)
-  ("g" rgrep)
+  ("f" (progn (my/format-buffer-with-reformatter))
+   :color blue)
   ("d" gud-gdb)
   ("t" (progn (if (fboundp 'projectile-test-project)
                   (call-interactively 'projectile-test-project)
-                (message "project-test not available"))
-              (hydra-code/body))
-   :exit nil)
-  ("l" comment-line)
-  ("s" (progn (if (fboundp 'eglot-code-actions)
+                (message "project-test not available")))
+   :color blue)
+  ("a" (progn (if (fboundp 'eglot-code-actions)
                   (call-interactively 'eglot-code-actions)
-                (message "eglot not available"))
-              (hydra-code/body))
-   :exit nil)
+                (message "eglot not available")))
+   :color blue)
+  ("e" my-execute-src-block)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

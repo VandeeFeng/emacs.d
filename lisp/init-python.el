@@ -6,39 +6,32 @@
 ;; (setq gud-pdb-command-name "python -m pdb")
 
 ;; ruff
-;; via: https://stackoverflow.com/questions/79555604/run-ruff-in-emacs
+(maybe-require-package 'ruff-format)
 (add-hook 'python-mode-hook 'eglot-ensure)
+(add-hook 'python-mode-hook 'ruff-format-on-save-mode)
+
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-stay-out-of 'flymake)
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server"))))
+               '((python-mode python-ts-mode) . ("ty" "server")))
+  ;;              '(python-mode . ("ruff" "server")))
+  )
 
-(defun manually-activate-eglot-flymake ()
-  "Manually activate eglot's flymake backend alongside other backends."
-  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
-  (flymake-mode 1))
-
-(add-hook 'eglot-managed-mode-hook #'manually-activate-eglot-flymake nil t)
-
+;; via: https://stackoverflow.com/questions/79555604/run-ruff-in-emacs
+;; 这个要求 LSP server 必须在初始化时声明 documentFormattingProvider
+;; 通过 LSP 协议发送 textDocument/formatting 请求
 ;; Format python buffers using eglot before saving.major-mode hook, which then adds a buffer-local hook.
-(defun python-eglot-format-on-save ()
-  "Add eglot-format-buffer to before-save-hook, but only for this buffer."
-  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
-(add-hook 'python-mode-hook #'python-eglot-format-on-save)
-
-;; (maybe-require-package 'ruff-format)
-;; (add-hook 'python-mode-hook 'ruff-format-on-save-mode)
+;; (defun python-eglot-format-on-save ()
+;;   "Add eglot-format-buffer to before-save-hook, but only for this buffer."
+;;   (add-hook 'before-save-hook #'eglot-format-buffer nil t))
+;; (add-hook 'python-mode-hook #'python-eglot-format-on-save)
 
 (defun ruff-check ()
   (interactive)
   (let ((current-file (buffer-file-name)))
     (if current-file
         (async-shell-command
-         (format "ruff check --select ALL %s" (shell-quote-argument current-file))
-         )
-      )
-    )
-  )
+         (format "ruff check --select ALL %s" (shell-quote-argument current-file))))))
 
 (defun ruff-fix ()
   (interactive)
@@ -46,13 +39,10 @@
     (if current-file
         (progn
           (shell-command
-           (format "ruff check --select ALL --fix %s" (shell-quote-argument current-file))
-           )
-          (revert-buffer t t t)
-          )
-      )
-    )
-  )
+           (format "ruff check --select ALL --fix %s" (shell-quote-argument current-file)))
+          (revert-buffer t t t)))))
+
+
 
 ;; I use nix + direnv instead of virtualenv/pyenv/pyvenv, and it is an
 ;; approach which extends to other languages too. I recorded a
@@ -73,8 +63,6 @@
     (when (executable-find "ruff")
       (flymake-ruff-load)))
   (add-hook 'python-mode-hook 'sanityinc/flymake-ruff-maybe-enable))
-
-(maybe-require-package 'ruff-format)
 
 (when (maybe-require-package 'toml-mode)
   (add-to-list 'auto-mode-alist '("\\(poetry\\|uv\\)\\.lock\\'" . toml-mode)))

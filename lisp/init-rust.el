@@ -16,11 +16,13 @@
 ;; rust-analyzer 是正常的
 ;; 官方文件是这样说的：Eglot does not support the rust-analyzer extensions to the language-server protocol and does not aim to do so in the future. The eglot-x package adds experimental support for those LSP extensions.
 
-;; ;; Auto-format rust buffers using rustfmt before saving
-;; (defun rust-eglot-format-on-save ()
-;;   "Add eglot-format-buffer to before-save-hook, but only for this buffer."
-;;   (add-hook 'before-save-hook #'eglot-format-buffer nil t))
-;; (add-hook 'rust-mode-hook #'rust-eglot-format-on-save)
+;; 之前运行 rust fmt 和在 eglot 里自动 rustfmt 有差异的原因是没有指定 rustfmt 的 style edition
+;; 已经在 ~/.config/rustfmt/rustfmt.toml 里设置好了
+;; Auto-format rust buffers using rustfmt before saving
+(defun rust-eglot-format-on-save ()
+  "Add eglot-format-buffer to before-save-hook, but only for this buffer."
+  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
+(add-hook 'rust-mode-hook #'rust-eglot-format-on-save)
 
 (when (maybe-require-package 'rust-mode)
   (when (maybe-require-package 'flycheck-rust)

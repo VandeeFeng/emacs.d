@@ -22,8 +22,7 @@
 
 (with-eval-after-load 'flymake
   ;; Trust local elisp files to avoid "Disabling elisp-flymake-byte-compile (untrusted content)" messages
-  (dolist (file (directory-files (expand-file-name "lisp" user-emacs-directory) t "\\.el$"))
-    (push file trusted-content))
+  (add-to-list 'trusted-content (expand-file-name "lisp" user-emacs-directory))
 
   ;; Provide some flycheck-like bindings in flymake mode to ease transition
   (define-key flymake-mode-map (kbd "C-c ! l") 'flymake-show-buffer-diagnostics)

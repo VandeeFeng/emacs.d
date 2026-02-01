@@ -119,9 +119,9 @@
   "
 ^Files^                    (C-c C-f to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_n_] copy buffer name    [_d_] find-grep-dired  [_r_] recent files
-[_p_] copy full path      [_g_] grep current     [_u_] sudo find file
-[_P_] copy parent path    [_j_] jump to file     [_U_] sudo edit file
+[_n_] copy buffer name    [_d_] find-grep-dired      [_r_] recent files
+[_p_] copy full path      [_g_] grep current         [_u_] sudo find file
+[_P_] copy parent path    [_j_] jump to org heading  [_U_] sudo edit file
 [_l_] get org headline
 "
   ("n" my/put-buffer-name-on-clipboard)
@@ -129,7 +129,7 @@
   ("P" my-buffer-path)
   ("d" find-grep-dired)
   ("g" counsel-grep-or-swiper)
-  ("j" counsel-file-jump)
+  ("j" consult-org-heading)
   ("l" my/org-get-current-headline-link)
   ("r" recentf)
   ("u" sudo-edit-find-file)
@@ -165,8 +165,10 @@
   "
 ^LLM^                     (C-c C-l to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_s_] gptel send           [_c_] simple claude
-[_n_] gptel new buffer     [_a_] aidermacs transient
+^gptel^                 ^agent-shell^                ^custom^
+^^^^^^^^^^--------------------------------------------------------
+[_s_] gptel send        [_o_] agent-shell opencode   [_c_] simple claude
+[_n_] gptel new buffer  [_d_] agent-shell send dwim  [_a_] aidermacs transient
 [_m_] gptel menu
 "
   ("s" gptel-send) ;; C-c RET is more convenient
@@ -174,6 +176,8 @@
   ("m" gptel-menu)
   ("a" aidermacs-transient-menu)
   ("c" my/claude-shell-command)
+  ("o" agent-shell-opencode-start-agent)
+  ("d" agent-shell-send-dwim)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

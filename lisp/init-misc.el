@@ -335,22 +335,6 @@ Optional MAX-RESULTS limits the number of suggestions (defaults to 5)."
 
 ;; (global-set-key (kbd "C-c m") 'chinhant-grab-mac-link)
 
-;; yasnippet
-(use-package yasnippet
-  :ensure t
-  )
-
-(setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"                 ;; personal snippets
-        ))
-(yas-global-mode 1) ;; or M-x yas-reload-all if you've started YASnippet already.
-
-(use-package snap-indent
-  :ensure t
-  :hook (prog-mode . snap-indent-mode)
-  :custom ((snap-indent-format 'untabify)
-           (snap-indent-on-save t)))
-
 (use-package org-cliplink
   :ensure t
   :defer t

@@ -487,6 +487,7 @@
          (cond
           ((derived-mode-p 'python-mode 'python-ts-mode) 'ruff-format-buffer)
           ((derived-mode-p 'rust-mode 'rust-ts-mode) 'rustfmt-buffer)
+          ((derived-mode-p 'typescript-mode 'js2-mode) 'biome-format-buffer)
           ((derived-mode-p 'terraform-mode) 'terraform-format-buffer)
           ((derived-mode-p 'purescript-mode) 'purty-buffer)
           ((derived-mode-p 'tuareg-mode 'ocaml-ts-mode) 'ocp-indent-buffer)
@@ -535,7 +536,8 @@
 [_c_] commit             [_l_] log              [_m_] merge
 [_P_] push               [_F_] pull             [_b_] branch
 [_A_] stash pop          [_z_] stash            [_Z_] stash drop
-[_e_] commit extend      [_a_] commit amend
+[_e_] commit extend      [_a_] commit amend     [_x_] file checkout
+[_X_] reset              [_V_] revert
 "
   ("s" magit-status)
   ("c" magit-commit)
@@ -548,9 +550,12 @@
   ("d" magit-diff)
   ("l" magit-log)
   ("r" magit-rebase)
+  ("V" magit-revert)
+  ("X" magit-reset)
   ("m" magit-merge)
   ("a" magit-commit-amend)
   ("e" magit-commit-extend)
+  ("x" magit-file-checkout)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

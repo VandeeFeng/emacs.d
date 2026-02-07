@@ -18,6 +18,16 @@
 
 (setq-default js-indent-level 2)
 
+
+;; Biome formatter using reformatter
+;; biome 默认使用 tab 不是很喜欢
+
+;; (when (maybe-require-package 'reformatter)
+;;   (reformatter-define biome-format
+;;     :program "biome"
+;;     :args (list "format" "--stdin-file-path" (or (buffer-file-name) "stdin.ts"))))
+
+;; (add-hook 'typescript-mode-hook #'biome-format-on-save-mode)
 
 
 ;; js2-mode

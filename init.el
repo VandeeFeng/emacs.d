@@ -65,7 +65,6 @@
 (require 'init-package)
 (require 'init-vibe)
 (require 'init-misc)
-(require 'init-coding)
 (require 'init-custom-functions)
 (require 'init-hydra)
 (require 'init-mark)

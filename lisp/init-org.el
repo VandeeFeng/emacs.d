@@ -473,6 +473,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;; 在输出之前 evaluate buffer 一次
 ;; 终于发现问题了！在 publish 的时候不要在 org 文件页面！
 ;; 我怀疑下面的其实也没用。。。
+;; 罪魁祸首找到了：是 snap-indent 这个包！
 
 (defun my/org-static-blog-publish-file-advice (orig-fun &rest args)
   "Advice to control indentation during file publishing."

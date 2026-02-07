@@ -21,6 +21,18 @@
 
 (setq css-indent-offset 2)
 
+(use-package snap-indent
+  :ensure t
+  :config
+  ;; Exclude TypeScript/JavaScript since biome handles formatting
+  ;; (setq snap-indent-excluded-modes
+  ;;       (append snap-indent-excluded-modes
+  ;;               '(typescript-mode tsx-mode)))
+  :custom ((snap-indent-format 'untabify)
+           (snap-indent-on-save t))
+  :hook (prog-mode . snap-indent-mode))
+
+
 ;;=========================
 ;; editing functions
 ;;=========================
@@ -142,11 +154,13 @@
 
 ;; magit
 (with-eval-after-load 'magit
+  (define-key magit-mode-map (kbd "x") 'magit-file-checkout)
   (dolist (binding '(("J" . magit-status-jump)
                      ("K" . magit-discard)
                      ("j" . magit-next-line)
                      ("k" . magit-previous-line)
-                     ("Z" . magit-stash-drop)))
+                     ("Z" . magit-stash-drop)
+                     ))
     (define-key magit-status-mode-map (kbd (car binding)) (cdr binding)))
 
   (dolist (map '(magit-mode-map magit-status-mode-map magit-log-mode-map magit-diff-mode-map magit-revision-mode-map))
@@ -169,6 +183,16 @@
 ;;=========================
 ;; packages
 ;;=========================
+
+;; yasnippet
+(use-package yasnippet
+  :ensure t
+  )
+
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"                 ;; personal snippets
+        ))
+(yas-global-mode 1) ;; or M-x yas-reload-all if you've started YASnippet already.
 
 ;; 快速移动当前行内容，感觉和原生的差不多
 ;; 现在用的是https://github.com/wyuenho/move-dup

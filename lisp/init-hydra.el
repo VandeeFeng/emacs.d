@@ -122,7 +122,7 @@
 [_n_] copy buffer name    [_d_] find-grep-dired      [_r_] recent files
 [_p_] copy full path      [_g_] grep current         [_u_] sudo find file
 [_P_] copy parent path    [_j_] jump to org heading  [_U_] sudo edit file
-[_l_] get org headline
+[_l_] get org headline    [_b_] browse current file
 "
   ("n" my/put-buffer-name-on-clipboard)
   ("p" my/put-file-name-on-clipboard)
@@ -134,6 +134,7 @@
   ("r" recentf)
   ("u" sudo-edit-find-file)
   ("U" sudo-edit)
+  ("b" browse-current-file)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
@@ -173,7 +174,7 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^gptel^                 ^agent-shell^                ^custom^
 ^^^^^^^^^^--------------------------------------------------------
-[_s_] gptel send        [_o_] agent-shell opencode   [_c_] simple claude
+[_s_] gptel send        [_o_] agent-shell opencode   [_i_] simple ai shell
 [_n_] gptel new buffer  [_d_] agent-shell send dwim  [_a_] aidermacs transient
 [_m_] gptel menu
 "
@@ -181,7 +182,7 @@
   ("n" gptel)
   ("m" gptel-menu)
   ("a" aidermacs-transient-menu)
-  ("c" my/claude-shell-command)
+  ("i" my/ai-shell-command)
   ("o" agent-shell-opencode-start-agent)
   ("d" agent-shell-send-dwim)
   ("q" nil "quit")

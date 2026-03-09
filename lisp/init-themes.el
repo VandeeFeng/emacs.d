@@ -56,7 +56,8 @@
 ;; nerd-icons-completion
 ;; https://github.com/rainstormstudio/nerd-icons-completion
 (require-package 'nerd-icons-corfu)
-(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+(with-eval-after-load 'corfu
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;; kind-icon
 ;; https://github.com/jdtsmith/kind-icon

@@ -505,6 +505,8 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;=========================
 ;; org-blog
 ;;=========================
+;; https://www.emacs.dyerdwelling.family/emacs/20241226125955-emacs--exploring-emacs-based-static-website-publishing-with-org-publish/
+;; 这篇文章里讲到了一些 org-publish 的设置
 ;; https://github.com/bastibe/org-static-blog/blob/master/org-static-blog.el
 ;; org-static-blog config
 

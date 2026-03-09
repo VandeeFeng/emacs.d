@@ -6,6 +6,10 @@
 ;; set .authinfo file path
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
+;; (use-package pi-coding-agent
+;;   :ensure t
+;;   :init (defalias 'pi 'pi-coding-agent))
+
 ;; agent-shell
 (use-package agent-shell
   :after evil

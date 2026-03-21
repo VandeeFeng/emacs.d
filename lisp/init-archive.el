@@ -1224,4 +1224,142 @@ fi"
 ;;     (completion-at-point)))
 
 
+;;; agent-shell OpenCode Subagent Support
+;;; Shows available subagents and enables @@subagent invocation syntax
+;; (defvar agent-shell-opencode--subagents nil
+;;   "Cached list of available subagents.")
+
+;; (defun agent-shell-opencode--get-subagent-description (agent-name)
+;;   "Get description for subagent AGENT-NAME from its config file."
+;;   (let* ((config-file (expand-file-name (format "%s.md" agent-name)
+;;                                         "~/.config/opencode/agents/"))
+;;          (description
+;;           (when (file-exists-p config-file)
+;;             (with-temp-buffer
+;;               (insert-file-contents config-file)
+;;               (goto-char (point-min))
+;;               (when (re-search-forward "^description: \\(.*\\)$" nil t)
+;;                 (match-string 1))))))
+;;     (or description "Subagent")))
+
+;; (defun agent-shell-opencode--list-subagents ()
+;;   "List all subagents using opencode agent list command.
+;; Returns list of agent alists with :id, :name, :description."
+;;   (let* ((output (shell-command-to-string "opencode agent list"))
+;;          (lines (split-string output "\n"))
+;;          agents)
+;;     (dolist (line lines)
+;;       (when (string-match "^\\([^\s]+\\) (subagent)$" line)
+;;         (let* ((name (match-string 1 line))
+;;                (description (agent-shell-opencode--get-subagent-description name)))
+;;           (push `((:id . ,name)
+;;                   (:name . ,name)
+;;                   (:description . ,description))
+;;                 agents))))
+;;     (nreverse agents)))
+
+;; (defun agent-shell-opencode--format-subagents (subagents)
+;;   "Format SUBAGENTS list for display."
+;;   (mapconcat
+;;    (lambda (agent)
+;;      (let ((name (map-elt agent :name))
+;;            (desc (map-elt agent :description)))
+;;        (format "@@%s - %s" (propertize name 'font-lock-face 'font-lock-keyword-face) desc)))
+;;    subagents
+;;    "\n"))
+
+;; (defun agent-shell-opencode--show-subagents-fragment ()
+;;   "Add subagents UI fragment after available modes fragment."
+;;   (when-let ((subagents agent-shell-opencode--subagents)
+;;              ((> (length subagents) 0))
+;;              ((fboundp 'agent-shell--update-fragment))
+;;              (state agent-shell--state)
+;;              (request-count (map-elt state :request-count))
+;;              (buffer (map-elt state :buffer)))
+;;     (with-current-buffer buffer
+;;       (save-excursion
+;;         (goto-char (point-max))
+;;         (when (text-property-search-backward
+;;                'agent-shell-ui-state nil
+;;                (lambda (_ prop-state)
+;;                  (equal (map-elt prop-state :qualified-id)
+;;                         (format "%s-available_modes" request-count)))
+;;                t)
+;;           (let* ((block-range (agent-shell-ui--block-range :position (point)))
+;;                  (insert-pos (map-elt block-range :end)))
+;;             (goto-char insert-pos)
+;;             (let ((inhibit-read-only t))
+;;               (insert "\n\n")
+;;               (agent-shell-ui--insert-fragment
+;;                (agent-shell-ui-make-fragment-model
+;;                 :namespace-id (number-to-string request-count)
+;;                 :block-id "available_subagents"
+;;                 :label-left (propertize "Available subagents" 'font-lock-face 'font-lock-doc-markup-face)
+;;                 :body (agent-shell-opencode--format-subagents subagents))
+;;                (format "%s-available_subagents" request-count)))))))))
+
+;; (defun agent-shell-opencode--load-subagents-delayed ()
+;;   "Load subagents and show them in UI after delay."
+;;   (run-with-timer
+;;    0.5 nil
+;;    (lambda ()
+;;      (when-let ((subagents (agent-shell-opencode--list-subagents))
+;;                 ((> (length subagents) 0)))
+;;        (setq agent-shell-opencode--subagents subagents)
+;;        (agent-shell-opencode--show-subagents-fragment)))))
+
+;; (defun agent-shell-opencode--around-initiate-session (orig-fun &rest args)
+;;   "Around advice for agent-shell--initiate-session."
+;;   (let* ((plist args)
+;;          (on-session-init (plist-get plist :on-session-init))
+;;          (new-on-session-init
+;;           (lambda ()
+;;             (funcall on-session-init)
+;;             (agent-shell-opencode--load-subagents-delayed))))
+;;     (plist-put plist :on-session-init new-on-session-init)
+;;     (apply orig-fun plist)))
+
+;; (advice-add 'agent-shell--initiate-session :around
+;;             #'agent-shell-opencode--around-initiate-session)
+
+;; ;;; Transform @@subagent syntax to @subagent before sending to OpenCode
+;; (defun agent-shell-opencode--filter-send-command-args (args)
+;;   "Transform @@subagent to @subagent in prompt before sending."
+;;   (let ((prompt (plist-get args :prompt)))
+;;     (when (and prompt (stringp prompt))
+;;       (plist-put args :prompt (replace-regexp-in-string "@@" "@" prompt))))
+;;   args)
+
+;; (advice-add 'agent-shell--send-command :filter-args
+;;             #'agent-shell-opencode--filter-send-command-args)
+
+;; ;;; @@subagent completion support
+;; (defun agent-shell-opencode--subagent-completion-at-point ()
+;;   "Complete subagent names after @@ prefix."
+;;   (when-let* ((bounds (agent-shell--completion-bounds "[:alnum:]_-" ?@))
+;;               ((save-excursion
+;;                  (goto-char (map-elt bounds :start))
+;;                  (eq (char-before) ?@)))
+;;               (subagents agent-shell-opencode--subagents)
+;;               (descriptions (mapcar (lambda (a)
+;;                                       (cons (map-elt a :name)
+;;                                             (map-elt a :description)))
+;;                                     subagents)))
+;;     (list (map-elt bounds :start) (map-elt bounds :end)
+;;           (mapcar #'car descriptions)
+;;           :exclusive t
+;;           :annotation-function
+;;           (lambda (name)
+;;             (when-let* ((desc (map-elt descriptions name)))
+;;               (concat "  " desc)))
+;;           :company-kind (lambda (_) 'function))))
+
+;; (defun agent-shell-opencode--setup-completion ()
+;;   "Set up @@subagent completion in agent-shell."
+;;   (add-hook 'completion-at-point-functions
+;;             #'agent-shell-opencode--subagent-completion-at-point
+;;             nil t))
+
+;; (add-hook 'agent-shell-mode-hook #'agent-shell-opencode--setup-completion)
+
 ;;; init-archive.el ends here

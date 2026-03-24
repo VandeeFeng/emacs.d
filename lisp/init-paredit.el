@@ -55,15 +55,23 @@
   (add-hook hook 'enable-paredit-mode))
 
 (when (maybe-require-package 'puni)
-  ;;(add-hook 'prog-mode-hook 'puni-mode)
+  (add-hook 'prog-mode-hook 'puni-mode)
   (add-hook 'sanityinc/lispy-modes-hook (lambda () (puni-mode -1)))
   (with-eval-after-load 'puni
+    ;; Wrap commands
     (define-key puni-mode-map (kbd "M-(") 'puni-wrap-round)
+    (define-key puni-mode-map (kbd "M-[") 'puni-wrap-square)
+    (define-key puni-mode-map (kbd "M-{") 'puni-wrap-curly)
+    ;; Slurp/Barf commands
     (define-key puni-mode-map (kbd "C-(") 'puni-slurp-backward)
     (define-key puni-mode-map (kbd "C-)") 'puni-slurp-forward)
     (define-key puni-mode-map (kbd "C-}") 'puni-barf-forward)
     (define-key puni-mode-map (kbd "C-{") 'puni-barf-backward)
+    ;; Splice
     (define-key puni-mode-map (kbd "M-<up>") 'puni-splice-killing-backward)
+    (define-key puni-mode-map (kbd "M-<down>") 'puni-splice-killing-forward)
+
+    (define-key puni-mode-map (kbd "M-r") 'puni-raise)
     (define-key puni-mode-map (kbd "C-w") nil)))
 
 

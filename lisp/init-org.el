@@ -522,7 +522,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 (setq org-export-with-section-numbers nil)
 (setq org-static-blog-use-preview t)
 (setq org-static-blog-enable-og-tags t)
-(setq org-static-blog-rss-max-entries 30) ;; 设置 rss 获取文章的最大数量
+(setq org-static-blog-rss-max-entries 10) ;; 设置 rss 获取文章的最大数量
 ;; (setq org-static-blog-index-length 8) ;; 首页包含了最近几篇博客文章，显示在同一个页面上。首页上的条目数量可以通过设置 org-static-blog-index-length 来自定义。
 ;;        <script src=\"https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vanilla-lazyload/17.3.1/lazyload.min.js\" type=\"application/javascript\" defer></script>
 ;; <script src=\"https://testingcf.jsdelivr.net/gh/vandeefeng/gitbox@main/codes/blogsummary.js\"></script>

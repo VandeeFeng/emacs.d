@@ -535,10 +535,11 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_s_] status             [_d_] diff             [_r_] rebase
 [_c_] commit             [_f_] fetch            [_m_] merge
-[_P_] push               [_F_] pull             [_b_] branch
-[_A_] stash pop          [_z_] stash            [_Z_] stash drop
-[_e_] commit extend      [_a_] commit amend     [_x_] file checkout
-[_X_] reset              [_V_] revert           [_l_] log
+[_P_] push               [_F_] pull             [_M_] remote
+[_b_] branch             [_a_] commit amend     [_z_] stash
+[_l_] log                [_A_] stash pop        [_Z_] stash drop
+[_x_] file checkout      [_V_] revert
+[_X_] reset
 "
   ("s" magit-status)
   ("c" magit-commit)

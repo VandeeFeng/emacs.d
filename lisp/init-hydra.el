@@ -122,7 +122,7 @@
 [_n_] copy buffer name    [_d_] find-grep-dired      [_r_] recent files
 [_p_] copy full path      [_g_] grep current         [_u_] sudo find file
 [_P_] copy parent path    [_j_] jump to org heading  [_U_] sudo edit file
-[_l_] get org headline    [_b_] browse current file
+[_l_] get org headline    [_b_] browse current file  [_i_] insert org file
 "
   ("n" my/put-buffer-name-on-clipboard)
   ("p" my/put-file-name-on-clipboard)
@@ -135,6 +135,7 @@
   ("u" sudo-edit-find-file)
   ("U" sudo-edit)
   ("b" browse-current-file)
+  ("i" my/insert-org-file-link)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
@@ -544,8 +545,9 @@
   ("s" magit-status)
   ("c" magit-commit)
   ("f" magit-fetch)
-  ("P" magit-push)
   ("F" magit-pull)
+  ("P" magit-push)
+  ("a" magit-commit-amend)
   ("A" magit-stash-pop)
   ("z" magit-stash)
   ("Z" magit-stash-drop)
@@ -554,11 +556,11 @@
   ("l" magit-log)
   ("r" magit-rebase)
   ("V" magit-revert)
+  ("x" magit-file-checkout)
   ("X" magit-reset)
   ("m" magit-merge)
-  ("a" magit-commit-amend)
+  ("M" magit-remote)
   ("e" magit-commit-extend)
-  ("x" magit-file-checkout)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

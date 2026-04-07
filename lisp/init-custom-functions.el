@@ -29,8 +29,12 @@ Searches for org links containing the current filename."
     (rgrep search-pattern "*.org" current-dir)))
 
 ;; 窗口移动,buffer 切换
-(global-set-key (kbd "M-[") 'previous-buffer) ;; emacs 默认是 ctrl+x 左右箭头切换
-(global-set-key (kbd "M-]") 'next-buffer)
+(global-set-key (kbd "M-,") 'previous-buffer) ;; emacs 默认是 ctrl+x 左右箭头切换
+(with-eval-after-load 'evil
+  (define-key evil-motion-state-map (kbd "M-.") 'next-buffer)
+  (define-key evil-normal-state-map (kbd "M-.") 'next-buffer)
+  (define-key evil-insert-state-map (kbd "M-.") 'next-buffer)
+  (define-key evil-visual-state-map (kbd "M-.") 'next-buffer))
 (global-set-key (kbd "M-h") 'windmove-left)
 (global-set-key (kbd "M-j") 'windmove-down)
 (global-set-key (kbd "M-k") 'windmove-up)
@@ -87,7 +91,7 @@ Searches for org links containing the current filename."
       (message "Year: %d, Day of Year: %d, Total Days: %d, Progress: %.2f"
                current-year day-of-year total-days progress))
 
-    (insert (format "\n* Progress for %d\n%s\n" current-year progress-bar))))
+    (insert (format "%s\n" progress-bar))))
 
 (defun date-days-in-year (year)
   "Return the number of days in YEAR."

@@ -107,6 +107,7 @@
              (mark-info (cdr pair))
              (file-path (nth 0 mark-info))
              (line-num (nth 1 mark-info))
+             (column-num (nth 2 mark-info))
              (file-exists (file-exists-p file-path)))
         (if file-exists
             (let ((preview (with-temp-buffer
@@ -116,14 +117,17 @@
                               (buffer-substring-no-properties
                                (line-beginning-position)
                                (line-end-position))))))
-              (insert (format "%s  →  %s:%d  |  %s\n"
-                              (propertize alias 'face 'bold)
-                              (file-name-nondirectory file-path)
-                              line-num
-                              preview)))
+              (insert-text-button
+               alias
+               'action (lambda (_)
+                         (find-file file-path)
+                         (goto-line line-num)
+                         (move-to-column column-num))
+               'help-echo "Click to jump to this mark")
+              (insert (format "  |  %s\n" preview)))
           (insert (format "%s  →  %s (file not found)\n" alias file-path)))))
     (goto-char (point-min))
-    (read-only-mode 1))
+    (special-mode))
   (switch-to-buffer "*Pin Marks*"))
 
 ;; Delete a specific pin bookmark

@@ -6,6 +6,11 @@
 ;; languages setting
 ;;=========================
 
+;; Disable Bidirectional Text Scanning
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
 ;; indentation
 (setq-default indent-tabs-mode nil)
 
@@ -46,6 +51,17 @@
 ;; Emacs 的 mark 在 evil 下就对应 visual 模式
 ;; normal 模式下，f，t 快速导航到字符串，再加上 w,e,b 就很高效了
 
+;; If you create a file that starts with #! (a shebang line), it should be executable. But you always forget to chmod +x it, run the script, get “Permission denied”, curse, go back, chmod, try again. This hook does it automatically:
+(add-hook 'after-save-hook
+          #'executable-make-buffer-file-executable-if-script-p)
+
+;;; Kill Ring (Emacs’s Clipboard History) and Clipboard
+
+;; Save the Clipboard Before Killing
+;; Here’s a scenario: you copy a URL from your browser, switch to Emacs, kill a line with C-k, and then try to yank the URL you copied earlier with C-y. Gone. The kill replaced it on the clipboard.
+(setq save-interprogram-paste-before-kill t)
+;; Kill the same line three times and you get three identical entries in the kill ring, wasting slots. This deduplicates them:
+(setq kill-do-not-save-duplicates t)
 ;; 启用系统复制粘贴
 (setq select-enable-clipboard t)
 (global-set-key (kbd "s-c") 'kill-ring-save)

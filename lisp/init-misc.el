@@ -6,6 +6,13 @@
 ;; global settings
 ;;==============================
 
+;; When you press C-h f or C-h v, Emacs opens the help buffer but leaves your cursor in the original window. You almost always want to read the help right away, so you end up pressing C-x o every single time. This fixes it:
+(setq help-window-select t)
+
+;; Skip Fontification During Input
+;; Emacs normally fontifies (syntax-highlights) text even while you’re actively typing. This can cause micro-stutters, especially in tree-sitter modes or large buffers. One setting fixes it:
+(setq redisplay-skip-fontification-on-input t)
+
 ;; disable SPC for scroll-up-command in message buffer
 (with-eval-after-load 'simple
   (define-key messages-buffer-mode-map (kbd "SPC") 'hydra-leader/body))

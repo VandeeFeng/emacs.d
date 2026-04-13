@@ -15,8 +15,11 @@
 ;; 已经在 ~/.config/rustfmt/rustfmt.toml 里设置好了
 ;; Auto-format rust buffers using rustfmt before saving
 (when (maybe-require-package 'reformatter)
-  (reformatter-define rustfmt :program "rustfmt" :args '("--emit" "stdout")))
-(add-hook 'rust-mode-hook 'rustfmt-on-save-mode)
+  (if (executable-find "rustfmt")
+      (reformatter-define rustfmt :program "rustfmt" :args '("--emit" "stdout"))
+    (message "WARNING: rustfmt not found. Please install rustfmt to enable Rust formatting.")))
+(when (executable-find "rustfmt")
+  (add-hook 'rust-mode-hook 'rustfmt-on-save-mode))
 
 (when (maybe-require-package 'rust-mode)
   (when (maybe-require-package 'flycheck-rust)

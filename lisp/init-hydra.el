@@ -235,7 +235,7 @@
 [_b_] switch to buffer  [_r_] revert buffer     [_d_] delete bookmark
 [_c_] clone indirect    [_R_] rename buffer     [_D_] delete all bookmarks
 [_C_] clone other win   [_k_] kill buffer       [_l_] list bookmarks
-[_K_] kill all scratch  [_m_] set bookmark      [_j_] bookmark jump
+[_K_] kill all scratch
 "
   ("i" ibuffer)
   ("v" view-buffer)
@@ -250,11 +250,10 @@
   ("R" rename-buffer)
   ("s" basic-save-buffer)
   ("S" save-some-buffers)
-  ("d" bookmark-delete)
-  ("D" bookmark-delete-all)
-  ("l" list-bookmarks)
-  ("m" bookmark-set)
-  ("j" bookmark-jump)
+  ("d" delete-pin-mark)
+  ("D" delete-all-pin-marks)
+  ("l" list-pin-marks)
+  ("g" goto-pin-mark)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

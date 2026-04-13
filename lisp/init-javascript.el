@@ -21,14 +21,17 @@
 
 
 ;; Biome formatter using reformatter
-;; biome 默认使用 tab 不是很喜欢
+;; biome 支持全局文件，我已经配置好了
 
-;; (when (maybe-require-package 'reformatter)
-;;   (reformatter-define biome-format
-;;     :program "biome"
-;;     :args (list "format" "--stdin-file-path" (or (buffer-file-name) "stdin.ts"))))
+(when (maybe-require-package 'reformatter)
+  (if (executable-find "biome")
+      (reformatter-define biome-format
+        :program "biome"
+        :args (list "format" "--stdin-file-path" (or (buffer-file-name) "stdin.ts")))
+    (message "WARNING: biome not found. Please install biome to enable JavaScript/TypeScript formatting.")))
 
-;; (add-hook 'typescript-mode-hook #'biome-format-on-save-mode)
+(when (executable-find "biome")
+  (add-hook 'typescript-mode-hook #'biome-format-on-save-mode))
 
 
 ;; js2-mode

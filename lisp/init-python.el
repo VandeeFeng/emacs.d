@@ -8,12 +8,16 @@
 ;; ruff
 (maybe-require-package 'ruff-format)
 (add-hook 'python-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'ruff-format-on-save-mode)
+(if (executable-find "ruff")
+    (add-hook 'python-mode-hook 'ruff-format-on-save-mode)
+  (message "WARNING: ruff not found. Please install ruff to enable Python formatting."))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-stay-out-of 'flymake)
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("ty" "server")))
+  (if (executable-find "ty")
+      (add-to-list 'eglot-server-programs
+                   '((python-mode python-ts-mode) . ("ty" "server")))
+    (message "WARNING: ty not found. Please install ty for Python LSP support."))
   ;;              '(python-mode . ("ruff" "server")))
   )
 

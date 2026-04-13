@@ -37,15 +37,25 @@
         (async-shell-command
          (format "ruff check --select ALL %s" (shell-quote-argument current-file))))))
 
-(defun ruff-fix ()
-  (interactive)
-  (let ((current-file (buffer-file-name)))
-    (if current-file
-        (progn
-          (shell-command
-           (format "ruff check --select ALL --fix %s" (shell-quote-argument current-file)))
-          (revert-buffer t t t)))))
+;; (defun ruff-fix ()
+;;   (interactive)
+;;   (let ((current-file (buffer-file-name)))
+;;     (if current-file
+;;         (progn
+;;           (shell-command
+;;            (format "ruff check --select ALL --fix %s" (shell-quote-argument current-file)))
+;;           (revert-buffer t t t)))))
 
+(reformatter-define ruff-check
+  :program ruff-format-command
+  :args (list "check" "--output-format" "text"
+              "--stdin-filename" (or (buffer-file-name) input-file))
+  :lighter " RuffCheck")
+
+(reformatter-define ruff-fix
+  :program ruff-format-command
+  :args (list "check" "--fix-only" "--stdin-filename" (or (buffer-file-name) input-file))
+  :lighter " RuffFix")
 
 
 ;; I use nix + direnv instead of virtualenv/pyenv/pyvenv, and it is an

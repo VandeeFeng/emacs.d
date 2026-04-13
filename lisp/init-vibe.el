@@ -10,38 +10,39 @@
 ;;   :ensure t
 ;;   :init (defalias 'pi 'pi-coding-agent))
 
-;; agent-shell
-(use-package agent-shell
-  :after evil
-  :config
-  (setq agent-shell-opencode-authentication
-        (agent-shell-opencode-make-authentication :none t))
-  ;; disable creating transcript file
-  (setq agent-shell-transcript-file-path-function nil)
-  ;; disable save prompt when killing buffer
-  (setq shell-maker-prompt-before-killing-buffer nil)
-  ;; (setq agent-shell-transcript-file-path-function
-  ;;       (lambda ()
-  ;;         (let* ((dir (expand-file-name "~/.agent-shell/transcripts/"))
-  ;;                (filename (format-time-string "%F-%H-%M-%S.md")))
-  ;;           (expand-file-name filename dir))))
+;; ;; agent-shell
+;; (use-package agent-shell
+;;   :after evil
+;;   :config
+;;   (setq agent-shell-opencode-authentication
+;;         (agent-shell-opencode-make-authentication :none t))
+;;   ;; disable creating transcript file
+;;   (setq agent-shell-transcript-file-path-function nil)
+;;   ;; disable save prompt when killing buffer
+;;   (setq shell-maker-prompt-before-killing-buffer nil)
+;;   ;; (setq agent-shell-transcript-file-path-function
+;;   ;;       (lambda ()
+;;   ;;         (let* ((dir (expand-file-name "~/.agent-shell/transcripts/"))
+;;   ;;                (filename (format-time-string "%F-%H-%M-%S.md")))
+;;   ;;           (expand-file-name filename dir))))
 
-  (setq agent-shell-pi-environment
-        (agent-shell-make-environment-variables
-         "ZAI_API_KEY" (getenv "ZAI_API_KEY")
-         "PI_CODING_AGENT_DIR" "~/.pi/agent"))
+;;   (setq agent-shell-pi-environment
+;;         (agent-shell-make-environment-variables
+;;          "MINIMAX_CN_API_KEY" (auth-source-pass-get 'secret "minimax-cn")
+;;          "PI_CODING_AGENT_DIR" "~/.pi/agent"
+;;          :inherit-env t))
 
-  ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
-  (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
-  (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
-  (evil-define-key 'normal agent-shell-mode-map (kbd "@") #'agent-shell-set-session-mode)
-  (define-key agent-shell-mode-map (kbd "C-c C-k") 'agent-shell-interrupt)
+;;   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
+;;   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+;;   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+;;   (evil-define-key 'normal agent-shell-mode-map (kbd "@") #'agent-shell-set-session-mode)
+;;   (define-key agent-shell-mode-map (kbd "C-c C-k") 'agent-shell-interrupt)
 
-  ;; Configure *agent-shell-diff* buffers to start in Emacs state
-  (add-hook 'diff-mode-hook
-            (lambda ()
-              (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-                (evil-emacs-state)))))
+;;   ;; Configure *agent-shell-diff* buffers to start in Emacs state
+;;   (add-hook 'diff-mode-hook
+;;             (lambda ()
+;;               (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+;;                 (evil-emacs-state)))))
 
 ;; aidermacs
 (use-package aidermacs

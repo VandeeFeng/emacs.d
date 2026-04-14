@@ -232,10 +232,10 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_i_] ibuffer           [_n_] next buffer       [_s_] save buffer
 [_v_] view buffer       [_p_] previous buffer   [_S_] save some buffers
-[_b_] switch to buffer  [_r_] revert buffer     [_d_] delete bookmark
-[_c_] clone indirect    [_R_] rename buffer     [_D_] delete all bookmarks
-[_C_] clone other win   [_k_] kill buffer       [_l_] list bookmarks
-[_K_] kill all scratch
+[_b_] switch to buffer  [_r_] revert buffer     [_d_] delete pin-mark
+[_c_] clone indirect    [_R_] rename buffer     [_D_] delete all-pin marks
+[_C_] clone other win   [_k_] kill buffer       [_l_] list pin-marks
+[_K_] kill all except scratch
 "
   ("i" ibuffer)
   ("v" view-buffer)

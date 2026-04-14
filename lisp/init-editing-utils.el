@@ -51,9 +51,6 @@
 ;; Emacs 的 mark 在 evil 下就对应 visual 模式
 ;; normal 模式下，f，t 快速导航到字符串，再加上 w,e,b 就很高效了
 
-;; If you create a file that starts with #! (a shebang line), it should be executable. But you always forget to chmod +x it, run the script, get “Permission denied”, curse, go back, chmod, try again. This hook does it automatically:
-(add-hook 'after-save-hook
-          #'executable-make-buffer-file-executable-if-script-p)
 
 ;;; Kill Ring (Emacs’s Clipboard History) and Clipboard
 

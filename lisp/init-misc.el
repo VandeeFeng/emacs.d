@@ -416,6 +416,8 @@
 (add-hook 'conf-mode-hook 'goto-address-prog-mode)
 (setq goto-address-mail-face 'link)
 
+
+;; If you create a file that starts with #! (a shebang line), it should be executable. But you always forget to chmod +x it, run the script, get “Permission denied”, curse, go back, chmod, try again. This hook does it automatically:
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 (add-hook 'after-save-hook 'sanityinc/set-mode-for-new-scripts)
 

@@ -7,19 +7,6 @@
 
 ;;; Code:
 
-;; C-x 1 (delete-other-windows) is the nuclear option – it nukes your entire window layout to focus on one buffer. Then you spend the next minute recreating the layout you just destroyed.
-(winner-mode +1)
-
-(defun toggle-delete-other-windows ()
-  "Delete other windows in frame if any, or restore previous window config."
-  (interactive)
-  (if (and winner-mode
-           (equal (selected-window) (next-window)))
-      (winner-undo)
-    (delete-other-windows)))
-
-(global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
-
 ;; If you have several windows visible, Emacs draws a cursor in each of them – even the ones you’re not working in. It also highlights selections in non-focused windows. Two settings to stop that:
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)

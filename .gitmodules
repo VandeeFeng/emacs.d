@@ -31,3 +31,6 @@
 [submodule "site-lisp/gruber-darker-theme"]
 	path = site-lisp/gruber-darker-theme
 	url = git@github.com:VandeeFeng/gruber-darker-theme.git
+[submodule "site-lisp/pimacs"]
+	path = site-lisp/pimacs
+	url = git@github.com:VandeeFeng/pimacs.git

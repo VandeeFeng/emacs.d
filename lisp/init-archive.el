@@ -1589,4 +1589,132 @@ fi"
 ;; Enhanced version with prompt for question:
 ;; javascript:(function(){const selectedText=window.getSelection().toString().trim();if(!selectedText){alert('Please select some text first');return;}const pageTitle=document.title;const pageUrl=window.location.href;const userQuestion=prompt('Optional: Add a question or context:');let fullText=`From: ${pageTitle}\nURL: ${pageUrl}\n\n`;if(userQuestion){fullText+=`Question: ${userQuestion}\n\n`;}fullText+=`Selected text:\n${selectedText}`;const encodedText=encodeURIComponent(fullText);const protocolUrl=`org-protocol://gptel?text=${encodedText}`;window.location.href=protocolUrl;})();
 
+;; (custom-set-faces
+;;  ;; global 部分-------------------------------------------
+;;  '(match ((t (:background unspecified :foreground "#79C0FF"))))
+;;  '(popup-tip-face ((t (:background "#1D1F21" :foreground "#d1d5db"))))
+;;  '(shadow ((t (:foreground "gray70"))))
+;;  '(show-paren-match ((t (:background "SteelBlue3" :foreground "gray90"))))
+;;  '(show-paren-mismatch ((t (:background "HotPink3" :foreground "white"))))
+
+;;  ;; 设置默认字体和大小
+;;  ;; '(default ((t (:family "GeistMono Nerd Font" :height 140 :weight light :background "#1D1F21" :foreground "#d1d5db"))))
+;;  '(default ((t (:font "fontset-myfontset" :height 140 :background "#1D1F21" :foreground "#d1d5db"))))
+;;  '(cursor ((t (:background "orange"))))
+
+;;  '(link ((t (:foreground "#96a6c8" :underline t))))
+;;  '(highlight ((t (:background "#5A5F66" :foreground unspecified)))) ;; #60656C
+
+;;  ;; 设置注释的样式
+;;  '(font-lock-comment-face ((t (:foreground "#787878"))))
+;;  '(font-lock-comment-delimiter-face ((t (:foreground "#787878"))))
+;;  ;; 设置字符串的样式
+;;  '(font-lock-string-face ((t (:foreground "#A1D08E")))) ;#A1D08E,#A7D08A #73c936 #96D0FF
+
+;;  ;; 设置常量的样式
+;;  ;; '(font-lock-constant-face ((t (:weight normal :foreground "95a99f"))))
+
+;;  ;; 设置内置函数的样式
+;;  '(font-lock-builtin-face ((t (:weight normal :foreground "#79C0FF"))))
+
+;;  ;; 设置关键字的样式
+;;  '(font-lock-keyword-face ((t (:weight normal :foreground "#FFA657")))) ;#FFA657-橙色 ,#FF7B72
+
+;;  ;; 设置函数名的样式
+;;  ;; '(font-lock-function-name-face ((t (:weight normal :foreground "#96a6c8"))))
+
+;;  ;; 设置变量名的样式
+;;  ;; '(font-lock-variable-name-face ((t (:weight normal :foreground "#c5b49f")))) ;#c5b49f-浅咖，#bc9575-焦糖橙 备用
+
+;;  ;; 设置类型的样式
+;;  ;; '(font-lock-type-face ((t (:foreground "#9DA3A2" :slant normal :weight normal)))) ; #a6adac ,#B6B9AE 很浅的灰绿备用
+
+;;  ;; 设置文档字符串的样式
+;;  '(font-lock-doc-face ((t (:weight normal :foreground "#787878"))))
+
+;;  ;; 设置当前行号颜色
+;;  '(line-number-current-line ((t (:foreground "#ffdd33"))))
+
+;;  ;; 设置行号颜色
+;;  '(line-number ((t (:foreground "gray30"))))
+
+;;  ;; org 部分 --------------------------------------------------------
+;;  ;; 代码块背景和边框
+;;  ;; '(org-block-begin-line
+;;  ;; ((t (:background "#343942" :foreground "#7F8490" :extend t))))
+;;  '(org-level-1 ((t (:height 1.4 :weight normal))))
+;;  '(org-level-2 ((t (:height 1.3 :weight normal))))
+;;  '(org-level-3 ((t (:height 1.2 :weight normal))))
+;;  '(org-level-4 ((t (:height 1.1 :weight normal))))
+;;  '(org-level-5 ((t (:height 1.05 :weight normal))))
+;;  '(org-level-6 ((t (:inherit outline-6 :height 1.05 :weight normal))))
+;;  '(org-level-7 ((t (:inherit outline-7 :height 1.0 :weight normal))))
+;;  '(org-level-8 ((t (:inherit outline-8 :height 1.0 :weight normal))))
+
+;;  ;; 设置文档标题 (#+TITLE:)
+;;  '(org-document-title ((t (:inherit default :weight bold
+;;                                     :height 1.5 ; 文档标题字体大小
+;;                                     :underline nil ; 添加下划线
+;;                                     ))))           ; 标题颜色
+
+;;  ;; 设置特殊关键字 (#+STARTUP: 等)
+;;  '(org-meta-line ((t (:inherit font-lock-comment-face
+;;                                :height 1.1 ; 关键字字体大小
+;;                                ;; :slant italic     ; 斜体
+;;                                ))))
+
+;;  ;; 设置时间戳颜色
+;;  '(org-date ((t (:foreground "#61AFEF" :background unspecified :weight normal))))
+
+;;  ;; 设置 org-tags 的颜色
+;;  '(org-tag ((t (:foreground "#8B949E" :weight normal :height 0.9 :inherit nil :slant normal))))
+
+;;  ;; 设置 org-block-begin-line 的样式
+;;  '(org-block-begin-line ((t (:background "#252525" :foreground "#757575" :extend t :italic t))))
+
+;;  ;; 设置 org-block 的样式
+;;  '(org-block ((t (:background "#252525" :extend t))))
+
+;;  ;; 设置 org-block-end-line 的样式
+;;  '(org-block-end-line ((t (:background "#252525" :foreground "#757575" :extend t :italic t))))
+
+;;  ;; 设置 org-code 的样式
+;;  '(org-code ((t (:foreground "#da8548" :weight normal))))
+;;  ;; 设置 mode-line
+;;  '(mode-line ((t (:box nil))))
+;;  '(mode-line-inactive ((t (:box nil))))
+;;  ;; org 部分 ends----------------------------------------------------
+
+;;  ;; 插件部分 --------------------------------------------------------
+;;  '(diff-hl-change ((t (:background unspecified :foreground "#ffc125"))))
+;;  '(diff-hl-delete ((t (:background unspecified :foreground "#ff3030"))))
+;;  '(diff-hl-insert ((t (:background unspecified :foreground "green1"))))
+;;  '(diredfl-date-time ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-deletion ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-dir-heading ((t (:foreground "#95a99f"))))
+;;  '(diredfl-dir-name ((t (:foreground "#79C0FF"))))
+;;  '(diredfl-dir-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-exec-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-file-name ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-file-suffix ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-no-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-number ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-other-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-rare-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-read-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(diredfl-write-priv ((t (:foreground unspecified :background unspecified))))
+;;  '(which-key-command-description-face ((t (:foreground "#79C0FF"))))
+;;  '(which-key-group-description-face ((t (:foreground "#79C0FF" :weight medium))))
+;;  '(orderless-match-face-1 ((t (:foreground "#79C0FF" :weight medium))))
+;;  '(orderless-match-face-2 ((t (:foreground "#79C0FF" :weight medium))))
+;;  '(orderless-match-face-3 ((t (:foreground "#79C0FF" :weight medium))))
+;;  '(vertico-current ((t (:extend nil :background "gray35" :foreground "gray100"))))
+;;  '(marginalia-key ((t (:foreground "#79C0FF"))))
+;;  '(corfu-default ((t (:background "gray15" :foreground "gray80"))))
+;;  '(anzu-mode-line ((t (:foreground "#79C0FF" :weight bold))))
+;;  '(anzu-mode-line-no-match ((t (:foreground "#79C0FF"))))
+;;  '(company-preview ((t (:background "gray35"))))
+;;  )
+
+
 ;;; init-archive.el ends here

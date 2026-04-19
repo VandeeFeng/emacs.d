@@ -14,6 +14,8 @@
 (require-package 'git-link)
 
 (when (maybe-require-package 'magit)
+  ;; 在 magit status buffer 的顶部显示 git 仓库的 user 信息
+  ;; (add-hook 'magit-status-headers-hook 'magit-insert-user-header)
   (setq-default magit-diff-refine-hunk 'all)
   (setq-default magit-diff-visit-prefer-worktree t)
 

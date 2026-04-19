@@ -149,9 +149,9 @@
 ^^^^^^^^^^--------------------------------------------------------
 [_a_] org agenda            [_I_] denote link
 [_c_] org capture           [_d_] denote create
-[_l_] find org backlinks    [_f_] denote open
-[_i_] insert org link       [_g_] denote grep
-[_e_] org export
+[_l_] find org backlinks    [_D_] denote sub create
+[_i_] insert org link       [_f_] denote open
+[_e_] org export            [_g_] denote grep
 [_._] org emphasize
 "
   ("l" my/org-backlink)
@@ -160,6 +160,7 @@
   ("a" org-agenda)
   ("f" denote-open-or-create)
   ("d" denote)
+  ("D" denote-subdirectory)
   ("g" denote-grep)
   ("e" org-export-dispatch)
   ("c" org-capture)

@@ -115,7 +115,9 @@
 
   :config
   ;; Remember to check the doc string of each of those variables.
-  (setq denote-directory (expand-file-name "/home/vandee/Vandee/Areas/pkm/denotes/"))
+  (setq denote-directory
+        (mapcar #'expand-file-name
+                '("~/Vandee/Areas/pkm/denotes/")))
   (setq denote-save-buffers nil)
   (setq denote-known-keywords '("Thinking" "Philosophy" "Hacking" "Coding"))
   (setq denote-infer-keywords t)
@@ -125,7 +127,7 @@
           (signature . denote-sluggify-signature)
           ))
   (setq denote-sort-keywords t)
-  (setq denote-prompts '(title keywords))
+  (setq denote-prompts '(title keywords)) ;; 这个控制 denote 在创建笔记的时候要填入的项目
   (setq denote-excluded-directories-regexp nil)
   (setq denote-excluded-keywords-regexp nil)
   (setq denote-rename-confirmations '(rewrite-front-matter modify-file-name))

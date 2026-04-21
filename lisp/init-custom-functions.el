@@ -241,11 +241,15 @@ input and search the whole buffer for it."
 (defvar my-org-preview-file (expand-file-name "org-preview.html" "~/.emacs.d/cache/")
   "用于存放 Org 文件实时预览的固定 HTML 文件路径。")
 
-(defvar my-org-preview-active nil
+(defvar-local my-org-preview-active nil
   "是否正在进行 Org 文件的实时预览。")
 
 (defun my-org-generate-html ()
   "生成当前 Org 文件的 HTML 内容。"
+  (unless (and buffer-file-name
+               (derived-mode-p 'org-mode)
+               (string-match-p "\\.org\\'" buffer-file-name))
+    (error "my-org-generate-html: current buffer is not an org file"))
   (org-export-string-as (buffer-string) 'html t))
 
 (defun my-org-preview-in-browser ()
@@ -259,18 +263,26 @@ input and search the whole buffer for it."
     (with-temp-file my-org-preview-file
       (insert html))))
 
+(defun my-org-preview-stop ()
+  "停止当前 buffer 的 Org 预览。"
+  (interactive)
+  (setq my-org-preview-active nil)
+  (remove-hook 'after-save-hook #'my-org-preview-in-browser t)
+  (remove-hook 'kill-buffer-hook #'my-org-preview-stop t)
+  (message "Org 预览已停止。"))
+
 (defun my-org-preview ()
   "手动控制 Org 文件的 HTML 预览开关。"
   (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (error "my-org-preview: current buffer is not an org buffer"))
   (if my-org-preview-active
-      (progn
-        (setq my-org-preview-active nil)
-        (remove-hook 'after-save-hook 'my-org-preview-in-browser)
-        (message "Org 预览已停止。"))
+      (my-org-preview-stop)
     (setq my-org-preview-active t)
     (my-org-preview-in-browser)
     (browse-url (concat "file://" my-org-preview-file))
-    (add-hook 'after-save-hook 'my-org-preview-in-browser)
+    (add-hook 'after-save-hook #'my-org-preview-in-browser nil t)
+    (add-hook 'kill-buffer-hook #'my-org-preview-stop nil t)
     (message "Org 预览已启动。")))
 
 ;; 执行代码块

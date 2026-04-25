@@ -107,15 +107,6 @@ Searches for org links containing the current filename."
 ;; Search
 ;;=========================
 
-;; search bilibli in eww
-(defun my/eww-bilibili-search (keyword)
-  "Search Bilibili for KEYWORD using `eww'.The keyword is read from the minibuffer and URL-encoded automatically."
-  (interactive "sBilibili search keyword: ")
-  (let* ((base "https://search.bilibili.com/all?keyword=")
-         (encoded (url-hexify-string keyword))
-         (url (concat base encoded)))
-    (eww url)))
-
 ;; inspired by doom emacs
 (defun my/search-cwd (&optional arg)
   "Conduct a text search in files under the current folder.

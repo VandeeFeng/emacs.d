@@ -1716,5 +1716,14 @@ fi"
 ;;  '(company-preview ((t (:background "gray35"))))
 ;;  )
 
+;; ;; search bilibli in eww
+;; (defun my/eww-bilibili-search (keyword)
+;;   "Search Bilibili for KEYWORD using `eww'.The keyword is read from the minibuffer and URL-encoded automatically."
+;;   (interactive "sBilibili search keyword: ")
+;;   (let* ((base "https://search.bilibili.com/all?keyword=")
+;;          (encoded (url-hexify-string keyword))
+;;          (url (concat base encoded)))
+;;     (eww url)))
+
 
 ;;; init-archive.el ends here

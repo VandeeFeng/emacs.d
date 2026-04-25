@@ -30,11 +30,6 @@
 ;; 关闭 warning
 ;; (setq warning-minimum-level :emergency)
 
-;; 禁止eww生成cookie
-;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
-(setq url-cookie-trusted-urls '()        ;不设置白名单
-      url-cookie-untrusted-urls '(".*")) ;所有内容都匹配黑名单
-
 (setq-default
  window-combination-resize t
  x-stretch-cursor t
@@ -110,6 +105,73 @@
 ;;                    (cons 'width (/ (* 4 (x-display-pixel-width))
 ;;                                    (* 6 (frame-char-width)))))))
 
+;; eww
+;; 禁止eww生成cookie
+;; https://github.com/lujun9972/lujun9972.github.com/blob/source/Emacs%E4%B9%8B%E6%80%92/%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2eww%E7%94%9F%E6%88%90cookie.org
+(setq url-cookie-trusted-urls '()        ;不设置白名单
+      url-cookie-untrusted-urls '(".*")  ;所有内容都匹配黑名单
+      eww-readable-urls '(".*"))         ;默认开启 readable
+
+;; https://joshblais.com/blog/emacs-as-my-browser/
+(setq eww-search-prefix "https://duckduckgo.com/search?q=")
+(setq eww-download-directory (expand-file-name "~/Downloads/"))
+
+(defun my-browse-url-mpv (url &rest _args)
+  "Open URL in mpv."
+  (start-process "mpv" nil "mpv" url))
+
+(defun my-browse-url-pdf (url &rest _args)
+  "Fetch remote PDF and open in pdf-tools within Emacs."
+  (let ((tmp (make-temp-file "emacs-pdf-" nil ".pdf")))
+    (url-copy-file url tmp t)
+    (find-file-other-window tmp)
+    (pdf-view-mode)))
+
+(setq browse-url-handlers
+      '(("\\(youtube\\.com\\|youtu\\.be\\|vimeo\\.com\\|twitch\\.tv\\|bilibili\\.com\\|b23\\.tv\\)" . my-browse-url-mpv)
+        ("\\.mp4$" . my-browse-url-mpv)
+        ("\\.pdf$" . my-browse-url-pdf)
+        ("." . eww-browse-url)))
+
+;; Keep your fallback setting
+(setq browse-url-secondary-browser-function 'browse-url-generic
+      browse-url-generic-program "librewolf")
+
+(with-eval-after-load 'eww
+  (define-key eww-mode-map (kbd "=") #'text-scale-increase)
+  (define-key eww-mode-map (kbd "-") #'text-scale-decrease)
+  (define-key eww-mode-map (kbd "0") #'text-scale-adjust))
+
+(setq shr-width 100)
+(setq shr-max-width 120)
+(setq shr-indentation 4)
+
+(setq shr-use-fonts nil)
+(setq shr-max-image-size '(800 . 600))
+(setq shr-image-animate t)
+
+(defun my/eww-download-image-at-point ()
+  "Download image at point to `eww-download-directory'."
+  (interactive)
+  (let ((url (or (get-text-property (point) 'image-url)
+                 (get-text-property (point) 'shr-url))))
+    (if (not url)
+        (message "No image at point")
+      (let* ((filename (file-name-nondirectory (url-filename (url-generic-parse-url url))))
+             (dest (expand-file-name filename eww-download-directory)))
+        (url-copy-file url dest t)
+        (message "Saved: %s" dest)))))
+
+;; Keybinds
+(with-eval-after-load 'eww
+  (define-key eww-mode-map (kbd "b") #'eww-back-url)
+  (define-key eww-mode-map (kbd "a") #'eww-add-bookmark)
+  (define-key eww-mode-map (kbd "U") #'shr-copy-url)
+  (define-key eww-mode-map (kbd "D") #'my/eww-download-image-at-point))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal eww-mode-map
+    (kbd "&") #'eww-browse-with-external-browser))
 
 ;;------------------------------
 ;; nonote

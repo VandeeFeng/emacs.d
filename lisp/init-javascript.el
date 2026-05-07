@@ -20,18 +20,40 @@
               typescript-indent-level 2)
 
 
-;; Biome formatter using reformatter
-;; biome 支持全局文件，我已经配置好了
+;; Biome formatter
+;; 终于统一了！
 
-(when (maybe-require-package 'reformatter)
-  (if (executable-find "biome")
-      (reformatter-define biome-format
-        :program "biome"
-        :args (list "format" "--stdin-file-path" (or (buffer-file-name) "stdin.ts")))
-    (message "WARNING: biome not found. Please install biome to enable JavaScript/TypeScript formatting.")))
+(defun my/project-root-for-file (file)
+  "Return project root for FILE."
+  (or (when (fboundp 'projectile-project-root)
+        (let ((default-directory (file-name-directory file)))
+          (ignore-errors (projectile-project-root))))
+      (locate-dominating-file file "biome.json")
+      (locate-dominating-file file "biome.jsonc")
+      (locate-dominating-file file "node_modules")))
 
-(when (executable-find "biome")
-  (add-hook 'typescript-mode-hook #'biome-format-on-save-mode))
+(defun my/project-biome-program (root)
+  "Return local Biome executable under ROOT."
+  (let ((program (expand-file-name "node_modules/.bin/biome" root)))
+    (when (file-executable-p program)
+      program)))
+
+(defun my/biome-check-write-buffer-file ()
+  "Run local `biome check --write' on the current buffer file."
+  (if-let* ((file (buffer-file-name))
+            (root (my/project-root-for-file file)))
+      (if-let ((biome (my/project-biome-program root)))
+          (let* ((default-directory root)
+                 (exit-code (call-process biome nil "*Biome check*" nil "check" "--write" file)))
+            (if (zerop exit-code)
+                (revert-buffer :ignore-auto :noconfirm :preserve-modes)
+              (message "biome check --write failed for %s" file)))
+        (message "local biome not found in %s" root))
+    (message "project root not found for %s" (or (buffer-file-name) (buffer-name)))))
+
+(add-hook 'typescript-ts-base-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook #'my/biome-check-write-buffer-file nil t)))
 
 
 ;; js2-mode

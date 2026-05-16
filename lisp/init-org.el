@@ -539,22 +539,10 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
        <link rel=\"stylesheet\" href=\"assets/css/blog-style.css\" type=\"text/css\"/>
        <link rel=\"stylesheet\"
              href=\"https://testingcf.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css\"/>
-       <link rel=\"stylesheet\"
-             href=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.css\"/>
        <link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\"/>
 
-       <script src=\"https://testingcf.jsdelivr.net/npm/@fancyapps/ui@4.0.12/dist/fancybox.umd.js\" defer></script>
-       <script src=\"https://testingcf.jsdelivr.net/npm/pangu@7.2.0/dist/browser/pangu.umd.js\" defer></script>
-       <script defer>
-         document.addEventListener(\"DOMContentLoaded\", () => {
-           pangu.autoSpacingPage();
-         });
-       </script>
-
        <script src=\"assets/js/app.js\" defer></script>
-       <script src=\"assets/js/copyCode.js\" defer></script>
-       <script src=\"assets/js/shiba.js\" defer></script>
-       <script src=\"assets/js/search.js\" defer></script>")
+       <script src=\"assets/js/shiba.js\" defer></script>")
 
 
 ;; Preamble for every page (e.g., navigation)

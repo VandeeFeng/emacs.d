@@ -202,7 +202,7 @@
 "
   ("g" magit)
   ("t" vt)
-  ("a" hydra-vandee-agenda/body)
+  ("a" hydra-agenda/body)
   ("o" hydra-org/body)
   ("T" my-insert-timestamp)
   ("h" my-org-show-current-heading-tidily)
@@ -212,14 +212,16 @@
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
-;; Vandee Agenda/TODO sub-hydra
-(defhydra hydra-vandee-agenda (:color blue :hint nil)
+;; Agenda/TODO sub-hydra
+(defhydra hydra-agenda (:color blue :hint nil)
   "
 ^Agenda & TODO^
 ^^^^^^^^^^^^^^
+[_a_] agenda
 [_t_] edit TODO state
 [_i_] insert TODO heading
 "
+  ("a" org-agenda)
   ("t" org-todo)
   ("i" org-insert-todo-heading)
   ("q" nil "quit")
@@ -472,7 +474,7 @@
   ("t" org-todo)
   ("T" org-time-stamp)
   ("c" org-capture)
-  ("a" org-agenda)
+  ("a" hydra-agenda/body)
   ("l" org-insert-link)
   ("s" org-cycle)
   ("e" org-export-dispatch)

@@ -54,6 +54,7 @@ site-lisp/package/
 /recentf
 /viper
 /projectile-bookmarks.eld
+/projectile-frecency.eld
 /anaconda-mode/
 /.historian
 /.uptimes.el

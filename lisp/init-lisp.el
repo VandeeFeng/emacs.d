@@ -10,7 +10,7 @@
 (add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "ELisp")))
 
 (setq-default initial-scratch-message
-              (concat ";; Stay foolish, Stay simple\n\n"))
+              (concat ";; Stay foolish, Stay simple\n;; ‾\\(シ)/‾  Just For Fun!\n\n"))
 
 
 (defun sanityinc/headerise-elisp ()

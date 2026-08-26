@@ -266,18 +266,17 @@
   "
 ^Dired^                   (C-c C-d to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_d_] open dired          [_+_] create empty file   [___] create directory
-[_f_] dired find file     [_C_] dired do copy       [_n_] copy filename
-[_u_] dired up directory  [_j_] dired jump current  [_p_] copy abs path
+[_d_] open dired          [_+_] create empty file   [_f_] dired find file
+[_C_] dired do copy       [_n_] copy filename       [_p_] copy abs path
 [_w_] into wdired-mode    [_R_] dired move/rename   [_N_] neotree dir
 "
   ("d" dired)
   ("f" dired-x-find-file)
-  ("u" dired-up-directory)
+  ;; ("u" dired-up-directory)
   ("+" dired-create-empty-file)
-  ("_" dired-create-directory)
+  ;; ("_" dired-create-directory)
   ("C" dired-do-copy)
-  ("j" dired-jump)
+  ;; ("j" dired-jump)
   ("n" dired-copy-filename-as-kill)
   ("p" my/dired-copy-absolute-path)
   ("N" neotree-dir)

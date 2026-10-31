@@ -36,7 +36,7 @@
       (dired-find-file)
       (when (and (not (eq current-buffer (current-buffer)))
                  (derived-mode-p 'dired-mode))
-        (message "Closed dired buffer: %s" dired-dir)
+        ;; (message "Closed dired buffer: %s" dired-dir)
         (kill-buffer current-buffer))))
 
   (define-key dired-mode-map (kbd "RET") 'my/dired-find-file-and-kill)

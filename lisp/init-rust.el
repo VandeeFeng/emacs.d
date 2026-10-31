@@ -4,7 +4,18 @@
 
 ;; https://rust-analyzer.github.io/book/other_editors.html#eglot
 (require 'eglot)
-(add-hook 'rust-mode-hook 'eglot-ensure)
+;; emacsclient 在使用 eglot 调用 projetile 的时候，index 会卡住
+;; 先临时使用 project.el 的 backend
+(defun my/rust-eglot-ensure ()
+  "Start Eglot with the built-in VC project backend preferred."
+  (setq-local project-find-functions
+              (cons #'project-try-vc
+                    (remove #'project-try-vc project-find-functions)))
+  (eglot-ensure))
+
+(add-hook 'rust-mode-hook #'my/rust-eglot-ensure)
+(add-hook 'rust-ts-mode-hook #'my/rust-eglot-ensure)
+
 ;; enable clippy
 ;; (with-eval-after-load 'eglot
 ;;   (add-to-list 'eglot-server-programs

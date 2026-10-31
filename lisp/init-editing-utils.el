@@ -166,6 +166,47 @@
   (global-set-key (kbd "S-<backspace>") 'delete-char))
 
 ;; magit
+(defun my/magit-search-section ()
+  "Choose a file diff, enclosing list, or current section for search."
+  (let* ((section (magit-current-section))
+         (ancestor section))
+    (while (and ancestor (not (eq (oref ancestor type) 'file)))
+      (setq ancestor (oref ancestor parent)))
+    (or ancestor
+        (and section
+             (if (oref section children)
+                 section
+               (or (oref section parent) section))))))
+
+(defun my/magit-search-repeat-map (filter)
+  "Temporarily repeat search with n/N using FILTER."
+  (let ((map (make-sparse-keymap)))
+    (dolist (binding '(("n" . evil-search-next)
+                       ("N" . evil-search-previous)))
+      (let ((command (cdr binding)))
+        (define-key map (kbd (car binding))
+                    (lambda ()
+                      (interactive)
+                      (let ((isearch-filter-predicate filter))
+                        (call-interactively command))))))
+    (set-transient-map map t)))
+
+(defun my/magit-search-dwim ()
+  "Search the contextual Magit section without leaving the current buffer."
+  (interactive)
+  (let* ((section (my/magit-search-section))
+         (start (if section (oref section start) (point-min)))
+         (end (if section (oref section end) (point-max)))
+         (original-filter isearch-filter-predicate)
+         (isearch-recursive-edit t)
+         (filter
+          (lambda (match-start match-end)
+            (and (<= start match-start) (<= match-end end)
+                 (funcall original-filter match-start match-end))))
+         (isearch-filter-predicate filter))
+    (call-interactively #'evil-search-forward)
+    (my/magit-search-repeat-map filter)))
+
 (with-eval-after-load 'magit
   (define-key magit-mode-map (kbd "x") 'magit-file-checkout)
   (dolist (binding '(("J" . magit-status-jump)
@@ -178,11 +219,16 @@
 
   (dolist (map '(magit-mode-map magit-status-mode-map magit-log-mode-map magit-diff-mode-map magit-revision-mode-map))
     (when (boundp map)
+      (define-key (symbol-value map) (kbd "SPC") #'hydra-leader/body)
       ;; (define-key (symbol-value map) (kbd "j") #'magit-section-forward)
       ;; (define-key (symbol-value map) (kbd "k") #'magit-section-backward)
       (define-key (symbol-value map) (kbd "J") #'magit-revision-jump)
       (define-key (symbol-value map) (kbd "j") #'magit-next-line)
-      (define-key (symbol-value map) (kbd "k") #'magit-previous-line))
+      (define-key (symbol-value map) (kbd "k") #'magit-previous-line)
+      (define-key (symbol-value map) (kbd "g") (make-sparse-keymap))
+      (define-key (symbol-value map) (kbd "g g") #'beginning-of-buffer)
+      (define-key (symbol-value map) (kbd "G") #'end-of-buffer)
+      (define-key (symbol-value map) (kbd "/") #'my/magit-search-dwim))
     )
   )
 

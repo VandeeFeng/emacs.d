@@ -116,6 +116,10 @@
 (setq eww-search-prefix "https://duckduckgo.com/search?q=")
 (setq eww-download-directory (expand-file-name "~/Downloads/"))
 
+;; 不保存 eww 的输入历史
+(with-eval-after-load 'savehist
+  (add-to-list 'savehist-ignored-variables 'eww-prompt-history))
+
 (defun my-browse-url-mpv (url &rest _args)
   "Open URL in mpv."
   (start-process "mpv" nil "mpv" url))
@@ -306,30 +310,9 @@
   ;; that evil-collection should works with.  The following line is here
   ;; for documentation purposes in case you need it.
   ;; (setq evil-collection-mode-list '(calendar dashboard dired ediff info magit ibuffer))
-  (setq evil-collection-mode-list '(org org-capture calendar dired))
+  (setq evil-collection-mode-list '(org org-capture calendar dired ibuffer))
   (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
-
-  ;; (defvar my-intercept-mode-map (make-sparse-keymap)
-  ;;   "High precedence keymap.")
-
-  ;; (define-minor-mode my-intercept-mode
-  ;;   "Global minor mode for higher precedence evil keybindings."
-  ;;   :global t)
-
-  ;; (my-intercept-mode)
-
-  ;; (dolist (state '(normal visual insert))
-  ;;   (evil-make-intercept-map
-  ;;    ;; NOTE: This requires an evil version from 2018-03-20 or later
-  ;;    (evil-get-auxiliary-keymap my-intercept-mode-map state t t)
-  ;;    state))
-
-  ;; (evil-define-key 'normal my-intercept-mode-map
-  ;;   (kbd "SPC n f") 'org-roam-node-find)
-
   (evil-collection-init))
-
-
 
 ;; Using RETURN to follow links in Org/Evil
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work

@@ -196,12 +196,12 @@
   "
 ^Vandee^                  (C-c C-v to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[_t_] vterm           [_h_] fold headings        [_v_] go to Vandee.org
+[_t_] ghostel         [_h_] fold headings        [_v_] go to Vandee.org
 [_g_] magit           [_T_] insert timestamp     [_j_] go to Journals.org
 [_a_] agenda/TODO     [_o_] org
 "
   ("g" magit)
-  ("t" vt)
+  ("t" gt)
   ("a" hydra-agenda/body)
   ("o" hydra-org/body)
   ("T" my-insert-timestamp)

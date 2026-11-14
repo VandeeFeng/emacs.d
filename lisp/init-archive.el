@@ -1725,5 +1725,95 @@ fi"
 ;;          (url (concat base encoded)))
 ;;     (eww url)))
 
+;; ;; vterm
+;; (require 'vterm)
+
+;; (defun vterm-minibuffer ()
+;;   "Open vterm in minibuffer and enter insert state."
+;;   (interactive)
+;;   (let ((height (/ (frame-height) 3)))  ; 设置高度为框架高度的1/3
+;;     (with-temp-buffer
+;;       (let ((window (split-window-vertically (- height))))
+;;         (select-window window)
+;;         (vterm)
+;;         ;; 确保 evil-mode 已加载后进入 insert 状态
+;;         (when (bound-and-true-p evil-mode)
+;;           (evil-insert-state))))))
+
+;; ;; 定义一个更简单的命令别名
+;; (defalias 'vt 'vterm-minibuffer)
+
+;; ;; 自定义 vterm 在 minibuffer 中的行为
+;; (with-eval-after-load 'vterm
+;;   (evil-define-key '(normal insert) vterm-mode-map (kbd "C-y") #'vterm-yank)
+;;   (evil-define-key '(normal) vterm-mode-map (kbd "p") #'vterm-yank)
+;;   (evil-define-key '(normal) vterm-mode-map (kbd "u") #'vterm-undo)
+;;   (evil-define-key 'normal vterm-mode-map (kbd "q") #'delete-window)
+
+;;   ;; 为 vterm-mode 添加 hook，确保在打开时进入 insert 状态
+;;   (add-hook 'vterm-mode-hook
+;;             (lambda ()
+;;               (when (bound-and-true-p evil-mode)
+;;                 (evil-insert-state)))))
+
+;; ;; 消除主题对终端的颜色影响
+;; (add-hook 'vterm-mode-hook
+;;           (lambda ()
+;;             ;; same as my ghostty
+;;             (set-face-attribute 'vterm-color-red nil
+;;                                 :foreground "#CD5C5C" :background "#CD5C5C")
+;;             (set-face-attribute 'vterm-color-green nil
+;;                                 :foreground "#86AF80" :background "#86AF80")
+;;             (set-face-attribute 'vterm-color-yellow nil
+;;                                 :foreground "#E8AE5B" :background "#E8AE5B")
+;;             (set-face-attribute 'vterm-color-blue nil
+;;                                 :foreground "#6495ED" :background "#6495ED")
+;;             (set-face-attribute 'vterm-color-magenta nil
+;;                                 :foreground "#DEB887" :background "#DEB887")
+;;             (set-face-attribute 'vterm-color-cyan nil
+;;                                 :foreground "#B0C4DE" :background "#B0C4DE")
+;;             (set-face-attribute 'vterm-color-white nil
+;;                                 :foreground "#BBAA99" :background "#BBAA99")))
+
+;; (require 'pi-coding-agent)
+;; (defalias 'pi #'pi-coding-agent)
+
+;; (use-package pi-coding-agent
+;;   :ensure t
+;;   :init (defalias 'pi 'pi-coding-agent))
+
+;; ;; agent-shell
+;; (use-package agent-shell
+;;   :after evil
+;;   :config
+;;   (setq agent-shell-opencode-authentication
+;;         (agent-shell-opencode-make-authentication :none t))
+;;   ;; disable creating transcript file
+;;   (setq agent-shell-transcript-file-path-function nil)
+;;   ;; disable save prompt when killing buffer
+;;   (setq shell-maker-prompt-before-killing-buffer nil)
+;;   ;; (setq agent-shell-transcript-file-path-function
+;;   ;;       (lambda ()
+;;   ;;         (let* ((dir (expand-file-name "~/.agent-shell/transcripts/"))
+;;   ;;                (filename (format-time-string "%F-%H-%M-%S.md")))
+;;   ;;           (expand-file-name filename dir))))
+
+;;   (setq agent-shell-pi-environment
+;;         (agent-shell-make-environment-variables
+;;          "MINIMAX_CN_API_KEY" (auth-source-pass-get 'secret "minimax-cn")
+;;          "PI_CODING_AGENT_DIR" "~/.pi/agent"
+;;          :inherit-env t))
+
+;;   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
+;;   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+;;   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+;;   (evil-define-key 'normal agent-shell-mode-map (kbd "@") #'agent-shell-set-session-mode)
+;;   (define-key agent-shell-mode-map (kbd "C-c C-k") 'agent-shell-interrupt)
+
+;;   ;; Configure *agent-shell-diff* buffers to start in Emacs state
+;;   (add-hook 'diff-mode-hook
+;;             (lambda ()
+;;               (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+;;                 (evil-emacs-state)))))
 
 ;;; init-archive.el ends here

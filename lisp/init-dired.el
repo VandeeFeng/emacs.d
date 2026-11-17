@@ -39,6 +39,9 @@
         ;; (message "Closed dired buffer: %s" dired-dir)
         (kill-buffer current-buffer))))
 
+  (define-key dired-mode-map (kbd "g") (make-sparse-keymap))
+  (define-key dired-mode-map (kbd "g g") #'beginning-of-buffer)
+  (define-key dired-mode-map (kbd "G") #'end-of-buffer)
   (define-key dired-mode-map (kbd "RET") 'my/dired-find-file-and-kill)
   (define-key dired-mode-map (kbd "S-<right>") 'my/dired-find-file-and-kill)
   (define-key dired-mode-map (kbd "S-<left>") #'dired-up-directory)

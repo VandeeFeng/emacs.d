@@ -438,24 +438,29 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^Splits^              ^Motion^
 ^^^^^^^^^-----------------------------------
-[_c_] close            [_h_] left
-[_n_] new              [_j_] down
-[_s_] horizontal split [_k_] up
-[_v_] vertical split   [_l_] right
-[_d_] delete others    [_w_] next window
+[_d_] close            [_h_] left         [_|_] split horizontally instead
+[_n_] new              [_j_] down         [___] split vertically instead
+[_s_] horizontal split [_k_] up           [_t_] toggle dedication
+[_v_] vertical split   [_l_] right        [_S_] switch window
+[_D_] delete others    [_w_] next window  [_r_] recent buffer
 "
+  ("t" sanityinc/toggle-current-window-dedication)
   ;; Splits
-  ("c" evil-window-delete)
+  ("d" evil-window-delete)
   ("n" evil-window-new)
   ("s" evil-window-split)
   ("v" evil-window-vsplit)
-  ("d" delete-other-windows)
+  ("D" delete-other-windows)
+  ("|" split-window-horizontally-instead)
+  ("_" split-window-vertically-instead)
+  ("r" sanityinc/split-window)
   ;; Motion
   ("h" evil-window-left)
   ("j" evil-window-down)
   ("k" evil-window-up)
   ("l" evil-window-right)
   ("w" evil-window-next)
+  ("S" switch-window)
   ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))

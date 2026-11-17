@@ -6,37 +6,37 @@
 ;; set .authinfo file path
 (setq auth-sources '("~/.emacs.d/.authinfo"))
 
-;; aidermacs
-(use-package aidermacs
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :config
-  (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
-  ;; (setenv "GEMINI_API_KEY" (my/get-gemini-api-key))
-  ;; (setq aidermacs-default-model "gemini/gemini-2.0-flash")
-  (setq aidermacs-backend 'vterm)
-  ;;(setq aidermacs-use-architect-mode t)
-  :custom
-  (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "gemini/gemini-2.5-flash"))
+;; ;; aidermacs
+;; (use-package aidermacs
+;;   :bind (("C-c a" . aidermacs-transient-menu))
+;;   :config
+;;   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+;;   ;; (setenv "GEMINI_API_KEY" (my/get-gemini-api-key))
+;;   ;; (setq aidermacs-default-model "gemini/gemini-2.0-flash")
+;;   (setq aidermacs-backend 'vterm)
+;;   ;;(setq aidermacs-use-architect-mode t)
+;;   :custom
+;;   (aidermacs-default-chat-mode 'architect)
+;;   (aidermacs-default-model "gemini/gemini-2.5-flash"))
 
-(add-hook 'aidermacs-before-run-backend-hook
-          (lambda ()
-            (let ((api-key (my/get-gemini-api-key)))
-              (if (and api-key (stringp api-key) (not (string-empty-p api-key)))
-                  (setenv "GEMINI_API_KEY" api-key)
-                (error "Failed to set GEMINI_API_KEY: Invalid or missing API key")))))
+;; (add-hook 'aidermacs-before-run-backend-hook
+;;           (lambda ()
+;;             (let ((api-key (my/get-gemini-api-key)))
+;;               (if (and api-key (stringp api-key) (not (string-empty-p api-key)))
+;;                   (setenv "GEMINI_API_KEY" api-key)
+;;                 (error "Failed to set GEMINI_API_KEY: Invalid or missing API key")))))
 
-(defun my/get-gemini-api-key ()
-  "Retrieve Gemini API key from auth-source."
-  (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))
-         (api-key (and auth-info (plist-get auth-info :secret))))
-    (cond
-     ((and api-key (functionp api-key)) (funcall api-key)) ; Handle case where secret is a function
-     ((and (stringp api-key) (not (string-empty-p api-key))) api-key) ; Return valid non-empty string
-     (t (progn
-          (message "No valid Gemini API key found in auth-source")
-          nil)))))
-;;; aidermacs ends
+;; (defun my/get-gemini-api-key ()
+;;   "Retrieve Gemini API key from auth-source."
+;;   (let* ((auth-info (car (auth-source-search :host "generativelanguage.googleapis.com")))
+;;          (api-key (and auth-info (plist-get auth-info :secret))))
+;;     (cond
+;;      ((and api-key (functionp api-key)) (funcall api-key)) ; Handle case where secret is a function
+;;      ((and (stringp api-key) (not (string-empty-p api-key))) api-key) ; Return valid non-empty string
+;;      (t (progn
+;;           (message "No valid Gemini API key found in auth-source")
+;;           nil)))))
+;; ;;; aidermacs ends
 
 ;; ----------------------------------------------------------
 ;; 自动补全

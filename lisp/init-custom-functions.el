@@ -42,6 +42,7 @@ Searches for org links containing the current filename."
 (with-eval-after-load 'paredit
   (define-key paredit-mode-map (kbd "M-d") nil))
 (global-set-key (kbd "M-d") 'delete-window)
+(global-set-key (kbd "M-D") 'delete-other-windows)
 (global-set-key (kbd "M-c") 'kill-current-buffer)
 (global-set-key (kbd "M-C") 'kill-all-buffers-except-scratch)
 (setq windmove-wrap-around t)

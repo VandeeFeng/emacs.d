@@ -605,18 +605,84 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
       <p>Stay foolish, Stay simple.</p>"
       )
 
-(with-eval-after-load 'org-static-blog
-  (defun update-post-list (&rest _)
-    "Update the post list in post-list.json."
-    (let* ((post-list (mapcar 'org-static-blog-get-post-url
-                              (org-static-blog-get-post-filenames)))
-           (json-encoding-pretty-print t)
-           (json-data (json-encode post-list)))
-      (with-temp-file (concat org-static-blog-publish-directory "/assets/post-list.json")
-        (insert json-data))
-      (message "Updated post-list.json")))
+(defun blog-search-normalize (text)
+  "Collapse whitespace in TEXT for the search index."
+  (replace-regexp-in-string "[[:space:] ]+" " " text))
 
-  (advice-add 'org-static-blog-publish :after #'update-post-list))
+(defun blog-search-read-post (filename url)
+  "Extract searchable content and heading positions from FILENAME at URL."
+  (let* ((document (with-temp-buffer
+                     (insert-file-contents filename)
+                     (libxml-parse-html-region (point-min) (point-max))))
+         (body (car (dom-by-id document "\\`content\\'")))
+         (title (car (dom-by-class body "\\bpost-title\\b")))
+         (headers nil))
+    (unless (and body title)
+      (error "Missing post content or title: %s" filename))
+    (with-temp-buffer
+      (cl-labels
+          ((walk (node)
+             (if (stringp node)
+                 (insert node)
+               (unless (or (memq (dom-tag node) '(script style))
+                           (member (dom-attr node 'id)
+                                   '("table-of-contents" "postamble"))
+                           (seq-some
+                            (lambda (class)
+                              (member class '("post-title" "post-date" "taglist")))
+                            (split-string (or (dom-attr node 'class) ""))))
+                 (when (and (memq (dom-tag node) '(h1 h2 h3 h4 h5 h6))
+                            (dom-attr node 'id))
+                   (push `((id . ,(dom-attr node 'id))
+                           (index . ,(1- (point)))
+                           (text . ,(string-trim
+                                     (blog-search-normalize (dom-texts node "")))))
+                         headers))
+                 (mapc #'walk (dom-children node))))))
+        (walk body))
+      (let* ((raw (buffer-string))
+             (content (string-trim (blog-search-normalize raw))))
+        (dolist (header headers)
+          (setf (alist-get 'index header)
+                ;; JavaScript offsets count UTF-16 code units, not characters.
+                (/ (length
+                    (encode-coding-string
+                     (string-trim-left
+                      (blog-search-normalize
+                       (substring raw 0 (alist-get 'index header))))
+                     'utf-16le t))
+                   2)))
+        `((url . ,url)
+          (title . ,(string-trim (blog-search-normalize (dom-texts title ""))))
+          (content . ,content)
+          (headers . ,(vconcat (nreverse headers))))))))
+
+(defun blog-search-build (&rest _)
+  "Build the search index from the published org-static-blog posts."
+  (interactive)
+  (let* ((posts
+          (mapcar
+           (lambda (post)
+             (blog-search-read-post
+              (org-static-blog-matching-publish-filename post)
+              (org-static-blog-get-post-url post)))
+           (org-static-blog-get-post-filenames)))
+         (output (expand-file-name "assets/search-index.json"
+                                   org-static-blog-publish-directory))
+         (coding-system-for-write 'utf-8-unix))
+    (make-directory (file-name-directory output) t)
+    (with-temp-file output
+      (insert (json-encode (vconcat posts))))
+    (message "Updated search-index.json (%d posts)" (length posts))))
+
+(with-eval-after-load 'org-static-blog
+  (require 'cl-lib)
+  (require 'dom)
+  (require 'json)
+  (require 'subr-x)
+
+  (advice-remove 'org-static-blog-publish 'update-post-list)
+  (advice-add 'org-static-blog-publish :after #'blog-search-build))
 
 (provide 'init-org)
 ;;; init-org.el ends here

@@ -9,7 +9,9 @@
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
 (add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "ELisp")))
 
-(setq-default elisp-fontify-semantically t)
+;; Emacs 31 semantic highlighting adds symbol colors, underlines, and hover help.
+;; Keep disabled to preserve traditional Elisp highlighting.
+;; (setq-default elisp-fontify-semantically t)
 
 (setq-default initial-scratch-message
               (concat ";; Stay foolish, Stay simple\n;; ‾\\(シ)/‾  Just For Fun!\n\n"))

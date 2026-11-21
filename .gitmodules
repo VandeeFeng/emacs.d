@@ -9,7 +9,7 @@
 	url = git@github.com:VandeeFeng/gua.el.git
 [submodule "site-lisp/thing-edit"]
 	path = site-lisp/thing-edit
-	url = git@github.com:manateelazycat/thing-edit.git
+	url = git@github.com:VandeeFeng/thing-edit.git
 [submodule "site-lisp/org-include-inline"]
 	path = site-lisp/org-include-inline
 	url = git@github.com:yibie/org-include-inline.git

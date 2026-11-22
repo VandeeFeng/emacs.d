@@ -20,11 +20,15 @@
                     :inherit 'hydra-face-blue
                     :foreground 'unspecified)
 
-;; Teal blocks unbound keys while exiting after valid commands.
 (defmacro my/defhydra (name &rest body)
-  "Define menu NAME with shared settings."
+  "Define menu NAME that blocks unbound keys and exits after valid commands."
   (declare (indent defun) (doc-string 2))
-  `(defhydra ,name (:color teal :hint nil)
+  `(defhydra ,name
+     (:color teal :hint nil
+             :base-map (let ((map (copy-keymap hydra-base-map)))
+                         ;; Block foreign prefixes before Emacs reads their next event.
+                         (define-key map [t] #'hydra-amaranth-warn)
+                         map))
      ,@body))
 
 ;; Define global leader key using general.el's override keymap
@@ -34,19 +38,22 @@
  :prefix "SPC"
  "" '(hydra-leader/body :wk "hydra leader"))
 
-;; Global C-c C-<key> bindings for hydra access
-(global-set-key (kbd "C-c C-w") 'hydra-windows/body)
-(global-set-key (kbd "C-c C-f") 'hydra-files/body)
-(global-set-key (kbd "C-c C-b") 'hydra-buffers/body)
-(global-set-key (kbd "C-c C-n") 'hydra-notes/body)
-(global-set-key (kbd "C-c C-l") 'hydra-llm/body)
-(global-set-key (kbd "C-c C-v") 'hydra-vandee/body)
-(global-set-key (kbd "C-c C-d") 'hydra-dired/body)
-(global-set-key (kbd "C-c C-e") 'hydra-eval/body)
-;; (global-set-key (kbd "C-c C-h") 'hydra-help/body)
-(global-set-key (kbd "C-c C-s") 'hydra-search/body)
-(global-set-key (kbd "C-c C-t") 'hydra-toggle/body)
-(global-set-key (kbd "C-c C-o") 'hydra-open/body)
+;; ;; Global C-c C-<key> bindings override major-mode bindings.
+;; (general-define-key
+;;  :keymaps 'override
+;;  :prefix "C-c"
+;;  "C-w" 'hydra-windows/body
+;;  "C-f" 'hydra-files/body
+;;  "C-b" 'hydra-buffers/body
+;;  "C-n" 'hydra-notes/body
+;;  "C-l" 'hydra-llm/body
+;;  "C-v" 'hydra-vandee/body
+;;  "C-d" 'hydra-dired/body
+;;  "C-e" 'hydra-eval/body
+;;  ;; "C-h" 'hydra-help/body
+;;  "C-s" 'hydra-search/body
+;;  "C-t" 'hydra-toggle/body
+;;  "C-o" 'hydra-open/body)
 
 ;; Mode-specific hydra bindings
 (define-key evil-normal-state-map (kbd "C-.") nil)
@@ -73,7 +80,7 @@
 
 (my/defhydra hydra-leader
   "
-^hydra^                     (C-c C-<key> for direct access)
+^hydra^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^General^           ^Misc^           ^Buffers^           ^Windows^
 ^^^^^^^^---------------------------------------------------------------------
@@ -141,7 +148,7 @@
 ;; Files hydra
 (my/defhydra hydra-files
   "
-^Files^                    (C-c C-f to open)
+^Files^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_n_] copy buffer name    [_d_] find-grep-dired      [_r_] recent files
 [_p_] copy full path      [_g_] grep current         [_u_] sudo find file
@@ -166,7 +173,7 @@
 ;; Notes hydra
 (my/defhydra hydra-notes
   "
-^Notes^                   (C-c C-n to open)
+^Notes^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^org^                       ^denote^
 ^^^^^^^^^^--------------------------------------------------------
@@ -194,7 +201,7 @@
 ;; LLM hydra
 (my/defhydra hydra-llm
   "
-^LLM^                     (C-c C-l to open)
+^LLM^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^gptel^                 ^agent-shell^                ^custom^
 ^^^^^^^^^^--------------------------------------------------------
@@ -215,7 +222,7 @@
 ;; Vandee hydra
 (my/defhydra hydra-vandee
   "
-^Vandee^                  (C-c C-v to open)
+^Vandee^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_t_] ghostel         [_h_] fold headings        [_v_] go to Vandee.org
 [_o_] org             [_T_] insert timestamp     [_j_] go to Journals.org
@@ -249,7 +256,7 @@
 ;; Buffers hydra
 (my/defhydra hydra-buffers
   "
-^Buffers^                 (C-c C-b to open)
+^Buffers^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_i_] ibuffer           [_n_] next buffer       [_s_] save buffer
 [_v_] view buffer       [_p_] previous buffer   [_S_] save some buffers
@@ -281,7 +288,7 @@
 ;; Dired hydra
 (my/defhydra hydra-dired
   "
-^Dired^                   (C-c C-d to open)
+^Dired^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_d_] open dired          [_+_] create empty file   [_f_] dired find file
 [_C_] dired do copy       [_n_] copy filename       [_p_] copy abs path
@@ -305,7 +312,7 @@
 ;; Eval/Eshell hydra
 (my/defhydra hydra-eval
   "
-^Eval/Eshell^             (C-c C-e to open)
+^Eval/Eshell^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_b_] eval buffer         [_l_] eval last sexp    [_s_] eshell
 [_d_] eval defun          [_r_] eval region       [_w_] eww
@@ -326,7 +333,7 @@
 ;; Help hydra
 (my/defhydra hydra-help
   "
-^Help^                    (C-c C-h to open)
+^Help^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_f_] describe function       [_v_] describe variable     [_c_] describe command
 [_b_] describe bindings       [_k_] describe key          [_F_] describe face
@@ -359,7 +366,7 @@
 ;; Open hydra
 (my/defhydra hydra-open
   "
-^Open^                   (C-c C-o to open)
+^Open^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_f_] make frame         [_F_] select frame by name
 "
@@ -371,7 +378,7 @@
 ;; Search hydra
 (my/defhydra hydra-search
   "
-^Search^                  (C-c C-s to open)
+^Search^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_d_] search cwd         [_b_] search buffer      [_p_] consult ripgrep
 [_D_] search other dir   [_g_] compile grep
@@ -387,7 +394,7 @@
 ;; Toggle hydra
 (my/defhydra hydra-toggle
   "
-^Toggle^                  (C-c C-t to open)
+^Toggle^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_e_] eshell toggle      [_l_] line numbers      [_r_] rainbow mode
 [_f_] flycheck mode      [_n_] neotree toggle    [_t_] visual line mode
@@ -407,7 +414,7 @@
 ;; Projects hydra
 (my/defhydra hydra-projects
   "
-^Projects^                 (C-c C-p to open)
+^Projects^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^Navigation^           ^Search^              ^Actions^
 ^^^^^^^^^^--------------------------------------------------------
@@ -444,7 +451,7 @@
 ;; Windows hydra
 (my/defhydra hydra-windows
   "
-^Windows^                  (C-c C-w to open)
+^Windows^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^Splits^              ^Motion^
 ^^^^^^^^^-----------------------------------

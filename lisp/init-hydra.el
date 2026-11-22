@@ -3,10 +3,29 @@
 ;;; Code:
 
 (require-package 'hydra)
+(require 'hydra)
 
-;; Setup general.el for global leader key that works across all major modes
-(maybe-require-package 'general)
+;; Setup general.el for global leader key that works across all major mode
+(require-package 'general)
+(require 'general)
+(require 'evil)
 (general-evil-setup t)
+
+;; Avoid Hydra's color jargon in unbound-key warnings.
+(setq hydra-amaranth-warn-message
+      "Unbound key; use C-g or Esc to quit")
+
+;; Keep the original blue appearance despite teal behavior.
+(set-face-attribute 'hydra-face-teal nil
+                    :inherit 'hydra-face-blue
+                    :foreground 'unspecified)
+
+;; Teal blocks unbound keys while exiting after valid commands.
+(defmacro my/defhydra (name &rest body)
+  "Define menu NAME with shared settings."
+  (declare (indent defun) (doc-string 2))
+  `(defhydra ,name (:color teal :hint nil)
+     ,@body))
 
 ;; Define global leader key using general.el's override keymap
 (general-define-key
@@ -52,7 +71,7 @@
 (add-hook 'magit-status-mode-hook 'hydra-mode-setup)
 (add-hook 'prog-mode-hook 'hydra-mode-setup)
 
-(defhydra hydra-leader (:color blue :hint nil)
+(my/defhydra hydra-leader
   "
 ^hydra^                     (C-c C-<key> for direct access)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -120,7 +139,7 @@
   ("<escape>" nil "quit"))
 
 ;; Files hydra
-(defhydra hydra-files (:color blue :hint nil)
+(my/defhydra hydra-files
   "
 ^Files^                    (C-c C-f to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -145,7 +164,7 @@
   ("<escape>" nil "quit"))
 
 ;; Notes hydra
-(defhydra hydra-notes (:color blue :hint nil)
+(my/defhydra hydra-notes
   "
 ^Notes^                   (C-c C-n to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -173,7 +192,7 @@
   ("<escape>" nil "quit"))
 
 ;; LLM hydra
-(defhydra hydra-llm (:color blue :hint nil)
+(my/defhydra hydra-llm
   "
 ^LLM^                     (C-c C-l to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -194,7 +213,7 @@
   ("<escape>" nil "quit"))
 
 ;; Vandee hydra
-(defhydra hydra-vandee (:color blue :hint nil)
+(my/defhydra hydra-vandee
   "
 ^Vandee^                  (C-c C-v to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -213,7 +232,7 @@
   ("<escape>" nil "quit"))
 
 ;; Agenda/TODO sub-hydra
-(defhydra hydra-agenda (:color blue :hint nil)
+(my/defhydra hydra-agenda
   "
 ^Agenda & TODO^
 ^^^^^^^^^^^^^^
@@ -228,7 +247,7 @@
   ("<escape>" nil "quit"))
 
 ;; Buffers hydra
-(defhydra hydra-buffers (:color blue :hint nil)
+(my/defhydra hydra-buffers
   "
 ^Buffers^                 (C-c C-b to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -237,7 +256,7 @@
 [_b_] switch to buffer  [_r_] revert buffer     [_d_] delete pin-mark
 [_c_] clone indirect    [_R_] rename buffer     [_D_] delete all-pin marks
 [_C_] clone other win   [_k_] kill buffer       [_l_] list pin-marks
-[_K_] kill all except scratch
+[_K_] kill all except scratch                 [_g_] goto-pin-mark
 "
   ("i" ibuffer)
   ("v" view-buffer)
@@ -260,7 +279,7 @@
   ("<escape>" nil "quit"))
 
 ;; Dired hydra
-(defhydra hydra-dired (:color blue :hint nil)
+(my/defhydra hydra-dired
   "
 ^Dired^                   (C-c C-d to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -284,7 +303,7 @@
   ("<escape>" nil "quit"))
 
 ;; Eval/Eshell hydra
-(defhydra hydra-eval (:color blue :hint nil)
+(my/defhydra hydra-eval
   "
 ^Eval/Eshell^             (C-c C-e to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -305,7 +324,7 @@
   ("<escape>" nil "quit"))
 
 ;; Help hydra
-(defhydra hydra-help (:color blue :hint nil)
+(my/defhydra hydra-help
   "
 ^Help^                    (C-c C-h to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -338,7 +357,7 @@
   ("<escape>" nil "quit"))
 
 ;; Open hydra
-(defhydra hydra-open (:color blue :hint nil)
+(my/defhydra hydra-open
   "
 ^Open^                   (C-c C-o to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -350,7 +369,7 @@
   ("<escape>" nil "quit"))
 
 ;; Search hydra
-(defhydra hydra-search (:color blue :hint nil)
+(my/defhydra hydra-search
   "
 ^Search^                  (C-c C-s to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -366,7 +385,7 @@
   ("<escape>" nil "quit"))
 
 ;; Toggle hydra
-(defhydra hydra-toggle (:color blue :hint nil)
+(my/defhydra hydra-toggle
   "
 ^Toggle^                  (C-c C-t to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -386,7 +405,7 @@
 
 
 ;; Projects hydra
-(defhydra hydra-projects (:color blue :hint nil)
+(my/defhydra hydra-projects
   "
 ^Projects^                 (C-c C-p to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -423,7 +442,7 @@
   ("<escape>" nil "quit"))
 
 ;; Windows hydra
-(defhydra hydra-windows (:color blue :hint nil)
+(my/defhydra hydra-windows
   "
 ^Windows^                  (C-c C-w to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -460,7 +479,7 @@
 ;; Mode-specific hydras
 
 ;; Org mode hydra
-(defhydra hydra-org (:color blue :hint nil)
+(my/defhydra hydra-org
   "
 ^Org Mode^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -500,7 +519,7 @@
           (message "Formatted with %s" formatter))
       (message "No reformatter found for %s" major-mode))))
 
-(defhydra hydra-code (:color blue :hint nil)
+(my/defhydra hydra-code
   "
 ^Code^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -527,7 +546,7 @@
   ("<escape>" nil "quit"))
 
 ;; Magit hydra
-(defhydra hydra-magit (:color blue :hint nil)
+(my/defhydra hydra-magit
   "
 ^Magit^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

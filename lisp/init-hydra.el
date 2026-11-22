@@ -56,15 +56,18 @@
   "
 ^hydra^                     (C-c C-<key> for direct access)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^General^             ^Misc^           ^Buffers^           ^Windows^
+^General^           ^Misc^           ^Buffers^           ^Windows^
 ^^^^^^^^---------------------------------------------------------------------
-[_SPC_] M-x           [_f_] files      [_b_] buffers       [_w_] windows
-[_._] compile         [_n_] notes      [_d_] dired         [_e_] eval/eshell
-[_v_] vandee          [_l_] LLM        [_s_] search        [_t_] toggle
-[_c_] code            [_h_] help       [_p_] projects      [_o_] open
+[_SPC_] M-x         [_f_] files      [_b_] buffers       [_w_] windows
+[_._] compile       [_n_] notes      [_d_] dired         [_e_] eval/eshell
+[_v_] vandee        [_l_] LLM        [_s_] search        [_t_] toggle
+[_c_] code          [_h_] help       [_p_] projects      [_o_] open
+[_g_] magit
 "
   ;; M-x alternatives
   ("SPC" execute-extended-command)
+
+  ;; compile command
   ("." compile)
 
   ;; Files (f)
@@ -94,6 +97,9 @@
   ;; Help (h)
   ("h" hydra-help/body)
 
+  ;; Git (g)
+  ("g" magit)
+
   ;; Open (o)
   ("o" hydra-open/body)
 
@@ -110,7 +116,6 @@
   ("w" hydra-windows/body)
 
   ;; Quit
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -136,7 +141,6 @@
   ("U" sudo-edit)
   ("b" browse-current-file)
   ("i" my/insert-org-file-link)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -165,7 +169,6 @@
   ("e" org-export-dispatch)
   ("c" org-capture)
   ("." org-emphasize)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -187,7 +190,6 @@
   ("i" my/ai-shell-command)
   ("o" agent-shell-opencode-start-agent)
   ("d" agent-shell-send-dwim)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -197,10 +199,9 @@
 ^Vandee^                  (C-c C-v to open)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 [_t_] ghostel         [_h_] fold headings        [_v_] go to Vandee.org
-[_g_] magit           [_T_] insert timestamp     [_j_] go to Journals.org
-[_a_] agenda/TODO     [_o_] org
+[_o_] org             [_T_] insert timestamp     [_j_] go to Journals.org
+[_a_] agenda/TODO
 "
-  ("g" magit)
   ("t" gt)
   ("a" hydra-agenda/body)
   ("o" hydra-org/body)
@@ -208,7 +209,6 @@
   ("h" my-org-show-current-heading-tidily)
   ("v" (find-file "~/Vandee/Areas/pkm/org/Vandee.org"))
   ("j" (find-file "~/Vandee/Areas/pkm/org/Journal.org"))
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -224,7 +224,6 @@
   ("a" org-agenda)
   ("t" org-todo)
   ("i" org-insert-todo-heading)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -257,7 +256,6 @@
   ("D" delete-all-pin-marks)
   ("l" list-pin-marks)
   ("g" goto-pin-mark)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -282,7 +280,6 @@
   ("N" neotree-dir)
   ("w" wdired-change-to-wdired-mode)
   ("R" dired-do-rename)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -304,7 +301,6 @@
   ("R" eww-reload)
   ("s" eshell)
   ("w" eww)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -338,7 +334,6 @@
   ("r" (lambda () (interactive)
          (load-file "~/.emacs.d/init.el")
          (message "Emacs configuration reloaded")))
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -351,7 +346,6 @@
 "
   ("f" make-frame)
   ("F" select-frame-by-name)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -368,7 +362,6 @@
   ("b" my/search-buffer)
   ("g" my/compile-grep-rn)
   ("p" sanityinc/consult-ripgrep-at-point)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -388,7 +381,6 @@
   ("o" org-mode)
   ("r" rainbow-mode)
   ("t" visual-line-mode)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -427,7 +419,6 @@
   ("k" projectile-kill-buffers)
 
   ;; Quit
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -438,11 +429,12 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^Splits^              ^Motion^
 ^^^^^^^^^-----------------------------------
-[_d_] close            [_h_] left         [_|_] split horizontally instead
+[_d_] delete window    [_h_] left         [_|_] split horizontally instead
 [_n_] new              [_j_] down         [___] split vertically instead
 [_s_] horizontal split [_k_] up           [_t_] toggle dedication
 [_v_] vertical split   [_l_] right        [_S_] switch window
 [_D_] delete others    [_w_] next window  [_r_] recent buffer
+[_q_] quit window
 "
   ("t" sanityinc/toggle-current-window-dedication)
   ;; Splits
@@ -461,7 +453,7 @@
   ("l" evil-window-right)
   ("w" evil-window-next)
   ("S" switch-window)
-  ("q" nil "quit")
+  ("q" quit-window)
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -484,7 +476,6 @@
   ("s" org-cycle)
   ("e" org-export-dispatch)
   ("p" org-priority)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -532,7 +523,6 @@
                 (message "eglot not available")))
    :color blue)
   ("e" my-execute-src-block)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 
@@ -568,7 +558,6 @@
   ("m" magit-merge)
   ("M" magit-remote)
   ("e" magit-commit-extend)
-  ("q" nil "quit")
   ("C-g" nil "quit")
   ("<escape>" nil "quit"))
 

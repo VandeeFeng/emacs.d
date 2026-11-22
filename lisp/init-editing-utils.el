@@ -531,10 +531,25 @@
 
 
 (require-package 'which-key)
-(add-hook 'after-init-hook 'which-key-mode)
-(setq-default which-key-idle-delay 1.5)
 (with-eval-after-load 'which-key
-  (diminish 'which-key-mode))
+  (diminish 'which-key-mode)
+  (setq which-key-side-window-location 'bottom
+        which-key-sort-order #'which-key-key-order-alpha
+        which-key-allow-imprecise-window-fit nil
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
+        which-key-max-display-columns nil
+        which-key-min-display-lines 6
+        which-key-side-window-slot -10
+        which-key-side-window-max-height 0.25
+        which-key-max-description-length 25
+        which-key-idle-delay 0.4
+        which-key-idle-secondary-delay 0.01
+        which-key-separator " → ")
+  (define-key which-key-C-h-map (kbd "<escape>") #'which-key-abort)
+  (define-key which-key-C-h-map (kbd "ESC") #'which-key-abort)
+  (define-key which-key-C-h-map (kbd "C-g") #'which-key-abort)
+  (add-hook 'after-init-hook #'which-key-mode))
 
 
 (defun sanityinc/disable-features-during-macro-call (orig &rest args)

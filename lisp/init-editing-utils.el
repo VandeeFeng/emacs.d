@@ -51,6 +51,14 @@
 ;; Emacs 的 mark 在 evil 下就对应 visual 模式
 ;; normal 模式下，f，t 快速导航到字符串，再加上 w,e,b 就很高效了
 
+;; 在 minibuffer 里实现按 ESC 直接退出
+;; Emacs 默认不把 Esc 专门当作“取消键”，而是保留了它作为 Meta 替代输入方式的历史用途
+;; 早期终端未必有 Meta 键，可以先按 Esc，再按 x 来输入 M-x。
+(define-key minibuffer-local-map [escape] #'abort-recursive-edit)
+;; 全局彻底解除 ESC 的前缀，可能影响部分功能
+(define-key local-function-key-map [escape] nil)
+(with-eval-after-load 'evil
+  (define-key evil-read-key-map [escape] #'keyboard-quit))
 
 ;;; Kill Ring (Emacs’s Clipboard History) and Clipboard
 

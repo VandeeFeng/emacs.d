@@ -675,6 +675,11 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
       (insert (json-encode (vconcat posts))))
     (message "Updated search-index.json (%d posts)" (length posts))))
 
+(defun blog-publish-posts-only (publish &rest args)
+  "Exclude drafts during batch publishing without affecting manual exports."
+  (cl-letf (((symbol-function 'org-static-blog-get-draft-filenames) #'ignore))
+    (apply publish args)))
+
 (with-eval-after-load 'org-static-blog
   (require 'cl-lib)
   (require 'dom)
@@ -682,6 +687,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (require 'subr-x)
 
   (advice-remove 'org-static-blog-publish 'update-post-list)
+  (advice-add 'org-static-blog-publish :around #'blog-publish-posts-only)
   (advice-add 'org-static-blog-publish :after #'blog-search-build))
 
 (provide 'init-org)
